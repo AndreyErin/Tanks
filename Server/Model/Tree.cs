@@ -1,28 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using static System.Net.Mime.MediaTypeNames;
-
+﻿
+//ред
 namespace Server.Model
 {
-    public class Tree : System.Windows.Controls.Image
+    public class Tree : Img
     {
+        public System.Windows.Point Pos;
+
         protected Tree() { }
         public Tree(System.Windows.Point ePos)
         {
+            Pos = ePos;
             Width = 40;
-            Height = 40;
-            
-            Source = Map.PictureWood1;
+            Height = 40;           
+            Source = SkinsEnum.PictureWood1;
 
-            Canvas.SetLeft(this, ePos.Y);
-            Canvas.SetTop(this, ePos.X);
-            Canvas.SetZIndex(this, 1); //- поверх остальных обьектов
-
-            GlobalDataStatic.cnvMap1.Children.Add(this);           
+            GlobalDataStatic.BattleGroundCollection.Add(this);          
         }
     }
 }

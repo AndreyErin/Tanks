@@ -33,7 +33,6 @@ namespace Server.Model
         PictureTankOfDestroySpeed1,
         PictureTankOfDestroySpeed2,
         PictureLootTeer,
-        PictureLootDefense,
         PictureLootSpeed,
         PictureTankBot1,
         PictureTankBot2,

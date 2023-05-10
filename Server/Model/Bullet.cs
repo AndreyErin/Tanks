@@ -1,36 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
+using Server.Model;
 
+//ред
 namespace Server.Model
 {
-    public class Bullet :  Image
+    public class Bullet :  Img,  ISoundsObjects
     {
         protected System.Windows.Point _ePos;
         protected VectorEnum _vector;
         protected int _damage;       
-        protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();
-        protected MediaPlayer _player = GlobalDataStatic.SoundPlayer;
+        protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();        
         protected bool _isPlayer = false;
+        protected SoundsEnum _sound; //звук
+
+        public event ISoundsObjects.SoundDeleg? SoundEvent;
 
         protected Bullet() { }
+        //конструктор
         public Bullet(VectorEnum vector, System.Windows.Point tpos, int damage)
-        {
-            
+        {           
             _damage = damage;
             _vector = vector;
             _ePos = tpos;
-
-            //_player.Volume = 1;
 
             //задаем начальное положение пули
             switch (vector)
@@ -61,109 +54,94 @@ namespace Server.Model
             //отрисовка снаряда            
             Width = 10;
             Height = 10;
-            Canvas.SetTop(this, _ePos.X);
-            Canvas.SetLeft(this, _ePos.Y);
-            
-
+ 
             switch (damage)
             { 
-
                 case 1:
-                    Source = Map.PictureBullet1;
+                    Source = SkinsEnum.PictureBullet1;
                     break;
                 case 2:
-                    Source = Map.PictureBullet2;
+                    Source = SkinsEnum.PictureBullet2;
                     break;
                 case 3:
-                    Source = Map.PictureBullet3;
+                    Source = SkinsEnum.PictureBullet3;
                     break;
                 case > 3:
-                    Source = Map.PictureBullet4;                   
+                    Source = SkinsEnum.PictureBullet4;                   
                     break;
             }
 
-            GlobalDataStatic.cnvMap1.Children.Add(this);
-
-            //выстрел
-           // _player?.Open(GlobalDataStatic.shotSoung);
-           // _player.Play();
+            GlobalDataStatic.BattleGroundCollection.Add(this);
 
             tTimerToFire.Start();
 
         }
-
+        //таймер
         protected void tTimerToFire_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //пуля
-            Action action = () =>
+            System.Windows.Point pt;//точки-ледары
+            System.Windows.Point pt2;
+            bool haveHit; //флаг того есть ли попадание по объекту окружения
+
+            switch (_vector)
             {
-                System.Windows.Point pt;//точки-ледары
-                System.Windows.Point pt2;
-                bool haveHit; //флаг того есть ли попадание по объекту окружения
+                //ВЕРХ
+                case VectorEnum.Top:
+                    pt = new System.Windows.Point(_ePos.X, _ePos.Y);
+                    pt2 = new System.Windows.Point(_ePos.X, _ePos.Y + this.Width -1);
+                    haveHit = HaveShot(pt, pt2);
 
-                switch (_vector)
-                {
-                    //ВЕРХ
-                    case VectorEnum.Top:
-                        pt = new System.Windows.Point(_ePos.X, _ePos.Y);
-                        pt2 = new System.Windows.Point(_ePos.X, _ePos.Y + this.Width -1);
-                        haveHit = HaveShot(pt, pt2);
-
-                        if ((_ePos.X >= 1.5) && (haveHit == false))
-                            Canvas.SetTop(this, _ePos.X -= 5);
-                        else
-                        {
-                            Task.Factory.StartNew(DistroyMy);
-                        }
-                        break;
-                    //НИЗ
-                    case VectorEnum.Down:
-                        pt = new System.Windows.Point(_ePos.X + this.Height -1, _ePos.Y);
-                        pt2 = new System.Windows.Point(_ePos.X + this.Height - 1, _ePos.Y + this.Width - 1);
-                        haveHit = HaveShot(pt, pt2);
-                        if ((_ePos.X <= GlobalDataStatic.cnvMap1.ActualHeight - 11.5) && (haveHit == false))
-                            Canvas.SetTop(this, _ePos.X += 5);
-                        else
-                        {
-                            Task.Factory.StartNew(DistroyMy);
-                        }
-                        break;
-                    //ЛЕВО
-                    case VectorEnum.Left:
-                        pt = new System.Windows.Point(_ePos.X , _ePos.Y);
-                        pt2 = new System.Windows.Point(_ePos.X + this.Height -1  , _ePos.Y);
-                        haveHit = HaveShot(pt, pt2); 
-                        if ((_ePos.Y >= 1.5) && (haveHit == false))
-                            Canvas.SetLeft(this, _ePos.Y -= 5);
-                        else
-                        {
-                            Task.Factory.StartNew(DistroyMy);
-                        }
-                        break;
-                    //ПРАВО
-                    case VectorEnum.Right:
-                        pt = new System.Windows.Point(_ePos.X, _ePos.Y + this.Width - 1);
-                        pt2 = new System.Windows.Point(_ePos.X + this.Height - 1, _ePos.Y +   this.Width - 1);
-                        haveHit = HaveShot(pt, pt2);
-                        if ((_ePos.Y <= GlobalDataStatic.cnvMap1.ActualWidth - 11.5) && (haveHit == false))
-                            Canvas.SetLeft(this, _ePos.Y += 5);
-                        else
-                        {
-                            Task.Factory.StartNew(DistroyMy);
-                        }
-                        break;
-                }                
-            };
-
-            GlobalDataStatic.MainDispatcher.Invoke(action);
+                    if ((_ePos.X >= 1.5) && (haveHit == false))
+                        _ePos.X -= 5;
+                    else
+                    {
+                        Task.Factory.StartNew(DistroyMy);
+                    }
+                    break;
+                //НИЗ
+                case VectorEnum.Down:
+                    pt = new System.Windows.Point(_ePos.X + this.Height -1, _ePos.Y);
+                    pt2 = new System.Windows.Point(_ePos.X + this.Height - 1, _ePos.Y + this.Width - 1);
+                    haveHit = HaveShot(pt, pt2);
+                    if ((_ePos.X <= 720 - 11.5) && (haveHit == false))
+                        _ePos.X += 5;
+                    else
+                    {
+                        Task.Factory.StartNew(DistroyMy);
+                    }
+                    break;
+                //ЛЕВО
+                case VectorEnum.Left:
+                    pt = new System.Windows.Point(_ePos.X , _ePos.Y);
+                    pt2 = new System.Windows.Point(_ePos.X + this.Height -1  , _ePos.Y);
+                    haveHit = HaveShot(pt, pt2); 
+                    if ((_ePos.Y >= 1.5) && (haveHit == false))
+                        _ePos.Y -= 5;
+                    else
+                    {
+                        Task.Factory.StartNew(DistroyMy);
+                    }
+                    break;
+                //ПРАВО
+                case VectorEnum.Right:
+                    pt = new System.Windows.Point(_ePos.X, _ePos.Y + this.Width - 1);
+                    pt2 = new System.Windows.Point(_ePos.X + this.Height - 1, _ePos.Y +   this.Width - 1);
+                    haveHit = HaveShot(pt, pt2);
+                    if ((_ePos.Y <= 1320 - 11.5) && (haveHit == false))
+                        _ePos.Y += 5;
+                    else
+                    {
+                        Task.Factory.StartNew(DistroyMy);
+                    }
+                    break;
+            }                
         }
 
         //если пуля попала в объект, то сообщаем етому обьекту что в него попали
         public bool HaveShot(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
         {
-            UIElementCollection collection = GlobalDataStatic.cnvMap1.Children;
-
-                var subset = from UIElement s in collection
+                var subset = from s in GlobalDataStatic.BattleGroundCollection
                              where (s as WorldElement) != null
                              select s;
 
@@ -177,54 +155,42 @@ namespace Server.Model
                         //если было попадание по этому объекту коллекции(и это не лут) то сообщаем объкту, что он получил урон
                         if ((s as Loot) == null)
                         {
-
-
                             s.GetDamage(_damage);
                             switch (s)
                             {
                                 case Tank:
                                 if (s.HP <= 0)
-                                GlobalDataStatic.lblStatisticTank.Content = int.Parse(GlobalDataStatic.lblStatisticTank.Content.ToString()) + 1;
-                                   // Action action = () => { };
-                                   //GlobalDataStatic.MainDispatcher.Invoke(action) ;
-                                    _player.Open(GlobalDataStatic.shotTargetSound);
+
+                                    _sound = SoundsEnum.shotTargetSound;
                                     break;
                                 case LocationGun:
-                                    _player.Open(GlobalDataStatic.shotTargetSound);                                   
-                                    break;
+                                    _sound = SoundsEnum.shotTargetSound;
+                                break;
     
                                 case BlockFerum:                                
                                 case TankOfDistroy:
-                                    _player.Open(GlobalDataStatic.ferumSoung);                                    
+                                    _sound = SoundsEnum.ferumSoung;                                    
                                     break;
     
                                  case Block:
-                                    _player.Open(GlobalDataStatic.rockSound);                                   
+                                    _sound = SoundsEnum.rockSound;                                   
                                     break;
                             }
-                        _player.Play();
+
+                        if (SoundEvent != null) SoundEvent(_sound);//играть звук
+
                         return true;
                         }               
                     }
                 }
-                return false;
-            
-
+                return false;            
         }
 
         //уничтожение пули при попадание
         protected void DistroyMy()
         {
-           Action action = () =>
-           {
                tTimerToFire.Stop();
-               GlobalDataStatic.cnvMap1.Children.Remove(this);               
-           };
-           GlobalDataStatic.MainDispatcher.Invoke(action);
-//           Thread.Sleep(1000); //логает пипец
-//           _player.Close();
-           
-            
+               GlobalDataStatic.BattleGroundCollection.Remove(this);                                   
         }
     }
 }

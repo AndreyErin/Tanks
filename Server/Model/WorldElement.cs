@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-
+﻿
+//ред
 namespace Server.Model
 {
-    public abstract class WorldElement
+    public abstract class WorldElement : Img
     {
-         
-        
-        
+       
         //проверка является ли объект(танк или блок) за игрока или нет
         public bool IsPlayer { get; set; } = false;
 
@@ -41,7 +30,7 @@ namespace Server.Model
         //разрушение объекта
         protected virtual void DistroyMy()
         {
-            GlobalDataStatic.MapCollection.Remove(this);            
+            GlobalDataStatic.BattleGroundCollection.Remove(this);            
         }
 
         public System.Windows.Point _ePos; // { get; set; }

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
+//ред
 namespace Server.Model
 {
     //железный блок
@@ -12,28 +8,22 @@ namespace Server.Model
     {
         public BlockFerum(System.Windows.Point ePos) : base(ePos)
         {
-            Source = Map.PictureBlockFerum1;
-            HP = 100;
+            Source = SkinsEnum.PictureBlockFerum1;
+            HP = 90;
         }
 
         //получение урона объктом
         public override void GetDamage(int damage) 
         {
-
             HP -= damage;
-
-            Task.Factory.StartNew(()=>GetDamageView());
+            GetDamageView();
         }
 
         protected override void GetDamageView()
         {
-            Action action = () => 
-            {
-                if (HP <= 60 && HP > 30) { Source = Map.PictureBlockFerum2; }
-                if (HP <= 30 && HP > 0) { Source = Map.PictureBlockFerum3; }
+                if (HP <= 60 && HP > 30) { Source = SkinsEnum.PictureBlockFerum2; }
+                if (HP <= 30 && HP > 0) { Source = SkinsEnum.PictureBlockFerum3; }
                 if (HP <= 0) { DistroyMy(); } //если нет хп, то объект уничтожается
-            };
-            GlobalDataStatic.MainDispatcher.Invoke(action);
         }
     }
 }

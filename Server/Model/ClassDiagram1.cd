@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Server.Model.Block" Collapsed="true">
+    <Position X="5.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Model\Block.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.BlockFerum" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Model\BlockFerum.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.Bullet" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAABAQAAAgAAAAAAAAAAAAAAAAAAAAAAEAgAAMAA=</HashCode>
+      <FileName>Model\Bullet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Server.Model.Bunker" Collapsed="true">
+    <Position X="2.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAACAACAAAA=</HashCode>
+      <FileName>Model\Bunker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.BunkerEnamy" Collapsed="true">
+    <Position X="2.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAACAACAAAA=</HashCode>
+      <FileName>Model\BunkerEnamy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.LocationGun" Collapsed="true">
+    <Position X="3" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAASgAIAAAIAAACAAIAAAAQBEAAAADAAAAIAA=</HashCode>
+      <FileName>Model\LocationGun.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.Loot" Collapsed="true">
+    <Position X="2.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Loot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.Tank" Collapsed="true">
+    <Position X="9.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQACAAAYgAAAgAIAICCAAAAwQgAAAAIAAAABAAIAA=</HashCode>
+      <FileName>Model\Tank.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.TankBot" Collapsed="true">
+    <Position X="8.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAgAAAAAIAAAAAAIAAAgAAUIAAAgAAAAIAA=</HashCode>
+      <FileName>Model\TankBot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.TankOfDistroy" Collapsed="true">
+    <Position X="4.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Model\TankOfDistroy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.TankPlayer" Collapsed="true">
+    <Position X="10.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgQAAAAAAAAAAAAAgAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Model\TankPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.Tree" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Tree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.WorldElement" Collapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAQAQAAAAQAAAAAAAAAAMAA=</HashCode>
+      <FileName>Model\WorldElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Model.Img" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABgAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Img.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
