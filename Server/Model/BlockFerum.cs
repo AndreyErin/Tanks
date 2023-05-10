@@ -8,7 +8,7 @@ namespace Server.Model
     {
         public BlockFerum(System.Windows.Point ePos) : base(ePos)
         {
-            Source = SkinsEnum.PictureBlockFerum1;
+            _skin = SkinsEnum.PictureBlockFerum1;
             HP = 90;
         }
 
@@ -21,8 +21,8 @@ namespace Server.Model
 
         protected override void GetDamageView()
         {
-                if (HP <= 60 && HP > 30) { Source = SkinsEnum.PictureBlockFerum2; }
-                if (HP <= 30 && HP > 0) { Source = SkinsEnum.PictureBlockFerum3; }
+                if (HP <= 60 && HP > 30) { _skin = SkinsEnum.PictureBlockFerum2; }
+                if (HP <= 30 && HP > 0) { _skin = SkinsEnum.PictureBlockFerum3; }
                 if (HP <= 0) { DistroyMy(); } //если нет хп, то объект уничтожается
         }
     }

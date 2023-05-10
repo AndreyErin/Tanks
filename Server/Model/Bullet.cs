@@ -6,13 +6,13 @@ using Server.Model;
 //ред
 namespace Server.Model
 {
-    public class Bullet :  Img,  ISoundsObjects
+    public class Bullet :  WorldElement,  ISoundsObjects
     {
-        protected System.Windows.Point _ePos;
+        //protected System.Windows.Point _ePos;
         protected VectorEnum _vector;
         protected int _damage;       
         protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();        
-        protected bool _isPlayer = false;
+        //protected bool _isPlayer = false;
         protected SoundsEnum _sound; //звук
 
         public event ISoundsObjects.SoundDeleg? SoundEvent;
@@ -23,14 +23,14 @@ namespace Server.Model
         {           
             _damage = damage;
             _vector = vector;
-            _ePos = tpos;
+            ePos = tpos;
 
             //задаем начальное положение пули
             switch (vector)
             {
                 case VectorEnum.Top:
-                    _ePos.X -= 10;
-                    _ePos.Y += 10;
+                    ePos.X = ePos.X- 10;
+                    ePos.Y += 10;
                     break;
                 case VectorEnum.Down:
                     _ePos.X += 30;
@@ -52,22 +52,22 @@ namespace Server.Model
             tTimerToFire.EndInit();
 
             //отрисовка снаряда            
-            Width = 10;
-            Height = 10;
+            _width = 10;
+            _height = 10;
  
             switch (damage)
             { 
                 case 1:
-                    Source = SkinsEnum.PictureBullet1;
+                    _skin = SkinsEnum.PictureBullet1;
                     break;
                 case 2:
-                    Source = SkinsEnum.PictureBullet2;
+                    _skin = SkinsEnum.PictureBullet2;
                     break;
                 case 3:
-                    Source = SkinsEnum.PictureBullet3;
+                    _skin = SkinsEnum.PictureBullet3;
                     break;
                 case > 3:
-                    Source = SkinsEnum.PictureBullet4;                   
+                    _skin = SkinsEnum.PictureBullet4;                   
                     break;
             }
 
@@ -88,12 +88,12 @@ namespace Server.Model
             {
                 //ВЕРХ
                 case VectorEnum.Top:
-                    pt = new System.Windows.Point(_ePos.X, _ePos.Y);
-                    pt2 = new System.Windows.Point(_ePos.X, _ePos.Y + this.Width -1);
+                    pt = new System.Windows.Point(ePos.X, ePos.Y);
+                    pt2 = new System.Windows.Point(ePos.X, ePos.Y + this._width -1);
                     haveHit = HaveShot(pt, pt2);
 
-                    if ((_ePos.X >= 1.5) && (haveHit == false))
-                        _ePos.X -= 5;
+                    if ((ePos.X >= 1.5) && (haveHit == false))
+                        ePos.X -= 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -101,11 +101,11 @@ namespace Server.Model
                     break;
                 //НИЗ
                 case VectorEnum.Down:
-                    pt = new System.Windows.Point(_ePos.X + this.Height -1, _ePos.Y);
-                    pt2 = new System.Windows.Point(_ePos.X + this.Height - 1, _ePos.Y + this.Width - 1);
+                    pt = new System.Windows.Point(ePos.X + this._height -1, ePos.Y);
+                    pt2 = new System.Windows.Point(ePos.X + this._height - 1, ePos.Y + this._width - 1);
                     haveHit = HaveShot(pt, pt2);
-                    if ((_ePos.X <= 720 - 11.5) && (haveHit == false))
-                        _ePos.X += 5;
+                    if ((ePos.X <= 720 - 11.5) && (haveHit == false))
+                        ePos.X += 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -113,11 +113,11 @@ namespace Server.Model
                     break;
                 //ЛЕВО
                 case VectorEnum.Left:
-                    pt = new System.Windows.Point(_ePos.X , _ePos.Y);
-                    pt2 = new System.Windows.Point(_ePos.X + this.Height -1  , _ePos.Y);
+                    pt = new System.Windows.Point(ePos.X , ePos.Y);
+                    pt2 = new System.Windows.Point(ePos.X + this._height -1  , ePos.Y);
                     haveHit = HaveShot(pt, pt2); 
-                    if ((_ePos.Y >= 1.5) && (haveHit == false))
-                        _ePos.Y -= 5;
+                    if ((ePos.Y >= 1.5) && (haveHit == false))
+                        ePos.Y -= 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -125,11 +125,11 @@ namespace Server.Model
                     break;
                 //ПРАВО
                 case VectorEnum.Right:
-                    pt = new System.Windows.Point(_ePos.X, _ePos.Y + this.Width - 1);
-                    pt2 = new System.Windows.Point(_ePos.X + this.Height - 1, _ePos.Y +   this.Width - 1);
+                    pt = new System.Windows.Point(ePos.X, ePos.Y + this._width - 1);
+                    pt2 = new System.Windows.Point(ePos.X + this._height - 1, ePos.Y +   this._width - 1);
                     haveHit = HaveShot(pt, pt2);
-                    if ((_ePos.Y <= 1320 - 11.5) && (haveHit == false))
-                        _ePos.Y += 5;
+                    if ((ePos.Y <= 1320 - 11.5) && (haveHit == false))
+                        ePos.Y += 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -146,15 +146,15 @@ namespace Server.Model
                              select s;
 
                 //если есть попадние, то двигаться нельзя
-                foreach (WorldElement s in subset)
+                foreach (HPElement s in subset)
                 {
                     bool result = s.HaveHit(posLedarL, posLedarR);
 
                     if (result)
                     {
                         //если было попадание по этому объекту коллекции(и это не лут) то сообщаем объкту, что он получил урон
-                        if ((s as Loot) == null)
-                        {
+//                        if ((s as Loot) == null)
+//                        {
                             s.GetDamage(_damage);
                             switch (s)
                             {
@@ -180,7 +180,7 @@ namespace Server.Model
                         if (SoundEvent != null) SoundEvent(_sound);//играть звук
 
                         return true;
-                        }               
+//                        }               
                     }
                 }
                 return false;            

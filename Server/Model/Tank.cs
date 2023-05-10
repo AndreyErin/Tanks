@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 
 namespace Server.Model
 {
-    public class Tank : WorldElement
+    public class Tank : HPElement
     {
         protected MediaPlayer _player = new MediaPlayer();
 

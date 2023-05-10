@@ -4,16 +4,16 @@
 //ред
 namespace Server.Model
 {
-    public class Block : WorldElement
+    public class Block : HPElement
     {               
         protected Block() { }
-        public Block(System.Windows.Point ePos)
+        public Block(System.Windows.Point Pos)
         {           
-            Source = SkinsEnum.PictureBlock1;
+            _skin = SkinsEnum.PictureBlock1;
 
-            Width = 40;
-            Height = 40;
-            _ePos = ePos;
+            _width = 40;
+            _height = 40;
+            ePos = Pos;
             HP = 3;
 
             GlobalDataStatic.BattleGroundCollection.Add(this);
@@ -31,11 +31,11 @@ namespace Server.Model
             switch (HP)
             {
                 case 2:
-                    Source = SkinsEnum.PictureBlock2;
+                    _skin = SkinsEnum.PictureBlock2;
                     break;
             
                 case 1:
-                    Source = SkinsEnum.PictureBlock3;
+                    _skin = SkinsEnum.PictureBlock3;
                     break;
             
                 case (<= 0): //если нет хп, то объект уничтожается

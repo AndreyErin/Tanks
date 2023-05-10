@@ -16,28 +16,23 @@ namespace Server.Model
             {
                 case 0:
                     typeUpgrade = BonusEnum.Teer;
-                    Source = SkinsEnum.PictureLootTeer ;
+                    _skin = SkinsEnum.PictureLootTeer ;
                     break;
                     
                 case 1:
                 case 2:  //увеличиваем шанс выпадения               
                     typeUpgrade = BonusEnum.Speed;
-                    Source = SkinsEnum.PictureLootSpeed;
+                    _skin = SkinsEnum.PictureLootSpeed;
                     break;
 
                 case >= 3:
                     return; //фокус не удался, дропа не будет                                      
             }           
 
-            Height = 30;
-            Width = 30;
-            _ePos = pos;
+            _height = 30;
+            _width = 30;
+            ePos = pos;
             GlobalDataStatic.BattleGroundCollection.Add(this);
-        }
-
-        public override void GetDamage(int damage)
-        {
-            //бонусы урон не получают
         }
     }
 }

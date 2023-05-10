@@ -14,7 +14,7 @@ namespace Server.Model
         protected BunkerEnamy() { }
         public BunkerEnamy (Point ePos) : base(ePos)
         {
-            Source = Map.PictureBunkerEnamy;
+            _skin = SkinsEnum.PictureBunkerEnamy;
             IsPlayer = false;
         }
 
@@ -26,16 +26,14 @@ namespace Server.Model
         }
         protected override void GetDamageView()
         {
-            Action action = () =>
-            {
                 switch (HP)
                 {
                     case 2:
-                        Source = Map.PictureBunkerEnamy2;
+                        _skin = SkinsEnum.PictureBunkerEnamy2;
                         break;
 
                     case 1:
-                        Source = Map.PictureBunkerEnamy3;
+                        _skin = SkinsEnum.PictureBunkerEnamy3;
                         break;
 
                     case (<= 0): //если нет хп, то объект уничтожается
@@ -43,8 +41,6 @@ namespace Server.Model
                         BunkerDestroy();//сообщает в Main о своем разрушение
                         break;
                 }
-            };
-            GlobalDataStatic.MainDispatcher.Invoke(action);
         }
     }
 }
