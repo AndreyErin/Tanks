@@ -1,0 +1,245 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+	  
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="bullet.png" />
+    <None Remove="bullet2.png" />
+    <None Remove="Maps\Map0Lvl.json" />
+    <None Remove="Maps\Map1Lvl.json" />
+    <None Remove="Maps\Map2Lvl.json" />
+    <None Remove="Maps\Map3Lvl.json" />
+    <None Remove="Maps\Map4Lvl.json" />
+    <None Remove="Maps\Map5Lvl.json" />
+    <None Remove="Pictures\blok.png" />
+    <None Remove="Pictures\blok2.png" />
+    <None Remove="Pictures\blok3.png" />
+    <None Remove="Pictures\bullet2.png" />
+    <None Remove="Pictures\bullet3.png" />
+    <None Remove="Pictures\bullet4.png" />
+    <None Remove="Pictures\bunker.png" />
+    <None Remove="Pictures\bunker2.png" />
+    <None Remove="Pictures\bunker3.png" />
+    <None Remove="Pictures\bunkerEnamy.png" />
+    <None Remove="Pictures\bunkerEnamy2.png" />
+    <None Remove="Pictures\bunkerEnamy3.png" />
+    <None Remove="Pictures\Damage.png" />
+    <None Remove="Pictures\Defense.png" />
+    <None Remove="Pictures\ferum.png" />
+    <None Remove="Pictures\ferum2.png" />
+    <None Remove="Pictures\ferum3.png" />
+    <None Remove="Pictures\kirpich.png" />
+    <None Remove="Pictures\LocationGun.png" />
+    <None Remove="Pictures\LocationGun2.png" />
+    <None Remove="Pictures\LocationGun3.png" />
+    <None Remove="Pictures\logo.png" />
+    <None Remove="Pictures\playertank.png" />
+    <None Remove="Pictures\playertank2.png" />
+    <None Remove="Pictures\playertank3.png" />
+    <None Remove="Pictures\playertank4.png" />
+    <None Remove="Pictures\Speed.png" />
+    <None Remove="Pictures\tank.png" />
+    <None Remove="Pictures\tankbot.jpg" />
+    <None Remove="Pictures\tankbot.png" />
+    <None Remove="Pictures\tankbot2.png" />
+    <None Remove="Pictures\tankbot3.png" />
+    <None Remove="Pictures\tankbot4.png" />
+    <None Remove="Pictures\TankOfDestroy.jpg" />
+    <None Remove="Pictures\tankofdestroy.png" />
+    <None Remove="Pictures\TankOfDestroy2.jpg" />
+    <None Remove="Pictures\tankofdestroy2.png" />
+    <None Remove="Pictures\TankOfDestroy3.jpg" />
+    <None Remove="Pictures\tankofdestroy3.png" />
+    <None Remove="Pictures\tankofdestroyspeed1.png" />
+    <None Remove="Pictures\tankofdestroyspeed2.png" />
+    <None Remove="Pictures\tankspeed.png" />
+    <None Remove="Pictures\tankspeed2.png" />
+    <None Remove="Pictures\tankspeedbot.png" />
+    <None Remove="Pictures\tankspeedbot2.png" />
+    <None Remove="Pictures\testBack.png" />
+    <None Remove="Pictures\testBack1.png" />
+    <None Remove="Pictures\testBack2.png" />
+    <None Remove="Pictures\unnamed.png" />
+    <None Remove="Pictures\wood.png" />
+    <None Remove="Sounds\bonus.mp3" />
+    <None Remove="Sounds\brue.mp3" />
+    <None Remove="Sounds\ferum.mp3" />
+    <None Remove="Sounds\mainSound.mp3" />
+    <None Remove="Sounds\menuSound.mp3" />
+    <None Remove="Sounds\piu.mp3" />
+    <None Remove="Sounds\rock.mp3" />
+    <None Remove="Sounds\shot.mp3" />
+    <None Remove="test.png" />
+    <None Remove="test2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Maps\Map0Lvl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Map1Lvl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Map2Lvl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Map3Lvl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Map4Lvl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\Map5Lvl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\blok.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\blok2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\blok3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bullet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bullet2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bullet3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bullet4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bunker.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bunker2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bunker3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bunkerEnamy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bunkerEnamy2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\bunkerEnamy3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\Damage.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\Defense.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\ferum.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\ferum2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\ferum3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\LocationGun.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\LocationGun2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\LocationGun3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\playertank.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\playertank2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\playertank3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\Speed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankbot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankbot2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankbot3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankofdestroy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankofdestroy2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankofdestroy3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankofdestroyspeed1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankofdestroyspeed2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankspeed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankspeed2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankspeedbot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\tankspeedbot2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\wood.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\bonus.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\brue.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\ferum.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\mainSound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\menuSound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\rock.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\shot.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>
