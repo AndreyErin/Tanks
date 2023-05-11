@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media.Media3D;
 
 
 //ред
@@ -33,6 +34,24 @@ namespace Server.Model
             _width = 30;
             ePos = pos;
             GlobalDataStatic.BattleGroundCollection.Add(this);
+        }
+
+        //проверка попадания по нашему обьекту
+        //метод отвечает попали по нему или нет
+        public bool HaveHit(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        {
+            if ((posLedarL.X >= ePos.X) && (posLedarL.X <= (ePos.X + _height))
+                && (posLedarL.Y >= ePos.Y) && (posLedarL.Y <= (ePos.Y + _width)))
+            {
+                return true;
+            }
+
+            if ((posLedarR.X >= ePos.X) && (posLedarR.X <= (ePos.X + _height))
+                && (posLedarR.Y >= ePos.Y) && (posLedarR.Y <= (ePos.Y + _width)))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

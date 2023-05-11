@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Server.Model;
 
@@ -8,41 +7,42 @@ namespace Server.Model
 {
     public class Bullet :  WorldElement,  ISoundsObjects
     {
-        //protected System.Windows.Point _ePos;
+        //интерфейс ISoundsObjects
+        public SoundsEnum sound { get; set; }
+        public event ISoundsObjects.SoundDeleg? SoundEvent;
+
+        public new System.Windows.Point ePos;//костыль -------------------------------------- разобраться
         protected VectorEnum _vector;
         protected int _damage;       
-        protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();        
-        //protected bool _isPlayer = false;
-        protected SoundsEnum _sound; //звук
+        protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();             
 
-        public event ISoundsObjects.SoundDeleg? SoundEvent;
 
         protected Bullet() { }
         //конструктор
         public Bullet(VectorEnum vector, System.Windows.Point tpos, int damage)
-        {           
+        {    
             _damage = damage;
             _vector = vector;
             ePos = tpos;
-
+            
             //задаем начальное положение пули
             switch (vector)
             {
                 case VectorEnum.Top:
-                    ePos.X = ePos.X- 10;
+                    ePos.X -= 10; 
                     ePos.Y += 10;
                     break;
                 case VectorEnum.Down:
-                    _ePos.X += 30;
-                    _ePos.Y += 10;
+                    ePos.X += 30;
+                    ePos.Y += 10;
                     break;
                 case VectorEnum.Left:
-                    _ePos.X += 10;
-                    _ePos.Y -= 10;
+                    ePos.X += 10;
+                    ePos.Y -= 10;
                     break;
                 case VectorEnum.Right:
-                    _ePos.X += 10;
-                    _ePos.Y += 30;
+                    ePos.X += 10;
+                    ePos.Y += 30;
                     break;
             }
 
@@ -142,7 +142,7 @@ namespace Server.Model
         public bool HaveShot(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
         {
                 var subset = from s in GlobalDataStatic.BattleGroundCollection
-                             where (s as WorldElement) != null
+                             where (s as HPElement) != null
                              select s;
 
                 //если есть попадние, то двигаться нельзя
@@ -161,23 +161,23 @@ namespace Server.Model
                                 case Tank:
                                 if (s.HP <= 0)
 
-                                    _sound = SoundsEnum.shotTargetSound;
+                                    sound = SoundsEnum.shotTargetSound;
                                     break;
                                 case LocationGun:
-                                    _sound = SoundsEnum.shotTargetSound;
+                                    sound = SoundsEnum.shotTargetSound;
                                 break;
     
                                 case BlockFerum:                                
                                 case TankOfDistroy:
-                                    _sound = SoundsEnum.ferumSoung;                                    
+                                    sound = SoundsEnum.ferumSoung;                                    
                                     break;
     
                                  case Block:
-                                    _sound = SoundsEnum.rockSound;                                   
+                                    sound = SoundsEnum.rockSound;                                   
                                     break;
                             }
 
-                        if (SoundEvent != null) SoundEvent(_sound);//играть звук
+                        if (SoundEvent != null) SoundEvent(sound);//играть звук
 
                         return true;
 //                        }               

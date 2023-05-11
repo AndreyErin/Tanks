@@ -1,5 +1,5 @@
 ﻿
-//ред
+
 namespace Server.Model
 {
     public class Tree : WorldElement

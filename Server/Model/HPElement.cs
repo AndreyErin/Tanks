@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Media.Media3D;
+﻿
 
 
 namespace Server.Model
 {
     public abstract class HPElement : WorldElement
     {
+        public int HP { get; set; } = 1;
 
         //проверка является ли объект(танк или блок) за игрока или нет
         public bool IsPlayer { get; set; } = false;
@@ -26,7 +26,6 @@ namespace Server.Model
                 return true;
             }
             return false;
-
         }
 
         //разрушение объекта
@@ -34,9 +33,6 @@ namespace Server.Model
         {
             GlobalDataStatic.BattleGroundCollection.Remove(this);
         }
-
-        
-        public int HP { get; set; } = 1;
 
         public abstract void GetDamage(int damage);//получение дамага
     }

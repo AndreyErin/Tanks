@@ -7,5 +7,6 @@ namespace Server.Model
     {
         public delegate void SoundDeleg(SoundsEnum sound);
         public event SoundDeleg? SoundEvent;
+        public SoundsEnum sound { get; set; }
     }
 }

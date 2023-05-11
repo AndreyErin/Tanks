@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Server.Model
 {
@@ -23,8 +18,7 @@ namespace Server.Model
         public override void GetDamage(int damage)
         {
             HP -= damage;
-
-            Task.Factory.StartNew(() => GetDamageView());
+            GetDamageView();
         }
 
         protected override void GetDamageView()

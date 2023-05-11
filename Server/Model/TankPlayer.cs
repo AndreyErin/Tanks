@@ -5,14 +5,14 @@ namespace Server.Model
 {
     public class TankPlayer : Tank
     {
-        //делегат сообщающий в Main что танк был уничтожен
+        //делегат сообщающий в Main, что танк был уничтожен
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет
         public event Action<Tank> DestroyPayerTank;
 
         public TankPlayer(Point tPos) : base(tPos)
         {
             IsPlayer = true;
-            Source = Map.PictureTank1;
+            _skin = SkinsEnum.PictureTank1;
         }
 
         protected override void DistroyMy()
@@ -24,21 +24,30 @@ namespace Server.Model
         //повышение уровня танка - визуализация
         protected override void UpgradeWiewTank(int teer)
         {
-            Action action = ()=> { 
             switch (teer)
             {
                 case 2:
-                    Source = Map.PictureTank2;
+                    _skin = SkinsEnum.PictureTank2;
                     break;
                 case 3:
-                    Source = Map.PictureTank3;
+                    _skin = SkinsEnum.PictureTank3;
                     break;
 
             }
-            };
-            GlobalDataStatic.MainDispatcher.Invoke(action);
         }
 
+        protected override void UpgradeWiewTankSpeed(double speed)
+        {
+            switch (speed)
+            {
+                case 2.0:
+                    _skin = SkinsEnum.PictureTankSpeed;
+                    break;
+                case 2.5:
+                    _skin = SkinsEnum.PictureTankSpeed2;
+                    break;
+            }
+        }
 
         //приводим характеристика танка в соответсвие с тиром
         public void UpdateHpForTeer()

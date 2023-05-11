@@ -1,5 +1,7 @@
 ﻿
-//ред
+
+using System.Windows;
+
 namespace Server.Model
 {
     public abstract class WorldElement
@@ -7,6 +9,6 @@ namespace Server.Model
         protected double _height { get; set; }
         protected double _width { get; set; }
         protected SkinsEnum _skin { get; set; }
-        public System.Windows.Point ePos { get; set; }
+        public Point ePos { get; set; }
     }
 }

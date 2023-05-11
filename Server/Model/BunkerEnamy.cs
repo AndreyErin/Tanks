@@ -21,8 +21,7 @@ namespace Server.Model
         public override void GetDamage(int damage)
         {
             HP -= damage;
-
-            Task.Factory.StartNew(() => GetDamageView());
+            GetDamageView();
         }
         protected override void GetDamageView()
         {

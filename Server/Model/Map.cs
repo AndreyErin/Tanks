@@ -8,7 +8,6 @@ namespace Server.Model
 
     public class Map
     {
-
         //все открытые свойства будут сериализованны по умолчанию (простые поля не будут)
         [JsonInclude]
         public List<Point> rockBlocs { get; set; } = new List<Point>();
@@ -34,6 +33,5 @@ namespace Server.Model
         public Point BunkerEnamyPos { get; set; }
         [JsonInclude]
         public int RespawnEnamyCount { get; set; } = 10;
-
     }
 }

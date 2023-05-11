@@ -1,25 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Controls;
-using System.Windows;
+﻿using System.Linq;
 
-using System.Numerics;
-using System.Threading;
-using System.Windows.Threading;
-using System.Windows.Media.Imaging;
 
 namespace Server.Model
 {
-    public class Tank : HPElement
+    public abstract class Tank : HPElement, ISoundsObjects
     {
-        protected MediaPlayer _player = new MediaPlayer();
+        //интерфейс
+        public SoundsEnum sound { get; set; }
+        public event ISoundsObjects.SoundDeleg? SoundEvent;
 
+        public new System.Windows.Point ePos;//костыль ----------------------------------- разобраться
 
         //уровень танка
         protected int lvlTank = 1;
@@ -32,24 +22,23 @@ namespace Server.Model
         //таймер передвижения танка
         protected System.Timers.Timer tTimerMove = new System.Timers.Timer();
         //направление
-        protected VectorEnum tVec { get; set; } = VectorEnum.Top;
+        protected VectorEnum tVec { get; set; } = VectorEnum.Top;       
         //флаг того можно ли двигаться(нет препятствий)
         protected bool cMove = false;
+
+        
 
         protected Tank() { }
         
         //конструктор
         public Tank(System.Windows.Point tPos)
-        {
+        {            
+            ePos = tPos;
+            _height = 30;
+            _width = 30;
             
-
-            _ePos = tPos;
-
-            //создаем внешний вид танка
-            CreatViewTank();
-
-            //отрисовка
-            GlobalDataStatic.cnvMap1.Children.Add(this);
+            //добавление на поле боя
+            GlobalDataStatic.BattleGroundCollection.Add(this);
 
             //настройка таймера движения
             tTimerMove.Interval = 10;
@@ -60,73 +49,64 @@ namespace Server.Model
         //функция таймера для движения танка
         protected void tTimerMove_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Action action = () =>
-            {
-                System.Windows.Point pt;//точки-ледары
-                System.Windows.Point pt2;
+            System.Windows.Point pt;//точки-ледары
+            System.Windows.Point pt2;
 
             switch (tVec)
             {
                 //ВЕРХ
-                case VectorEnum.Top:
-                    this.LayoutTransform = new RotateTransform(0);//поворот в направление езды
+                case VectorEnum.Top:                   
                         //проверяем угловые верхние точки танка
-                        pt = new System.Windows.Point(_ePos.X - 3, _ePos.Y);
-                        pt2 = new System.Windows.Point(_ePos.X - 3, _ePos.Y + 29);
+                        pt = new System.Windows.Point(ePos.X - 3, ePos.Y);
+                        pt2 = new System.Windows.Point(ePos.X - 3, ePos.Y + 29);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
                         //если не достигли границ  поля боя и перед носом у танка нет преграды (дочерних эелметнов поля боя)
-                        noEndMap = (_ePos.X >= speedTank + 1);
-                        if (noEndMap && cMove)                        
-                            Canvas.SetTop(this, _ePos.X -= speedTank); 
-                        
+                        noEndMap = (ePos.X >= speedTank + 1);
+                        if (noEndMap && cMove)
+                            ePos.X -= speedTank;                        
                         break;
                     //НИЗ
                     case VectorEnum.Down:
-                        this.LayoutTransform = new RotateTransform(180);
                         //проверяем угловые нижние точки танка
-                         pt = new System.Windows.Point(_ePos.X + 32, _ePos.Y);
-                         pt2 = new System.Windows.Point(_ePos.X + 32, _ePos.Y + 29);
+                         pt = new System.Windows.Point(ePos.X + 32, ePos.Y);
+                         pt2 = new System.Windows.Point(ePos.X + 32, ePos.Y + 29);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
-                        noEndMap = (_ePos.X <= GlobalDataStatic.cnvMap1.ActualHeight - 31 - speedTank);
+                        noEndMap = (ePos.X <= 720 - 31 - speedTank);
                         if (noEndMap && cMove)
-                            Canvas.SetTop(this, _ePos.X += speedTank);
+                            ePos.X += speedTank;
                         break;
                     //ЛЕВО
                     case VectorEnum.Left:
-                        this.LayoutTransform = new RotateTransform(270);
                         //проверяем угловые левые точки танка
-                        pt = new System.Windows.Point(_ePos.X, _ePos.Y - 3);
-                        pt2 = new System.Windows.Point(_ePos.X + 29, _ePos.Y - 3);
+                        pt = new System.Windows.Point(ePos.X, ePos.Y - 3);
+                        pt2 = new System.Windows.Point(ePos.X + 29, ePos.Y - 3);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
-                        noEndMap = (_ePos.Y >= speedTank + 1);
+                        noEndMap = (ePos.Y >= speedTank + 1);
                         if (noEndMap && cMove)
-                            Canvas.SetLeft(this, _ePos.Y -= speedTank);
+                            ePos.Y -= speedTank;
                         break;
                     //ПРАВО
-                    case VectorEnum.Right:
-                        this.LayoutTransform = new RotateTransform(90);                      
+                    case VectorEnum.Right:                     
                         //проверяем угловые правые точки танка
-                        pt = new System.Windows.Point(_ePos.X, _ePos.Y + 32);
-                        pt2 = new System.Windows.Point(_ePos.X + 29, _ePos.Y + 32);
+                        pt = new System.Windows.Point(ePos.X, ePos.Y + 32);
+                        pt2 = new System.Windows.Point(ePos.X + 29, ePos.Y + 32);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
-                        noEndMap = (_ePos.Y <= GlobalDataStatic.cnvMap1.ActualWidth - 31 - speedTank);
+                        noEndMap = (ePos.Y <= 1320 - 31 - speedTank);
                         if (noEndMap && cMove)
-                            Canvas.SetLeft(this, _ePos.Y += speedTank);
+                            ePos.Y += speedTank;
                         break;
                 }
-            };
-            GlobalDataStatic.MainDispatcher.Invoke(action);
         }
         
         //начать движение танка(запустить таймер)
         public void Move(VectorEnum vector)
         {
             //если танк не уничтожен, то едем
-            if (GlobalDataStatic.cnvMap1.Children.Contains(this))
+            if (GlobalDataStatic.BattleGroundCollection.Contains(this))
             {
                 //направление движения
                 tVec = vector;
@@ -141,64 +121,48 @@ namespace Server.Model
             tTimerMove.Stop();
         }
         
-        //рисуем изображение танка
-        protected void CreatViewTank()
-        {
-            this.Width = 30;
-            this.Height = 30;
-
-            Canvas.SetTop(this, _ePos.X);
-            Canvas.SetLeft(this, _ePos.Y);    
-        }
         
         //выстрел
         public void ToFire()
         {
-//            Task.Factory.StartNew( () =>
-//            {
-//
-//                Action action = () =>
-//                {
-//                    //если танк не уничтожен, то стреляем
-                    if (GlobalDataStatic.cnvMap1.Children.Contains(this))
-                    {
-                        //огонь. пуля стреляет сразу при создание объекта
-                        Bullet bullet = new Bullet(tVec, _ePos, damageTank);
-                        _player.Open(GlobalDataStatic.shotSoung);
-                        _player.Position = TimeSpan.Zero;
-                        _player.Play();
-                    }
-//                };
-//
-//                GlobalDataStatic.MainDispatcher.Invoke(action);
-//            });
-
+             //если танк не уничтожен, то стреляем
+             if (GlobalDataStatic.BattleGroundCollection.Contains(this))
+             {
+                 //огонь. пуля стреляет сразу при создание объекта
+                 Bullet bullet = new Bullet(tVec, ePos, damageTank);
+                 sound = SoundsEnum.shotSoung;
+             }
         }
         
         //если ледары насчупали препятсвие то двигаться дальше нельзя
         protected bool CanMove(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
-        {
-            UIElementCollection collection = GlobalDataStatic.cnvMap1.Children;
+        {            
+            var subset = from s in GlobalDataStatic.BattleGroundCollection
+                         where ((s as HPElement) != null) || ((s as Loot) != null)
+                         select s;
 
-            var subset = from UIElement s in collection
-                             where (s as WorldElement) != null
-                             select s;
-            
+            //если мы уперлись в лут то получаем его и едем дальше
+            foreach (Loot s in subset)
+            {
+                bool result = s.HaveHit(posLedarL, posLedarR);
+
+                if (result)
+                {                    
+                    GlobalDataStatic.BattleGroundCollection.Remove(s);
+                    GetLoot(s);
+                    return true;
+                }
+                
+            }
+
             //если есть препятствие, то двигаться нельзя
-            foreach ( WorldElement s in subset ) 
+            foreach (HPElement s in subset ) 
             {               
                 bool result = s.HaveHit(posLedarL, posLedarR);
 
                 if (result) 
                 {
-                    if (s is Loot) //лут не помеха для движения
-                    {
-                        GlobalDataStatic.cnvMap1.Children.Remove(s);
-                        GetLoot((Loot)s);                                               
-                        return true;
-                    }
-                    else
-                        return false;
+                    return false;//двигаться нельзя
                 }                     
             }
             return true;
@@ -217,9 +181,9 @@ namespace Server.Model
         //уничтожение объекта
         protected override void DistroyMy()
         {
-            base.DistroyMy();
             tTimerMove.Stop();
-            TankOfDistroy tankOfDistroy = new TankOfDistroy(_ePos, tVec, lvlTank, speedTank);
+            base.DistroyMy();            
+            TankOfDistroy tankOfDistroy = new TankOfDistroy(ePos, tVec, lvlTank, speedTank);
         }
 
         //обработка получения лута
@@ -236,15 +200,14 @@ namespace Server.Model
                     speedTank += 0.5;
                     if (speedTank > 2.5)
                         speedTank = 2.5;
-                    Task.Factory.StartNew( ()=> UpgradeWiewTankSpeed(speedTank));
+                    UpgradeWiewTankSpeed(speedTank);
                     HP = 1;
                     damageTank = 1;
                     lvlTank = 1;
                     break;
             }
-            _player.Open(GlobalDataStatic.bonusSound);
-            _player.Position = TimeSpan.Zero;
-            _player.Play();
+            sound = SoundsEnum.bonusSound;
+            if (SoundEvent != null) SoundEvent(sound);
         }
         
         //поднимаем уровень танка
@@ -268,41 +231,12 @@ namespace Server.Model
                     damageTank = 100;
                     break;      
             }
-            Task.Factory.StartNew(() => UpgradeWiewTank(lvlTank));
-        }
-        
-        //повышение уровня танка - визуализация -------------------
-        protected virtual void UpgradeWiewTank(int teer) 
-        {
-//            switch (teer)
-//            {
-//                case 2:
-//                    Source = Map.PictureTank2;
-//                    break;
-//                case 3:
-//                    Source = Map.PictureTank3;
-//                    break;
-//                case 4:
-//                    //Source = Map.PictureTank3;
-//                    break;
-//            }           
+            UpgradeWiewTank(lvlTank);
         }
 
-        protected virtual void UpgradeWiewTankSpeed(double speed)
-        {
-            Action action = () =>
-            {
-                switch (speed)
-                {
-                    case 2.0:
-                        Source = Map.PictureTankSpeed;
-                        break;
-                    case 2.5:
-                        Source = Map.PictureTankSpeed2;
-                        break;
-                }
-            };
-            GlobalDataStatic.MainDispatcher.Invoke(action);
-        }
+        //повышение уровня танка - визуализация -------------------
+        protected abstract void UpgradeWiewTank(int teer);
+        protected abstract void UpgradeWiewTankSpeed(double speed);
+
     }
 }
