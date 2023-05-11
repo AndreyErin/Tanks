@@ -47,16 +47,17 @@
   <Class Name="Server.Model.Loot" Collapsed="true">
     <Position X="3.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAAAAA=</HashCode>
       <FileName>Model\Loot.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Model.Tank" Collapsed="true">
     <Position X="8.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAQACAAAYgAAAgAIAICCAAAAwQgAAAAIAAAABAAIAA=</HashCode>
+      <HashCode>AAAAACAAAYgAgAgQIAICAAAAAwQkAAAAIAAAABAAIAA=</HashCode>
       <FileName>Model\Tank.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Server.Model.TankBot" Collapsed="true">
     <Position X="7.75" Y="5" Width="1.5" />
@@ -68,14 +69,14 @@
   <Class Name="Server.Model.TankOfDistroy" Collapsed="true">
     <Position X="3" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAEAAAAAAIAA=</HashCode>
       <FileName>Model\TankOfDistroy.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Model.TankPlayer" Collapsed="true">
     <Position X="9.5" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAgQAAAAAAAAAAAAAgAAAAAAAAAAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAAgAgQAAAAAAAAAAAAAgAAAAAAAAAAAAIAA=</HashCode>
       <FileName>Model\TankPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
