@@ -22,19 +22,24 @@ namespace Server
         public MainWindow()
         {
             InitializeComponent();
+
+            //MessageBox.Show(Thread.CurrentThread.ManagedThreadId.ToString());
+            Network network = new Network();
         }
 
         //загрузка программы
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
-            //загружаем все имена карт из папки Maps
-            mapPool = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Maps", "*.json");
 
-            mapPool.OrderBy(x => x.ToString());
 
-            //настраеваем таймер респавна ботов-танков
-            tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
-            tTimer_RespawnBotTank.EndInit();
+//            //загружаем все имена карт из папки Maps
+//            mapPool = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Maps", "*.json");
+//
+//            mapPool.OrderBy(x => x.ToString());
+//
+//            //настраеваем таймер респавна ботов-танков
+//            tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
+//            tTimer_RespawnBotTank.EndInit();
         }
 
         //таймер респавна танков-ботов
