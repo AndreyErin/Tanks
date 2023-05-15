@@ -12,7 +12,7 @@ namespace Server.Model
 
         //проверка попадания по нашему обьекту
         //метод отвечает попали по нему или нет
-        public bool HaveHit(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        public bool HaveHit(MyPoint posLedarL, MyPoint posLedarR)
         {
             if ((posLedarL.X >= ePos.X) && (posLedarL.X <= (ePos.X + _height))
                 && (posLedarL.Y >= ePos.Y) && (posLedarL.Y <= (ePos.Y + _width)))

@@ -11,7 +11,7 @@ namespace Server.Model
         public SoundsEnum sound { get; set; }
         public event ISoundsObjects.SoundDeleg? SoundEvent;
 
-        public new System.Windows.Point ePos;//костыль -------------------------------------- разобраться
+        
         protected VectorEnum _vector;
         protected int _damage;       
         protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();             
@@ -19,7 +19,7 @@ namespace Server.Model
 
         protected Bullet() { }
         //конструктор
-        public Bullet(VectorEnum vector, System.Windows.Point tpos, int damage)
+        public Bullet(VectorEnum vector, MyPoint tpos, int damage)
         {    
             _damage = damage;
             _vector = vector;

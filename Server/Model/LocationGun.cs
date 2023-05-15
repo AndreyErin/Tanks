@@ -15,7 +15,7 @@ namespace Server.Model
         protected int _damage;
         protected HPElement? target = null;
 
-        public LocationGun(System.Windows.Point pos, int damage)
+        public LocationGun(MyPoint pos, int damage)
         {
             ePos = pos;
             _width = 30;
@@ -39,15 +39,15 @@ namespace Server.Model
             }
 
                 //стрельба(ограничение видимости 120)
-                System.Windows.Point pt;
-                System.Windows.Point pt2;
+                MyPoint pt;
+                MyPoint pt2;
                 bool enemy = false;
             switch (Vec)
             {
                     //ВЕРХ
                 case VectorEnum.Top:
-                    pt = new System.Windows.Point(ePos.X - 29, ePos.Y + 9);
-                    pt2 = new System.Windows.Point(ePos.X - 29, ePos.Y + 19);
+                    pt = new MyPoint(ePos.X - 29, ePos.Y + 9);
+                    pt2 = new MyPoint(ePos.X - 29, ePos.Y + 19);
 
                     //если нет попадания продолжаем перечислять
                     while ((CanTarget(pt, pt2) == false) && (pt.X > 29) && (pt.X > (ePos.X - 120)))
@@ -63,8 +63,8 @@ namespace Server.Model
                     break;
                 //НИЗ
                 case VectorEnum.Down:
-                    pt = new System.Windows.Point(ePos.X + 58, ePos.Y + 9);
-                    pt2 = new System.Windows.Point(ePos.X + 58, ePos.Y + 19);
+                    pt = new MyPoint(ePos.X + 58, ePos.Y + 9);
+                    pt2 = new MyPoint(ePos.X + 58, ePos.Y + 19);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.X < (720 - 29)) && (pt.X < (ePos.X + 120)))
                     {
@@ -79,8 +79,8 @@ namespace Server.Model
                     break;
                 //ЛЕВО
                 case VectorEnum.Left:
-                    pt = new System.Windows.Point(ePos.X + 9, ePos.Y - 29);
-                    pt2 = new System.Windows.Point(ePos.X + 19, ePos.Y - 29);
+                    pt = new MyPoint(ePos.X + 9, ePos.Y - 29);
+                    pt2 = new MyPoint(ePos.X + 19, ePos.Y - 29);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.Y > 29) && (pt.Y > (ePos.Y - 120)))
                     {
@@ -95,8 +95,8 @@ namespace Server.Model
                     break;
                 //ПРАВО
                 case VectorEnum.Right:
-                    pt = new System.Windows.Point(ePos.X + 9, ePos.Y + 58);
-                    pt2 = new System.Windows.Point(ePos.X + 19, ePos.Y + 58);
+                    pt = new MyPoint(ePos.X + 9, ePos.Y + 58);
+                    pt2 = new MyPoint(ePos.X + 19, ePos.Y + 58);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.Y < (1320 - 29)) && (pt.Y < (ePos.Y + 120)))
                     {
@@ -145,7 +145,7 @@ namespace Server.Model
         }
               
         //проверяем ближайшую цель на пути
-        protected bool CanTarget(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        protected bool CanTarget(MyPoint posLedarL, MyPoint posLedarR)
         {            
             var subset = from s in GlobalDataStatic.BattleGroundCollection
                          where (s as HPElement) != null
@@ -165,7 +165,7 @@ namespace Server.Model
             return false;
         }
 
-        protected bool CanTargetEnemy(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        protected bool CanTargetEnemy(MyPoint posLedarL, MyPoint posLedarR)
         {
             //если ближайшая цель является врагом
             if (target != null)

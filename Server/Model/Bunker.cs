@@ -8,7 +8,7 @@ namespace Server.Model
         public event Action BunkerDestroy;
 
         protected Bunker() { }
-        public Bunker(Point ePos):base(ePos)
+        public Bunker(MyPoint ePos):base(ePos)
         {
             _skin = SkinsEnum.PictureBunker;
             IsPlayer = true;

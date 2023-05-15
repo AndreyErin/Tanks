@@ -1,13 +1,10 @@
-﻿using System;
-
-
-//ред
+﻿
 namespace Server.Model
 {
     public class Block : HPElement
     {               
         protected Block() { }
-        public Block(System.Windows.Point Pos)
+        public Block(MyPoint Pos)
         {           
             _skin = SkinsEnum.PictureBlock1;
 

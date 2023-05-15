@@ -11,7 +11,7 @@ namespace Server
 {
     public partial class MainWindow : Window
     {
-        TankPlayer mainTank;
+        public TankPlayer mainTank;
         Map? map;
         int lvlMap = 0;
         string[] mapPool;
@@ -23,23 +23,22 @@ namespace Server
         {
             InitializeComponent();
 
+            GlobalDataStatic.Controller = this;
             //MessageBox.Show(Thread.CurrentThread.ManagedThreadId.ToString());
-            Network network = new Network();
+            //Network network = new Network();
         }
 
         //загрузка программы
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
+            //загружаем все имена карт из папки Maps
+            mapPool = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Maps", "*.json");
 
+            mapPool.OrderBy(x => x.ToString());
 
-//            //загружаем все имена карт из папки Maps
-//            mapPool = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Maps", "*.json");
-//
-//            mapPool.OrderBy(x => x.ToString());
-//
-//            //настраеваем таймер респавна ботов-танков
-//            tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
-//            tTimer_RespawnBotTank.EndInit();
+            //настраеваем таймер респавна ботов-танков
+            tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
+            tTimer_RespawnBotTank.EndInit();
         }
 
         //таймер респавна танков-ботов
@@ -126,8 +125,8 @@ namespace Server
             }
         }
 
-        //двигаем танк 
-        //-------------------------------------
+        //двигаем танк из клиента
+
 
         private bool cD = false;
         //откат выстрела
@@ -139,7 +138,7 @@ namespace Server
         }
 
         //начальное меню - новая игра
-        private void btnNewGame()
+        public void NewGame()
         {
             //создаем элементы окружения
             //должны загружаться до респавнов
@@ -148,6 +147,7 @@ namespace Server
             System.Windows.Point tPos = map.respawnTankPlayer[0];
             //создаем танк игрока
             mainTank = new TankPlayer(tPos);
+
             mainTank.DestroyPayerTank += DistroyFriendlyTank;
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
@@ -159,7 +159,7 @@ namespace Server
             GlobalDataStatic.PartyTankBots.Remove(tankBot);//удаляем танк из пачки вражеский танков
         }
         //уничтожены танки игроков----------------
-        private void DistroyFriendlyTank(Tank tank)
+        private void DistroyFriendlyTank(TankPlayer tank)
         {
             if (GlobalDataStatic.PartyTanksOfPlayers.Count == 0)
             {
@@ -179,7 +179,7 @@ namespace Server
         }
 
         //следующий раунд-------------------------
-        private void btnRaundWin()
+        public void NewRaund()
         {
             if (mapPool.Length > (++lvlMap))
             {
@@ -198,7 +198,7 @@ namespace Server
             }
         }
         //повторяем раунд при проигрыше ----------------------------
-        private void btnRaundLose()
+        public void LostRaund()
         {
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);

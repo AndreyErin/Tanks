@@ -6,7 +6,7 @@ namespace Server.Model
     //железный блок
     internal class BlockFerum : Block
     {
-        public BlockFerum(System.Windows.Point ePos) : base(ePos)
+        public BlockFerum(MyPoint ePos) : base(ePos)
         {
             _skin = SkinsEnum.PictureBlockFerum1;
             HP = 90;

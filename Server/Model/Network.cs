@@ -60,6 +60,8 @@ namespace Server.Model
         {
             private Socket client;
 
+            public TankPlayer? tank;
+
             protected clientClass() { }
 
             //конструктор
@@ -69,6 +71,7 @@ namespace Server.Model
                 client = clientSocket;
                 //подписываемся на событие изменения  на поле боя
                 GlobalDataStatic.BattleGroundCollection.CollectionChanged += ChangedBattleGround;
+                tank = GlobalDataStatic.Controller?.mainTank;
             }
 
             protected async Task GetDataAsynk()
@@ -94,25 +97,38 @@ namespace Server.Model
                     {
                         //Навигация по меню
                         case "NEWGAME":
+                            GlobalDataStatic.Controller?.NewGame();
                             break;
                         case "CONTINUE":
+                            GlobalDataStatic.Controller?.NewRaund();
                             break;
                         case "OUT":
+                            StopClient();//отключаемся от сервера
                             break;
                         case "REPLAY":
+                            GlobalDataStatic.Controller?.LostRaund();
                             break;
 
                         //Движение
                         case "MOVEUP":
+                            tank?.Move(VectorEnum.Top);
                             break;
                         case "MOVEDOWN":
+                            tank?.Move(VectorEnum.Down);
                             break;
                         case "MOVELEFT":
+                            tank?.Move(VectorEnum.Left);
                             break;
                         case "MOVERIGHT":
+                            tank?.Move(VectorEnum.Right);
                             break;
+                        case "STOP":
+                            tank?.Stop();
+                            break;
+                                
                         //Стрельба
                         case "FIRE":
+                            tank?.ToFire();
                             break;
                     }                   
                 }
@@ -125,9 +141,9 @@ namespace Server.Model
             }
 
             //отправка данных
-            protected async Task SetDataAsynk()
+            protected async Task SetDataAsynk(byte[] data)
             {
-
+                await client.SendAsync(data, SocketFlags.None);
             }
 
             //останавливаем клиент (сокет этого клиента)

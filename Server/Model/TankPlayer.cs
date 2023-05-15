@@ -7,7 +7,7 @@ namespace Server.Model
     {
         //делегат сообщающий в Main, что танк был уничтожен
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет
-        public event Action<Tank> DestroyPayerTank;
+        public event Action<TankPlayer> DestroyPayerTank;
 
         public TankPlayer(Point tPos) : base(tPos)
         {

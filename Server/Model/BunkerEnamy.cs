@@ -12,7 +12,7 @@ namespace Server.Model
         public event Action BunkerDestroy;
 
         protected BunkerEnamy() { }
-        public BunkerEnamy (Point ePos) : base(ePos)
+        public BunkerEnamy (MyPoint ePos) : base(ePos)
         {
             _skin = SkinsEnum.PictureBunkerEnamy;
             IsPlayer = false;
