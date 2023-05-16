@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -69,8 +70,6 @@ namespace Server.Model
             {
                 clientList.Add(this);//добавляемся в список клиентов
                 client = clientSocket;
-                //подписываемся на событие изменения  на поле боя
-                GlobalDataStatic.BattleGroundCollection.CollectionChanged += ChangedBattleGround;
                 tank = GlobalDataStatic.Controller?.mainTank;
             }
 
@@ -108,6 +107,9 @@ namespace Server.Model
                         case "REPLAY":
                             GlobalDataStatic.Controller?.LostRaund();
                             break;
+                        case "READY":
+                            //проверка на готовность 2го игрока
+                            break;
 
                         //Движение
                         case "MOVEUP":
@@ -134,9 +136,48 @@ namespace Server.Model
                 }
             }
 
+            //подписаться на события элементов
+            protected void SubscribeForEventsElements() 
+            {
+                //подписываемся на событие изменения  на поле боя
+                GlobalDataStatic.BattleGroundCollection.CollectionChanged += ChangedBattleGround;
+
+                //подписываемся на события конкретных элементов
+                var subset = from e in GlobalDataStatic.BattleGroundCollection
+                             where (e as Loot == null) && (e as Tree == null)
+                             select e;
+                foreach (WorldElement worldElement in subset)
+                {
+                    worldElement.PropertyChanged += ChangedElement;
+                }
+            }
+
+            //отписаться от оставшихся
+            protected void UnSubscribeForEventsElements()
+            {
+                GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
+
+                var subset = from e in GlobalDataStatic.BattleGroundCollection
+                             where (e as Loot == null) && (e as Tree == null)
+                             select e;
+                foreach (WorldElement worldElement in subset)
+                {
+                    worldElement.PropertyChanged -= ChangedElement;
+                }
+            }
+
             //отлавливаем изменения в коллекции поля боя
             protected void ChangedBattleGround(object? sender, NotifyCollectionChangedEventArgs e) 
             {
+                //при добавление объкта будем подписываться
+                //при удаление объекта будем отписываться
+                // от сюда будем вызыват функцию SetDataAsynk()
+            }
+
+            //отлавливаем изменения в конкретных элементах
+            protected void ChangedElement(object? sender, PropertyChangedEventArgs e)
+            { 
+                
                 // от сюда будем вызыват функцию SetDataAsynk()
             }
 
