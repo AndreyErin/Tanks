@@ -63,6 +63,8 @@ namespace Server.Model
 
             public TankPlayer? tank;
 
+            private bool readyCheck = false;
+
             protected clientClass() { }
 
             //конструктор
@@ -73,6 +75,7 @@ namespace Server.Model
                 tank = GlobalDataStatic.Controller?.mainTank;
             }
 
+            //получение данных
             protected async Task GetDataAsynk()
             {
                 List<byte> data = new List<byte>(); //весь пакет данных
@@ -97,18 +100,22 @@ namespace Server.Model
                         //Навигация по меню
                         case "NEWGAME":
                             GlobalDataStatic.Controller?.NewGame();
+                            SubscribeForEventsElements();
                             break;
                         case "CONTINUE":
                             GlobalDataStatic.Controller?.NewRaund();
+                            SubscribeForEventsElements();
                             break;
                         case "OUT":
                             StopClient();//отключаемся от сервера
                             break;
                         case "REPLAY":
                             GlobalDataStatic.Controller?.LostRaund();
+                            SubscribeForEventsElements();
                             break;
                         case "READY":
                             //проверка на готовность 2го игрока
+                            readyCheck = true;
                             break;
 
                         //Движение
@@ -131,6 +138,12 @@ namespace Server.Model
                         //Стрельба
                         case "FIRE":
                             tank?.ToFire();
+                            break;
+
+                        //Итог сражения
+                        //странно канешно получать его от клиента, но пока так
+                        case "ENDROUND":
+                            UnSubscribeForEventsElements();
                             break;
                     }                   
                 }
@@ -169,16 +182,45 @@ namespace Server.Model
             //отлавливаем изменения в коллекции поля боя
             protected void ChangedBattleGround(object? sender, NotifyCollectionChangedEventArgs e) 
             {
-                //при добавление объкта будем подписываться
-                //при удаление объекта будем отписываться
-                // от сюда будем вызыват функцию SetDataAsynk()
+                string commandString = "";
+                switch (e.Action)
+                {
+                    //при добавление объкта будем подписываться
+                    case NotifyCollectionChangedAction.Add:
+                        ((WorldElement)e.NewItems[0]).PropertyChanged += ChangedElement;
+                        commandString = $"ADD@{((WorldElement)e.NewItems[0]).ID}@{((WorldElement)e.NewItems[0]).ePos}@{((WorldElement)e.NewItems[0]).Skin}^";
+                        break;
+
+                    //при удаление объекта будем отписываться
+                    case NotifyCollectionChangedAction.Remove:
+                        ((WorldElement)e.NewItems[0]).PropertyChanged -= ChangedElement;
+                        commandString = $"REMOVE@{((WorldElement)e.OldItems[0]).ID}^";
+                        break;
+                }
+                byte[] data = Encoding.UTF8.GetBytes(commandString);
+                SetDataAsynk(data);
             }
 
             //отлавливаем изменения в конкретных элементах
             protected void ChangedElement(object? sender, PropertyChangedEventArgs e)
-            { 
-                
-                // от сюда будем вызыват функцию SetDataAsynk()
+            {
+                string commandString = "";
+                switch (e.PropertyName?.ToUpper())
+                {
+                    case "SKIN":
+                        commandString = $"SKIN@{((WorldElement)sender).ID}@{((WorldElement)sender).Skin}^";
+                        break;
+                    case "X":
+                        commandString = $"X@{((WorldElement)sender).ID}@{((WorldElement)sender).ePos.X}^";
+                        break;
+                    case "Y":
+                        commandString = $"Y@{((WorldElement)sender).ID}@{((WorldElement)sender).ePos.Y}^";
+                        break;
+                }
+
+                byte[] data = Encoding.UTF8.GetBytes(commandString);
+                SetDataAsynk(data);
+
             }
 
             //отправка данных

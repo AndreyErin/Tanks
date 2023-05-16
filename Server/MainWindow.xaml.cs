@@ -48,7 +48,7 @@ namespace Server
             GlobalDataStatic.RespawnBotON = true;
 
                 //загрузка танков-ботов
-                foreach (Point point in map.respawnTankBots)
+                foreach (MyPoint point in map.respawnTankBots)
                 {
                     TankBot tankBot = new TankBot(point);
                     tankBot.DistroyEvent += DistroyEnemyTank;
@@ -81,27 +81,27 @@ namespace Server
 
 
                 //каменные блоки
-                foreach (System.Windows.Point pos in map.rockBlocs)
+                foreach (MyPoint pos in map.rockBlocs)
                 {
                     Block b = new Block(pos);
                 }
                 //железные блоки
-                foreach (System.Windows.Point pos in map.ironBlocs)
+                foreach (MyPoint pos in map.ironBlocs)
                 {
                     BlockFerum b = new BlockFerum(pos);
                 }
                 //деревья
-                foreach (System.Windows.Point pos in map.woodBlocs)
+                foreach (MyPoint pos in map.woodBlocs)
                 {
                     Tree b = new Tree(pos);
                 }
                 //дружеские каменные блоки
-                foreach (System.Windows.Point pos in map.friendlyRockBlocs)
+                foreach (MyPoint pos in map.friendlyRockBlocs)
                 {
                     Block b = new Block(pos) { IsPlayer = true };
                 }
                 //локальные пушки
-                foreach (System.Windows.Point pos in map.LocationGun)
+                foreach (MyPoint pos in map.LocationGun)
                 {
                     LocationGun b = new LocationGun(pos, 3);
                 }
@@ -144,7 +144,7 @@ namespace Server
             //должны загружаться до респавнов
             CreateWorldElements(mapPool[lvlMap]);
 
-            System.Windows.Point tPos = map.respawnTankPlayer[0];
+            MyPoint tPos = map.respawnTankPlayer[0];
             //создаем танк игрока
             mainTank = new TankPlayer(tPos);
 
@@ -191,7 +191,7 @@ namespace Server
 
 
                 //добавляем игрока на карту следующего раунда               
-                System.Windows.Point tPos = map.respawnTankPlayer[0];
+                MyPoint tPos = map.respawnTankPlayer[0];
                 mainTank.ePos = tPos;
                 mainTank.UpdateHpForTeer(); //выравниваем HP по тиру
                 GlobalDataStatic.BattleGroundCollection.Add(mainTank);

@@ -9,6 +9,8 @@ namespace Server.Model
         //наблюдаем за изменением свойств позиции и скина
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public int ID { get; set; }
+
         protected double _height { get; set; }
         protected double _width { get; set; }
 
