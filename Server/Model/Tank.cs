@@ -9,8 +9,6 @@ namespace Server.Model
         public SoundsEnum sound { get; set; }
         public event ISoundsObjects.SoundDeleg? SoundEvent;
 
-        public new System.Windows.Point ePos;//костыль ----------------------------------- разобраться
-
         //уровень танка
         protected int lvlTank = 1;
         //дамаг танка
@@ -31,7 +29,7 @@ namespace Server.Model
         protected Tank() { }
         
         //конструктор
-        public Tank(System.Windows.Point tPos)
+        public Tank(MyPoint tPos)
         {            
             ePos = tPos;
             _height = 30;
@@ -49,16 +47,16 @@ namespace Server.Model
         //функция таймера для движения танка
         protected void tTimerMove_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            System.Windows.Point pt;//точки-ледары
-            System.Windows.Point pt2;
+            MyPoint pt;//точки-ледары
+            MyPoint pt2;
 
             switch (tVec)
             {
                 //ВЕРХ
                 case VectorEnum.Top:                   
                         //проверяем угловые верхние точки танка
-                        pt = new System.Windows.Point(ePos.X - 3, ePos.Y);
-                        pt2 = new System.Windows.Point(ePos.X - 3, ePos.Y + 29);
+                        pt = new MyPoint(ePos.X - 3, ePos.Y);
+                        pt2 = new MyPoint(ePos.X - 3, ePos.Y + 29);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
                         //если не достигли границ  поля боя и перед носом у танка нет преграды (дочерних эелметнов поля боя)
@@ -69,8 +67,8 @@ namespace Server.Model
                     //НИЗ
                     case VectorEnum.Down:
                         //проверяем угловые нижние точки танка
-                         pt = new System.Windows.Point(ePos.X + 32, ePos.Y);
-                         pt2 = new System.Windows.Point(ePos.X + 32, ePos.Y + 29);
+                         pt = new MyPoint(ePos.X + 32, ePos.Y);
+                         pt2 = new MyPoint(ePos.X + 32, ePos.Y + 29);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
                         noEndMap = (ePos.X <= 720 - 31 - speedTank);
@@ -80,8 +78,8 @@ namespace Server.Model
                     //ЛЕВО
                     case VectorEnum.Left:
                         //проверяем угловые левые точки танка
-                        pt = new System.Windows.Point(ePos.X, ePos.Y - 3);
-                        pt2 = new System.Windows.Point(ePos.X + 29, ePos.Y - 3);
+                        pt = new MyPoint(ePos.X, ePos.Y - 3);
+                        pt2 = new MyPoint(ePos.X + 29, ePos.Y - 3);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
                         noEndMap = (ePos.Y >= speedTank + 1);
@@ -91,8 +89,8 @@ namespace Server.Model
                     //ПРАВО
                     case VectorEnum.Right:                     
                         //проверяем угловые правые точки танка
-                        pt = new System.Windows.Point(ePos.X, ePos.Y + 32);
-                        pt2 = new System.Windows.Point(ePos.X + 29, ePos.Y + 32);
+                        pt = new MyPoint(ePos.X, ePos.Y + 32);
+                        pt2 = new MyPoint(ePos.X + 29, ePos.Y + 32);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
                         noEndMap = (ePos.Y <= 1320 - 31 - speedTank);
@@ -135,7 +133,7 @@ namespace Server.Model
         }
         
         //если ледары насчупали препятсвие то двигаться дальше нельзя
-        protected bool CanMove(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        protected bool CanMove(MyPoint posLedarL, MyPoint posLedarR)
         {            
             var subset = from s in GlobalDataStatic.BattleGroundCollection
                          where ((s as HPElement) != null) || ((s as Loot) != null)

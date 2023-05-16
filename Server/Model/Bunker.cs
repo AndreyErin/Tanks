@@ -10,7 +10,7 @@ namespace Server.Model
         protected Bunker() { }
         public Bunker(MyPoint ePos):base(ePos)
         {
-            _skin = SkinsEnum.PictureBunker;
+            Skin = SkinsEnum.PictureBunker;
             IsPlayer = true;
         }
 
@@ -25,11 +25,11 @@ namespace Server.Model
                 switch (HP)
                 {
                     case 2:
-                        _skin = SkinsEnum.PictureBunker2;
+                        Skin = SkinsEnum.PictureBunker2;
                         break;
 
                     case 1:
-                        _skin = SkinsEnum.PictureBunker3;
+                        Skin = SkinsEnum.PictureBunker3;
                         break;
 
                     case (<= 0): //если нет хп, то объект уничтожается

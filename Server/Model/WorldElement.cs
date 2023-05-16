@@ -15,7 +15,7 @@ namespace Server.Model
         protected double _width { get; set; }
 
         //свойства вызывающие события при изменении
-        protected SkinsEnum _skin;
+        private SkinsEnum _skin;
         public SkinsEnum Skin {
             get => _skin;
 
@@ -29,9 +29,9 @@ namespace Server.Model
             }
         }
 
-        protected MyPoint _ePos;
+        private MyPoint _ePos;
         public MyPoint ePos {
-            get => ePos;
+            get => _ePos;
             set 
             {
                 if (_ePos != value) 

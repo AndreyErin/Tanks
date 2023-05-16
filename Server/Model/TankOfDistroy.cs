@@ -6,7 +6,7 @@ namespace Server.Model
     {
         public VectorEnum Vector { get; set; }
 
-        public TankOfDistroy(System.Windows.Point pos, VectorEnum vector, int teer, double speed) :base(pos)
+        public TankOfDistroy(MyPoint pos, VectorEnum vector, int teer, double speed) :base(pos)
         {
             Vector = vector;
             _height = 30;
@@ -15,24 +15,24 @@ namespace Server.Model
             switch (teer)
             {
                 case 1:
-                    _skin = SkinsEnum.PictureTankOfDestroy1;
+                    Skin = SkinsEnum.PictureTankOfDestroy1;
                     break;
                 case 2:
-                    _skin = SkinsEnum.PictureTankOfDestroy2;
+                    Skin = SkinsEnum.PictureTankOfDestroy2;
                     break;
                 case 3:
                 case 4:
-                    _skin = SkinsEnum.PictureTankOfDestroy3;
+                    Skin = SkinsEnum.PictureTankOfDestroy3;
                     break;
             }
 
             switch (speed)
             {
                 case 2.0:
-                    _skin = SkinsEnum.PictureTankOfDestroySpeed1;
+                    Skin = SkinsEnum.PictureTankOfDestroySpeed1;
                     break;
                 case 2.5:
-                    _skin = SkinsEnum.PictureTankOfDestroySpeed2;
+                    Skin = SkinsEnum.PictureTankOfDestroySpeed2;
                     break;
             }
         }

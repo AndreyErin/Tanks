@@ -9,10 +9,10 @@ namespace Server.Model
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет
         public event Action<TankPlayer> DestroyPayerTank;
 
-        public TankPlayer(Point tPos) : base(tPos)
+        public TankPlayer(MyPoint tPos) : base(tPos)
         {
             IsPlayer = true;
-            _skin = SkinsEnum.PictureTank1;
+            Skin = SkinsEnum.PictureTank1;
         }
 
         protected override void DistroyMy()
@@ -27,10 +27,10 @@ namespace Server.Model
             switch (teer)
             {
                 case 2:
-                    _skin = SkinsEnum.PictureTank2;
+                    Skin = SkinsEnum.PictureTank2;
                     break;
                 case 3:
-                    _skin = SkinsEnum.PictureTank3;
+                    Skin = SkinsEnum.PictureTank3;
                     break;
 
             }
@@ -41,10 +41,10 @@ namespace Server.Model
             switch (speed)
             {
                 case 2.0:
-                    _skin = SkinsEnum.PictureTankSpeed;
+                    Skin = SkinsEnum.PictureTankSpeed;
                     break;
                 case 2.5:
-                    _skin = SkinsEnum.PictureTankSpeed2;
+                    Skin = SkinsEnum.PictureTankSpeed2;
                     break;
             }
         }

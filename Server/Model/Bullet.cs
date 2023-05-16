@@ -58,16 +58,16 @@ namespace Server.Model
             switch (damage)
             { 
                 case 1:
-                    _skin = SkinsEnum.PictureBullet1;
+                    Skin = SkinsEnum.PictureBullet1;
                     break;
                 case 2:
-                    _skin = SkinsEnum.PictureBullet2;
+                    Skin = SkinsEnum.PictureBullet2;
                     break;
                 case 3:
-                    _skin = SkinsEnum.PictureBullet3;
+                    Skin = SkinsEnum.PictureBullet3;
                     break;
                 case > 3:
-                    _skin = SkinsEnum.PictureBullet4;                   
+                    Skin = SkinsEnum.PictureBullet4;                   
                     break;
             }
 
@@ -80,16 +80,16 @@ namespace Server.Model
         protected void tTimerToFire_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //пуля
-            System.Windows.Point pt;//точки-ледары
-            System.Windows.Point pt2;
+            MyPoint pt;//точки-ледары
+            MyPoint pt2;
             bool haveHit; //флаг того есть ли попадание по объекту окружения
 
             switch (_vector)
             {
                 //ВЕРХ
                 case VectorEnum.Top:
-                    pt = new System.Windows.Point(ePos.X, ePos.Y);
-                    pt2 = new System.Windows.Point(ePos.X, ePos.Y + this._width -1);
+                    pt = new MyPoint(ePos.X, ePos.Y);
+                    pt2 = new MyPoint(ePos.X, ePos.Y + this._width -1);
                     haveHit = HaveShot(pt, pt2);
 
                     if ((ePos.X >= 1.5) && (haveHit == false))
@@ -101,8 +101,8 @@ namespace Server.Model
                     break;
                 //НИЗ
                 case VectorEnum.Down:
-                    pt = new System.Windows.Point(ePos.X + this._height -1, ePos.Y);
-                    pt2 = new System.Windows.Point(ePos.X + this._height - 1, ePos.Y + this._width - 1);
+                    pt = new MyPoint(ePos.X + this._height -1, ePos.Y);
+                    pt2 = new MyPoint(ePos.X + this._height - 1, ePos.Y + this._width - 1);
                     haveHit = HaveShot(pt, pt2);
                     if ((ePos.X <= 720 - 11.5) && (haveHit == false))
                         ePos.X += 5;
@@ -113,8 +113,8 @@ namespace Server.Model
                     break;
                 //ЛЕВО
                 case VectorEnum.Left:
-                    pt = new System.Windows.Point(ePos.X , ePos.Y);
-                    pt2 = new System.Windows.Point(ePos.X + this._height -1  , ePos.Y);
+                    pt = new MyPoint(ePos.X , ePos.Y);
+                    pt2 = new MyPoint(ePos.X + this._height -1  , ePos.Y);
                     haveHit = HaveShot(pt, pt2); 
                     if ((ePos.Y >= 1.5) && (haveHit == false))
                         ePos.Y -= 5;
@@ -125,8 +125,8 @@ namespace Server.Model
                     break;
                 //ПРАВО
                 case VectorEnum.Right:
-                    pt = new System.Windows.Point(ePos.X, ePos.Y + this._width - 1);
-                    pt2 = new System.Windows.Point(ePos.X + this._height - 1, ePos.Y +   this._width - 1);
+                    pt = new MyPoint(ePos.X, ePos.Y + this._width - 1);
+                    pt2 = new MyPoint(ePos.X + this._height - 1, ePos.Y +   this._width - 1);
                     haveHit = HaveShot(pt, pt2);
                     if ((ePos.Y <= 1320 - 11.5) && (haveHit == false))
                         ePos.Y += 5;
@@ -139,7 +139,7 @@ namespace Server.Model
         }
 
         //если пуля попала в объект, то сообщаем етому обьекту что в него попали
-        public bool HaveShot(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        public bool HaveShot(MyPoint posLedarL, MyPoint posLedarR)
         {
                 var subset = from s in GlobalDataStatic.BattleGroundCollection
                              where (s as HPElement) != null
@@ -151,10 +151,7 @@ namespace Server.Model
                     bool result = s.HaveHit(posLedarL, posLedarR);
 
                     if (result)
-                    {
-                        //если было попадание по этому объекту коллекции(и это не лут) то сообщаем объкту, что он получил урон
-//                        if ((s as Loot) == null)
-//                        {
+                    {                
                             s.GetDamage(_damage);
                             switch (s)
                             {
@@ -180,7 +177,7 @@ namespace Server.Model
                         if (SoundEvent != null) SoundEvent(sound);//играть звук
 
                         return true;
-//                        }               
+//                                       
                     }
                 }
                 return false;            

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+
 
 namespace Server.Model
 {
@@ -14,7 +10,7 @@ namespace Server.Model
         protected BunkerEnamy() { }
         public BunkerEnamy (MyPoint ePos) : base(ePos)
         {
-            _skin = SkinsEnum.PictureBunkerEnamy;
+            Skin = SkinsEnum.PictureBunkerEnamy;
             IsPlayer = false;
         }
 
@@ -28,11 +24,11 @@ namespace Server.Model
                 switch (HP)
                 {
                     case 2:
-                        _skin = SkinsEnum.PictureBunkerEnamy2;
+                        Skin = SkinsEnum.PictureBunkerEnamy2;
                         break;
 
                     case 1:
-                        _skin = SkinsEnum.PictureBunkerEnamy3;
+                        Skin = SkinsEnum.PictureBunkerEnamy3;
                         break;
 
                     case (<= 0): //если нет хп, то объект уничтожается

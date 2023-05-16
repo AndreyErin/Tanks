@@ -9,7 +9,7 @@ namespace Server.Model
     {
         public BonusEnum typeUpgrade;
 
-        public Loot(System.Windows.Point pos)
+        public Loot(MyPoint pos)
         {
             Random random = new Random();
             //случайный лут
@@ -17,13 +17,13 @@ namespace Server.Model
             {
                 case 0:
                     typeUpgrade = BonusEnum.Teer;
-                    _skin = SkinsEnum.PictureLootTeer ;
+                    Skin = SkinsEnum.PictureLootTeer ;
                     break;
                     
                 case 1:
                 case 2:  //увеличиваем шанс выпадения               
                     typeUpgrade = BonusEnum.Speed;
-                    _skin = SkinsEnum.PictureLootSpeed;
+                    Skin = SkinsEnum.PictureLootSpeed;
                     break;
 
                 case >= 3:
@@ -38,7 +38,7 @@ namespace Server.Model
 
         //проверка попадания по нашему обьекту
         //метод отвечает попали по нему или нет
-        public bool HaveHit(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        public bool HaveHit(MyPoint posLedarL, MyPoint posLedarR)
         {
             if ((posLedarL.X >= ePos.X) && (posLedarL.X <= (ePos.X + _height))
                 && (posLedarL.Y >= ePos.Y) && (posLedarL.Y <= (ePos.Y + _width)))

@@ -21,7 +21,7 @@ namespace Server.Model
             _width = 30;
             _height = 30;
             _damage = damage;
-            _skin = SkinsEnum.PictureLocationGun1;
+            Skin = SkinsEnum.PictureLocationGun1;
 
             timerRotation.Interval = 500;
             timerRotation.Elapsed += GunAutoRotation;
@@ -191,11 +191,11 @@ namespace Server.Model
                 switch (HP)
                 {
                     case 2:
-                        _skin = SkinsEnum.PictureLocationGun2;
+                        Skin = SkinsEnum.PictureLocationGun2;
                         break;
 
                     case 1:
-                        _skin = SkinsEnum.PictureLocationGun3;
+                        Skin = SkinsEnum.PictureLocationGun3;
                         break;
 
                     case (<= 0): //если нет хп, то объект уничтожается

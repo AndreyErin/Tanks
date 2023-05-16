@@ -6,7 +6,7 @@ namespace Server.Model
         protected Block() { }
         public Block(MyPoint Pos)
         {           
-            _skin = SkinsEnum.PictureBlock1;
+            Skin = SkinsEnum.PictureBlock1;
 
             _width = 40;
             _height = 40;
@@ -28,11 +28,11 @@ namespace Server.Model
             switch (HP)
             {
                 case 2:
-                    _skin = SkinsEnum.PictureBlock2;
+                    Skin = SkinsEnum.PictureBlock2;
                     break;
             
                 case 1:
-                    _skin = SkinsEnum.PictureBlock3;
+                    Skin = SkinsEnum.PictureBlock3;
                     break;
             
                 case (<= 0): //если нет хп, то объект уничтожается

@@ -14,9 +14,9 @@ namespace Server.Model
         protected HPElement? target = null;
 
         protected TankBot() { }
-        public TankBot(System.Windows.Point tPos) : base(tPos)
+        public TankBot(MyPoint tPos) : base(tPos)
         {
-            _skin = SkinsEnum.PictureTankBot1; 
+            Skin = SkinsEnum.PictureTankBot1; 
 
             tAutoMove.Interval = 1000;
             tAutoMove.Elapsed += AutoMove;
@@ -35,16 +35,16 @@ namespace Server.Model
 
 
             //стрельба
-            System.Windows.Point pt;
-            System.Windows.Point pt2;
+            MyPoint pt;
+            MyPoint pt2;
             bool enemy = false;
             switch (tVec)
             {
                 //ВЕРХ
                 case VectorEnum.Top:
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new System.Windows.Point(ePos.X - 3, ePos.Y + 9);
-                    pt2 = new System.Windows.Point(ePos.X - 3, ePos.Y + 19);
+                    pt = new MyPoint(ePos.X - 3, ePos.Y + 9);
+                    pt2 = new MyPoint(ePos.X - 3, ePos.Y + 19);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -57,8 +57,8 @@ namespace Server.Model
 
                     
 
-                    pt = new System.Windows.Point(ePos.X - 29, ePos.Y + 9);
-                    pt2 = new System.Windows.Point(ePos.X - 29, ePos.Y + 19);
+                    pt = new MyPoint(ePos.X - 29, ePos.Y + 9);
+                    pt2 = new MyPoint(ePos.X - 29, ePos.Y + 19);
 
                     //если нет попадания продолжаем перечислять
                     while ((CanTarget(pt, pt2) == false) && (pt.X > 29))
@@ -76,8 +76,8 @@ namespace Server.Model
                 case VectorEnum.Down:
 
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new System.Windows.Point(ePos.X + 32, ePos.Y + 9);
-                    pt2 = new System.Windows.Point(ePos.X + 32, ePos.Y + 19);
+                    pt = new MyPoint(ePos.X + 32, ePos.Y + 9);
+                    pt2 = new MyPoint(ePos.X + 32, ePos.Y + 19);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -88,8 +88,8 @@ namespace Server.Model
                         }
                     }
 
-                    pt = new System.Windows.Point(ePos.X + 58, ePos.Y + 9);
-                    pt2 = new System.Windows.Point(ePos.X + 58, ePos.Y + 19);
+                    pt = new MyPoint(ePos.X + 58, ePos.Y + 9);
+                    pt2 = new MyPoint(ePos.X + 58, ePos.Y + 19);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.X < (720 - 29)))
                     {
@@ -106,8 +106,8 @@ namespace Server.Model
                 case VectorEnum.Left:
 
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new System.Windows.Point(ePos.X + 9, ePos.Y - 3);
-                    pt2 = new System.Windows.Point(ePos.X + 19, ePos.Y - 3);
+                    pt = new MyPoint(ePos.X + 9, ePos.Y - 3);
+                    pt2 = new MyPoint(ePos.X + 19, ePos.Y - 3);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -118,8 +118,8 @@ namespace Server.Model
                         }
                     }
 
-                    pt = new System.Windows.Point(ePos.X + 9, ePos.Y - 29);
-                    pt2 = new System.Windows.Point(ePos.X + 19, ePos.Y - 29);
+                    pt = new MyPoint(ePos.X + 9, ePos.Y - 29);
+                    pt2 = new MyPoint(ePos.X + 19, ePos.Y - 29);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.Y > 29))
                     {
@@ -136,8 +136,8 @@ namespace Server.Model
                 case VectorEnum.Right:
 
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new System.Windows.Point(ePos.X + 9, ePos.Y + 32);
-                    pt2 = new System.Windows.Point(ePos.X + 19, ePos.Y + 32);
+                    pt = new MyPoint(ePos.X + 9, ePos.Y + 32);
+                    pt2 = new MyPoint(ePos.X + 19, ePos.Y + 32);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -148,8 +148,8 @@ namespace Server.Model
                         }
                     }
 
-                    pt = new System.Windows.Point(ePos.X + 9, ePos.Y + 58);
-                    pt2 = new System.Windows.Point(ePos.X + 19, ePos.Y + 58);
+                    pt = new MyPoint(ePos.X + 9, ePos.Y + 58);
+                    pt2 = new MyPoint(ePos.X + 19, ePos.Y + 58);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.Y < (1320 - 29)))
                     {
@@ -250,7 +250,7 @@ namespace Server.Model
 
         
         //проверяем ближайшую цель на пути
-        protected bool CanTarget(System.Windows.Point posLedarL, System.Windows.Point posLedarR)
+        protected bool CanTarget(MyPoint posLedarL, MyPoint posLedarR)
         {
             var subset = from s in GlobalDataStatic.BattleGroundCollection
                          where (s as HPElement) != null
@@ -309,11 +309,11 @@ namespace Server.Model
             switch (teer)
             {
                 case 2:
-                    _skin = SkinsEnum.PictureTankBot2;
+                    Skin = SkinsEnum.PictureTankBot2;
                     break;
                 case 3:
                 case 4:
-                    _skin = SkinsEnum.PictureTankBot3;
+                    Skin = SkinsEnum.PictureTankBot3;
                     break;
             }
         }
@@ -323,10 +323,10 @@ namespace Server.Model
             switch (speed)
             {
                 case 2.0:
-                    _skin = SkinsEnum.PictureTankSpeedBot;
+                    Skin = SkinsEnum.PictureTankSpeedBot;
                     break;
                 case 2.5:
-                    _skin = SkinsEnum.PictureTankSpeedBot2;
+                    Skin = SkinsEnum.PictureTankSpeedBot2;
                     break;
             }
 
