@@ -11,6 +11,9 @@ namespace Server
 {
     public partial class MainWindow : Window
     {
+        public delegate void gEvent(GameEnum gameEvent);
+        public event gEvent GameEvent;
+
         public TankPlayer mainTank;
         Map? map;
         int lvlMap = 0;
@@ -125,18 +128,6 @@ namespace Server
             }
         }
 
-        //двигаем танк из клиента
-
-
-        private bool cD = false;
-        //откат выстрела
-        private void CooldownFire()
-        {
-            cD = true;
-            Thread.Sleep(300);
-            cD = false;
-        }
-
         //начальное меню - новая игра
         public void NewGame()
         {
@@ -198,7 +189,7 @@ namespace Server
             }
         }
         //повторяем раунд при проигрыше ----------------------------
-        public void LostRaund()
+        public void ReplayRaund()
         {
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);

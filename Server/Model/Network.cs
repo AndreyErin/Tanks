@@ -73,6 +73,9 @@ namespace Server.Model
                 clientList.Add(this);//добавляемся в список клиентов
                 client = clientSocket;
                 tank = GlobalDataStatic.Controller?.mainTank;
+
+                //подписываемся на события в игре
+                GlobalDataStatic.Controller.GameEvent += EventOfGame;
             }
 
             //получение данных
@@ -149,20 +152,25 @@ namespace Server.Model
                 }
             }
 
-            //подписаться на события элементов
+            //подписаться на события коллекции
             protected void SubscribeForEventsElements() 
             {
                 //подписываемся на событие изменения  на поле боя
                 GlobalDataStatic.BattleGroundCollection.CollectionChanged += ChangedBattleGround;
 
-                //подписываемся на события конкретных элементов
-                var subset = from e in GlobalDataStatic.BattleGroundCollection
-                             where (e as Loot == null) && (e as Tree == null)
-                             select e;
-                foreach (WorldElement worldElement in subset)
-                {
-                    worldElement.PropertyChanged += ChangedElement;
-                }
+//                //подписываемся на события конкретных элементов
+//                var subset = from e in GlobalDataStatic.BattleGroundCollection
+//                             where (e as Loot == null) && (e as Tree == null)
+//                             select e;
+//                foreach (WorldElement worldElement in subset)
+//                {
+//                    worldElement.PropertyChanged += ChangedElement;
+//                    //если элемент может издавать звуки
+//                    if (worldElement is ISoundsObjects)
+//                    {
+//                        ((ISoundsObjects)worldElement).SoundEvent += Sounds;
+//                    }
+//                }
             }
 
             //отписаться от оставшихся
@@ -176,6 +184,11 @@ namespace Server.Model
                 foreach (WorldElement worldElement in subset)
                 {
                     worldElement.PropertyChanged -= ChangedElement;
+                    //если элемент может издавать звуки
+                    if (worldElement is ISoundsObjects)
+                    {
+                        ((ISoundsObjects)worldElement).SoundEvent -= Sounds;
+                    }
                 }
             }
 
@@ -188,12 +201,22 @@ namespace Server.Model
                     //при добавление объкта будем подписываться
                     case NotifyCollectionChangedAction.Add:
                         ((WorldElement)e.NewItems[0]).PropertyChanged += ChangedElement;
+                        //если элемент может издавать звуки
+                        if (e.NewItems[0] is ISoundsObjects)
+                        {
+                            ((ISoundsObjects)e.NewItems[0]).SoundEvent += Sounds;
+                        }
                         commandString = $"ADD@{((WorldElement)e.NewItems[0]).ID}@{((WorldElement)e.NewItems[0]).ePos}@{((WorldElement)e.NewItems[0]).Skin}^";
                         break;
 
                     //при удаление объекта будем отписываться
                     case NotifyCollectionChangedAction.Remove:
                         ((WorldElement)e.NewItems[0]).PropertyChanged -= ChangedElement;
+                        //если элемент может издавать звуки
+                        if (e.NewItems[0] is ISoundsObjects)
+                        {
+                            ((ISoundsObjects)e.NewItems[0]).SoundEvent -= Sounds;
+                        }
                         commandString = $"REMOVE@{((WorldElement)e.OldItems[0]).ID}^";
                         break;
                 }
@@ -223,6 +246,34 @@ namespace Server.Model
 
             }
 
+            //звуки
+            protected void Sounds(SoundsEnum sound) 
+            {
+                string commandString = "";
+                switch (sound)
+                {
+
+                    case SoundsEnum.bonusSound:
+                        commandString = "BONUSSOUND^";
+                        break;
+                    case SoundsEnum.ferumSoung:
+                        commandString = "FERUMSOUND^";
+                        break;
+                    case SoundsEnum.rockSound:
+                        commandString = "FOCKSOUND^";
+                        break;
+                    case SoundsEnum.shotSoung:
+                        commandString = "SHOTSOUND^";
+                        break;
+                    case SoundsEnum.shotTargetSound:
+                        commandString = "SHOTTARGETSSOUND^";
+                        break;
+
+                }
+                byte[] data = Encoding.UTF8.GetBytes(commandString);
+                SetDataAsynk(data);
+            }
+
             //отправка данных
             protected async Task SetDataAsynk(byte[] data)
             {
@@ -234,6 +285,25 @@ namespace Server.Model
             {
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
+            }
+
+            //результат сражения
+            protected void EventOfGame(GameEnum gameEvent) 
+            {
+                switch (gameEvent)
+                {
+                    case GameEnum.NewGame:
+                        break;
+                    case GameEnum.NewRound:
+                        break;
+                    case GameEnum.ReplayRound:
+                        break;
+                    case GameEnum.Win:
+                        break;
+                    case GameEnum.Lose:
+                        break;
+
+                }
             }
         }
     }
