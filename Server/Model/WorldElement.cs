@@ -5,6 +5,11 @@ namespace Server.Model
 {
     public abstract class WorldElement : INotifyPropertyChanged
     {
+        public WorldElement()
+        {
+            ID = GlobalDataStatic.IdNumberElement++;
+        }
+
         //интерфейс INotifyPropertyChanged
         //наблюдаем за изменением свойств позиции и скина
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -12,10 +12,10 @@ namespace Server
     public partial class MainWindow : Window
     {
         public delegate void gEvent(GameEnum gameEvent);
-        public event gEvent GameEvent;
+        public event gEvent? GameEvent;
 
         public TankPlayer mainTank;
-        Map? map;
+        public Map? map;
         int lvlMap = 0;
         string[] mapPool;
 
@@ -27,8 +27,6 @@ namespace Server
             InitializeComponent();
 
             GlobalDataStatic.Controller = this;
-            //MessageBox.Show(Thread.CurrentThread.ManagedThreadId.ToString());
-            //Network network = new Network();
         }
 
         //загрузка программы
@@ -82,7 +80,6 @@ namespace Server
                 //запихиваем ети данные в объект
                 map = JsonSerializer.Deserialize<Map>(jsonText);
 
-
                 //каменные блоки
                 foreach (MyPoint pos in map.rockBlocs)
                 {
@@ -130,46 +127,81 @@ namespace Server
 
         //начальное меню - новая игра
         public void NewGame()
-        {
+        {                        
             //создаем элементы окружения
             //должны загружаться до респавнов
             CreateWorldElements(mapPool[lvlMap]);
 
-            MyPoint tPos = map.respawnTankPlayer[0];
-            //создаем танк игрока
-            mainTank = new TankPlayer(tPos);
-
-            mainTank.DestroyPayerTank += DistroyFriendlyTank;
+            if (GameEvent != null) GameEvent.Invoke(GameEnum.NewGame);
+            //подписываемся
+            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tank.DestroyPayerTank += DistroyFriendlyTank;
+            }
+            
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
         }
 
-        //уничтожение танков-ботов ----------------
+        //уничтожение танков-ботов
         private void DistroyEnemyTank(TankBot tankBot)
         {
             GlobalDataStatic.PartyTankBots.Remove(tankBot);//удаляем танк из пачки вражеский танков
-        }
-        //уничтожены танки игроков----------------
-        private void DistroyFriendlyTank(TankPlayer tank)
-        {
-            if (GlobalDataStatic.PartyTanksOfPlayers.Count == 0)
+            //если вражеские танки уничтожены все и новых не будет, то -
+            //ПОБЕДА
+            if ((GlobalDataStatic.PartyTankBots.Count == 0) && (countTimerRespawn == 0) && (GameEvent != null))
             {
-            /////////конец раунда
+                GameEvent(GameEnum.DistroyEnemyTank);
+                tTimer_RespawnBotTank.Stop();
+                GlobalDataStatic.IdNumberElement = 0;
+                //отписываемся
+                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+                {
+                    tank.DestroyPayerTank -= DistroyFriendlyTank;
+                }
             }
         }
-        //уничтожен бункер -----------------
+
+        //уничтожены танки игроков
+        private void DistroyFriendlyTank(TankPlayer tank)
+        {
+            GlobalDataStatic.PartyTanksOfPlayers.Remove(tank);
+            //ПОРАЖЕНИЕ
+            if (GlobalDataStatic.PartyTanksOfPlayers.Count == 0 && (GameEvent != null))
+            {
+                GameEvent(GameEnum.DistroyFriendlyTank);
+                tTimer_RespawnBotTank.Stop();
+                GlobalDataStatic.IdNumberElement = 0;
+            }
+        }
+
+        //уничтожен бункер
         private void DestroyBunker()
         {
- 
+            if(GameEvent !=null) GameEvent.Invoke(GameEnum.DestroyBunker);
+            tTimer_RespawnBotTank.Stop();
+            GlobalDataStatic.IdNumberElement = 0;
+            //отписываемся
+            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tank.DestroyPayerTank -= DistroyFriendlyTank;
+            }
         }
 
-        //уничтожен вражеский бункер ----------------------------
+        //уничтожен вражеский бункер
         private void DestroyBunkerEnamy()
         {
-            //
+            if (GameEvent != null) GameEvent.Invoke(GameEnum.DestroyBunkerEnamy);
+            tTimer_RespawnBotTank.Stop();
+            GlobalDataStatic.IdNumberElement = 0;
+            //отписываемся
+            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tank.DestroyPayerTank -= DistroyFriendlyTank;
+            }
         }
 
-        //следующий раунд-------------------------
+        //следующий раунд
         public void NewRaund()
         {
             if (mapPool.Length > (++lvlMap))
@@ -177,29 +209,34 @@ namespace Server
                 //заполняем карту элементами мира следующего уговня
                 CreateWorldElements(mapPool[lvlMap]);
 
+                if (GameEvent != null) GameEvent.Invoke(GameEnum.NewRound);
+
+                //подписываемся
+                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+                {
+                    tank.DestroyPayerTank += DistroyFriendlyTank;
+                }
+
                 //запускаем респавн  ботов-танков
                 tTimer_RespawnBotTank.Start();
-
-
-                //добавляем игрока на карту следующего раунда               
-                MyPoint tPos = map.respawnTankPlayer[0];
-                mainTank.ePos = tPos;
-                mainTank.UpdateHpForTeer(); //выравниваем HP по тиру
-                GlobalDataStatic.BattleGroundCollection.Add(mainTank);
             }
         }
-        //повторяем раунд при проигрыше ----------------------------
+
+        //повторяем раунд при проигрыше 
         public void ReplayRaund()
         {
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);
 
+            if (GameEvent != null) GameEvent.Invoke(GameEnum.ReplayRound);
+            //подписываемся
+            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tank.DestroyPayerTank += DistroyFriendlyTank;
+            }
+
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
-
-            //создаем танк игрока
-            mainTank = new TankPlayer(map.respawnTankPlayer[0]);
-            mainTank.DestroyPayerTank += DistroyFriendlyTank;
         }
 
     }

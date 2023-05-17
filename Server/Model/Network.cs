@@ -63,16 +63,18 @@ namespace Server.Model
 
             public TankPlayer? tank;
 
-            private bool readyCheck = false;
+            public bool isFirstClient = false;
 
             protected clientClass() { }
 
             //конструктор
             public clientClass(Socket clientSocket, List<clientClass> clientList)
             {
+                //определяем клияента как основного(либо ведомого)
+                if (clientList.Count == 0) isFirstClient = true;
+
                 clientList.Add(this);//добавляемся в список клиентов
-                client = clientSocket;
-                tank = GlobalDataStatic.Controller?.mainTank;
+                client = clientSocket;                
 
                 //подписываемся на события в игре
                 GlobalDataStatic.Controller.GameEvent += EventOfGame;
@@ -102,23 +104,19 @@ namespace Server.Model
                     {
                         //Навигация по меню
                         case "NEWGAME":
-                            GlobalDataStatic.Controller?.NewGame();
-                            SubscribeForEventsElements();
+                            GlobalDataStatic.Controller?.NewGame();                            
                             break;
                         case "CONTINUE":
                             GlobalDataStatic.Controller?.NewRaund();
-                            SubscribeForEventsElements();
                             break;
                         case "OUT":
                             StopClient();//отключаемся от сервера
                             break;
                         case "REPLAY":
-                            GlobalDataStatic.Controller?.LostRaund();
-                            SubscribeForEventsElements();
+                            GlobalDataStatic.Controller?.ReplayRaund();
                             break;
                         case "READY":
-                            //проверка на готовность 2го игрока
-                            readyCheck = true;
+                            GlobalDataStatic.readyCheck = true;
                             break;
 
                         //Движение
@@ -287,20 +285,95 @@ namespace Server.Model
                 client.Close();
             }
 
-            //результат сражения
+            //события игры
             protected void EventOfGame(GameEnum gameEvent) 
             {
+                string commandString = "";
+                byte[] data;
+
                 switch (gameEvent)
                 {
                     case GameEnum.NewGame:
+                        tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
+                        GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
+                        GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя
+                        //подписываемся на события коллекции
+                        SubscribeForEventsElements();
                         break;
+
                     case GameEnum.NewRound:
+                        if (tank.HP <= 0) 
+                        {
+                            tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
+                            GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
+                        }
+                        else 
+                        {
+                            tank.UpdateHpForTeer();
+                            tank.ID = GlobalDataStatic.IdNumberElement++;
+                            tank.ePos = (isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
+                        }
+                        GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя
+                        //подписываемся на события коллекции
+                        SubscribeForEventsElements();
                         break;
+
                     case GameEnum.ReplayRound:
+                        if (tank.HP <= 0)
+                        {
+                            tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
+                            GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
+                        }
+                        else
+                        {
+                            tank.UpdateHpForTeer();
+                            tank.ID = GlobalDataStatic.IdNumberElement++;
+                            tank.ePos = (isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
+                        }
+                        GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя
+                        //подписываемся на события коллекции
+                        SubscribeForEventsElements();
                         break;
-                    case GameEnum.Win:
+
+                    //результат сражения
+                    case GameEnum.DistroyEnemyTank:
+                        //ПОБЕДА
+                        commandString = "WIN@DESTROYENEMYTANK^";
+                        data = Encoding.UTF8.GetBytes(commandString);
+                        SetDataAsynk(data);
+                        //отписываемся от событий элементов и коллекции
+                        UnSubscribeForEventsElements();
+                        GlobalDataStatic.readyCheck = false;
                         break;
-                    case GameEnum.Lose:
+
+                    case GameEnum.DistroyFriendlyTank:
+                        //ПОРАЖЕНИЕ
+                        commandString = "LOSE@DESTROYFRIENDLYTANK^";
+                        data = Encoding.UTF8.GetBytes(commandString);
+                        SetDataAsynk(data);
+                        //отписываемся от событий элементов и коллекции
+                        UnSubscribeForEventsElements();
+                        GlobalDataStatic.readyCheck = false;
+                        break;
+
+                    case GameEnum.DestroyBunker:
+                        //ПОРАЖЕНИЕ
+                        commandString = "LOSE@DESTROYBUNKER^";
+                        data = Encoding.UTF8.GetBytes(commandString);
+                        SetDataAsynk(data);
+                        //отписываемся от событий элементов и коллекции
+                        UnSubscribeForEventsElements();
+                        GlobalDataStatic.readyCheck = false;
+                        break;
+
+                    case GameEnum.DestroyBunkerEnamy:
+                        //ПОБЕДА
+                        commandString = "WIN@DESTROYBUNKERENEMY^";
+                        data = Encoding.UTF8.GetBytes(commandString);
+                        SetDataAsynk(data);
+                        //отписываемся от событий элементов и коллекции
+                        UnSubscribeForEventsElements();
+                        GlobalDataStatic.readyCheck = false;
                         break;
 
                 }

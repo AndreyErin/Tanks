@@ -17,7 +17,7 @@ namespace Server.Model
         [JsonInclude]
         public List<MyPoint> friendlyRockBlocs { get; set; } = new List<MyPoint>();
         [JsonInclude]
-        public List<MyPoint> respawnTankPlayer { get; set; } = new List<MyPoint>();
+        public List<MyPoint>? respawnTankPlayer { get; set; } = new List<MyPoint>();
         [JsonInclude]
         public List<MyPoint> respawnTankBots { get; set; } = new List<MyPoint>();
         [JsonInclude]
