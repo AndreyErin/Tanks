@@ -20,7 +20,7 @@ namespace Client
 
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
-        //двигаем танк ------править
+        //двигаем танк
         private void MainWin_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -56,7 +56,7 @@ namespace Client
             }
 
         }
-        //править
+        
         private void MainWin_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == _moveKey)//если кнопка движения была поднята то останавливаем танк
@@ -64,7 +64,7 @@ namespace Client
 
             _lastKey = Key.None;
         }
-        //описан
+        
         private void MainWin_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (_lastKey == e.Key) //проверяем нажата ли та же самая кнопка или другая
@@ -83,32 +83,46 @@ namespace Client
             cD = false;
         }
 
+        //загрузка программы ----------------
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
 
         }
 
+        //завершение программы ---------------
         private void MainWin_Unloaded(object sender, RoutedEventArgs e)
         {
 
         }
 
+        //выход - отключение от сервера дописать------------------
         private void btnOut_Click(object sender, RoutedEventArgs e)
         {
-
+            tcpClient.MenuComand(MenuComandEnum.Out);
         }
-
+        //новая игра
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-
+            tcpClient.MenuComand(MenuComandEnum.NewGame);
+        }
+        //новый раунд
+        private void btnRaundWin_Click(object sender, RoutedEventArgs e)
+        {
+            tcpClient.MenuComand(MenuComandEnum.NewRaund);
+        }
+        //переигровка раунда
+        private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
+        {
+            tcpClient.MenuComand(MenuComandEnum.Replay);
         }
 
-        private void btnRaundWin_Click(object sender, RoutedEventArgs e)
+        //добавление объекта на поле боя
+        public void AddElement() 
         {
 
         }
-
-        private void btnRaundLose_Click(object sender, RoutedEventArgs e)
+        //удаление объекта с поля боя
+        public void RemoveElement() 
         {
 
         }

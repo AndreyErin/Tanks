@@ -43,7 +43,7 @@
             <Label Grid.Row="0" x:Name="lblResultOfBattleText" Content="Результат боя"  FontSize="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Foreground="#FF310309"/>
             <Button Grid.Row="1" x:Name="btnStartGame" Content="Начать игру" Visibility="Hidden" Click="btnNewGame_Click" Height="auto" Background="#FF310309" Width="250" FontSize="35" Foreground="Beige" VerticalContentAlignment="Center"/>
             <Button Grid.Row="1" x:Name="btnRaundWin" Content="Продолжить" Visibility="Hidden" Click="btnRaundWin_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" VerticalContentAlignment="Center"/>
-            <Button Grid.Row="1" x:Name="btnRaundLose" Content="Повторить" Visibility="Hidden" Click="btnRaundLose_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" VerticalContentAlignment="Center"/>
+            <Button Grid.Row="1" x:Name="btnRaundReplay" Content="Повторить" Visibility="Hidden" Click="btnRaundReplay_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" VerticalContentAlignment="Center"/>
             <Button Grid.Row="2" x:Name="btnOut2" Content="Выход из игры" Click="btnOut_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" Margin="0,2,0,0" VerticalContentAlignment="Center"/>
             <Label Grid.Row="3" x:Name="lblWinText" Content="Игра пройдена! Маладес тебе!" FontSize="50" HorizontalContentAlignment="Center" Foreground="#FF310309" Visibility="Hidden"/>
         </Grid>

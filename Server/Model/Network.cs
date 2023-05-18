@@ -106,7 +106,7 @@ namespace Server.Model
                         case "NEWGAME":
                             GlobalDataStatic.Controller?.NewGame();                            
                             break;
-                        case "CONTINUE":
+                        case "NEWRAUND":
                             GlobalDataStatic.Controller?.NewRaund();
                             break;
                         case "OUT":
@@ -141,11 +141,6 @@ namespace Server.Model
                             tank?.ToFire();
                             break;
 
-                        //Итог сражения
-                        //странно канешно получать его от клиента, но пока так
-                        case "ENDROUND":
-                            UnSubscribeForEventsElements();
-                            break;
                     }                   
                 }
             }

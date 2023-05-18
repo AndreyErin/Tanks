@@ -8,6 +8,196 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Model\Pictures\blok.png" />
+    <None Remove="Model\Pictures\blok2.png" />
+    <None Remove="Model\Pictures\blok3.png" />
+    <None Remove="Model\Pictures\bullet.png" />
+    <None Remove="Model\Pictures\bullet2.png" />
+    <None Remove="Model\Pictures\bullet3.png" />
+    <None Remove="Model\Pictures\bullet4.png" />
+    <None Remove="Model\Pictures\bunker.png" />
+    <None Remove="Model\Pictures\bunker2.png" />
+    <None Remove="Model\Pictures\bunker3.png" />
+    <None Remove="Model\Pictures\bunkerEnamy.png" />
+    <None Remove="Model\Pictures\bunkerEnamy2.png" />
+    <None Remove="Model\Pictures\bunkerEnamy3.png" />
+    <None Remove="Model\Pictures\Damage.png" />
+    <None Remove="Model\Pictures\Defense.png" />
+    <None Remove="Model\Pictures\ferum.png" />
+    <None Remove="Model\Pictures\ferum2.png" />
+    <None Remove="Model\Pictures\ferum3.png" />
+    <None Remove="Model\Pictures\LocationGun.png" />
+    <None Remove="Model\Pictures\LocationGun2.png" />
+    <None Remove="Model\Pictures\LocationGun3.png" />
+    <None Remove="Model\Pictures\logo.png" />
+    <None Remove="Model\Pictures\playertank.png" />
+    <None Remove="Model\Pictures\playertank2.png" />
+    <None Remove="Model\Pictures\playertank3.png" />
+    <None Remove="Model\Pictures\Speed.png" />
+    <None Remove="Model\Pictures\tankbot.png" />
+    <None Remove="Model\Pictures\tankbot2.png" />
+    <None Remove="Model\Pictures\tankbot3.png" />
+    <None Remove="Model\Pictures\tankofdestroy.png" />
+    <None Remove="Model\Pictures\tankofdestroy2.png" />
+    <None Remove="Model\Pictures\tankofdestroy3.png" />
+    <None Remove="Model\Pictures\tankofdestroyspeed1.png" />
+    <None Remove="Model\Pictures\tankofdestroyspeed2.png" />
+    <None Remove="Model\Pictures\tankspeed.png" />
+    <None Remove="Model\Pictures\tankspeed2.png" />
+    <None Remove="Model\Pictures\tankspeedbot.png" />
+    <None Remove="Model\Pictures\tankspeedbot2.png" />
+    <None Remove="Model\Pictures\wood.png" />
+    <None Remove="Model\Sounds\bonus.mp3" />
+    <None Remove="Model\Sounds\brue.mp3" />
+    <None Remove="Model\Sounds\ferum.mp3" />
+    <None Remove="Model\Sounds\mainSound.mp3" />
+    <None Remove="Model\Sounds\menuSound.mp3" />
+    <None Remove="Model\Sounds\rock.mp3" />
+    <None Remove="Model\Sounds\shot.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Model\Pictures\blok.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\blok2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\blok3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bullet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bullet2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bullet3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bullet4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bunker.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bunker2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bunker3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bunkerEnamy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bunkerEnamy2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\bunkerEnamy3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\Damage.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\Defense.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\ferum.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\ferum2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\ferum3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\LocationGun.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\LocationGun2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\LocationGun3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\playertank.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\playertank2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\playertank3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\Speed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankbot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankbot2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankbot3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankofdestroy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankofdestroy2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankofdestroy3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankofdestroyspeed1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankofdestroyspeed2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankspeed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankspeed2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankspeedbot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankspeedbot2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\wood.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Sounds\bonus.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Sounds\brue.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Sounds\ferum.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Sounds\mainSound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Sounds\menuSound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Sounds\rock.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Sounds\shot.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="View\" />
   </ItemGroup>
 

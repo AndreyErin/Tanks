@@ -27,7 +27,7 @@ namespace Client.Model
             try
             {
                 await clientSocket.ConnectAsync("192.168.0.34", 7070);
-                Task.Factory.StartNew(() => { GetDataOfServer(); SetDataOfServer(); });
+                Task.Factory.StartNew(() => GetDataOfServer());
             }
             catch (System.Exception e)
             {
@@ -68,6 +68,34 @@ namespace Client.Model
             SetDataOfServer(data);
         }
 
+        //навигация по меню
+        public void MenuComand(MenuComandEnum comandEnum)
+        {
+            byte[] data;
+            string command = "";
+
+            switch (comandEnum)
+            {
+                case MenuComandEnum.NewGame:
+                    command = "NEWGAME^";
+                    break;
+                case MenuComandEnum.NewRaund:
+                    command = "NEWRAUND^";
+                    break;
+                case MenuComandEnum.Replay:
+                    command = "REPLAY^";
+                    break;
+                case MenuComandEnum.Out:
+                    command = "OUT^";
+                    break;
+                case MenuComandEnum.Ready:
+                    command = "READY^";
+                    break;
+            }
+
+            data = Encoding.UTF8.GetBytes(command);
+            SetDataOfServer(data);
+        }
 
         //отправить данные
         private async Task SetDataOfServer(byte[] data)
