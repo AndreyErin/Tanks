@@ -1,12 +1,59 @@
-﻿<Window x:Class="Client.MainWindow"
+﻿<Window x:Class="Client.MainWindow" x:Name="MainWin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" 
+        WindowState="Maximized" 
+        BorderBrush="Brown" BorderThickness="2" Loaded="MainWin_Loaded" KeyDown="MainWin_KeyDown" KeyUp="MainWin_KeyUp" 
+        PreviewKeyDown="MainWin_PreviewKeyDown" Background="#FF310309" Unloaded="MainWin_Unloaded"  >
+    <!-- полноэкранный режим - WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized" -->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!-- верхнее меню -->
+        <StackPanel  Grid.Row="0" Orientation="Horizontal" Background="#FF310309">
+            <Label Content="Подбито танков: " Foreground="Beige"/>
+            <Label x:Name="lblStatisticTank" Content="0" Foreground="Beige" Width="1000"/>
+            <Label Content="FPS" Foreground="Beige"/>
+            <Label x:Name="lblFPS" Content="0" Foreground="Beige" Width="1000"/>
+            <Button Content="Выход" Name="btnOut" Click="btnOut_Click" />
+        </StackPanel>
+
+
+
+
+
+        <!-- основное поле -->
+        <Canvas Grid.Row="1" Width="1320" Height="720" x:Name="cnvMain"  Background="LightYellow"/>
+        <!--  меню  -->
+
+        <Grid x:Name="gridMenu" Grid.Row="1" Width="1000" Height="auto">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" x:Name="lblResultOfBattleText" Content="Результат боя"  FontSize="150" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Foreground="#FF310309"/>
+            <Button Grid.Row="1" x:Name="btnStartGame" Content="Начать игру" Visibility="Hidden" Click="btnNewGame_Click" Height="auto" Background="#FF310309" Width="250" FontSize="35" Foreground="Beige" VerticalContentAlignment="Center"/>
+            <Button Grid.Row="1" x:Name="btnRaundWin" Content="Продолжить" Visibility="Hidden" Click="btnRaundWin_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" VerticalContentAlignment="Center"/>
+            <Button Grid.Row="1" x:Name="btnRaundLose" Content="Повторить" Visibility="Hidden" Click="btnRaundLose_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" VerticalContentAlignment="Center"/>
+            <Button Grid.Row="2" x:Name="btnOut2" Content="Выход из игры" Click="btnOut_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" Margin="0,2,0,0" VerticalContentAlignment="Center"/>
+            <Label Grid.Row="3" x:Name="lblWinText" Content="Игра пройдена! Маладес тебе!" FontSize="50" HorizontalContentAlignment="Center" Foreground="#FF310309" Visibility="Hidden"/>
+        </Grid>
+
+
+
+        <!-- статистическая панель -->
+
+
+
 
     </Grid>
 </Window>
