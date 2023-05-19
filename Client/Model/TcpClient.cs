@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Linq;
 
 namespace Client.Model
 {
@@ -26,7 +27,8 @@ namespace Client.Model
         {
             try
             {
-                await clientSocket.ConnectAsync("192.168.0.34", 7070);
+                await clientSocket.ConnectAsync("127.0.0.1", 7071);
+                MessageBox.Show("подключено");
                 Task.Factory.StartNew(() => GetDataOfServer());
             }
             catch (System.Exception e)
@@ -78,6 +80,7 @@ namespace Client.Model
             {
                 case MenuComandEnum.NewGame:
                     command = "NEWGAME^";
+                    
                     break;
                 case MenuComandEnum.NewRaund:
                     command = "NEWRAUND^";
@@ -101,6 +104,7 @@ namespace Client.Model
         private async Task SetDataOfServer(byte[] data)
         {
             await clientSocket.SendAsync(data, SocketFlags.None);
+            MessageBox.Show("нова игра - отправлено на сервер");
         }
 
         //получить данные
@@ -116,7 +120,7 @@ namespace Client.Model
                 {
                     haveData = await clientSocket.ReceiveAsync(character, SocketFlags.None);
                     // ^ - символ означающий конец  пакета
-                    if (haveData == 0 || haveData == '^') break;//если считаны все данные
+                    if (haveData == 0 || character[0] == '^') break;//если считаны все данные
                     data.Add(character[0]);
                 }
 
@@ -126,19 +130,38 @@ namespace Client.Model
                 if (isCommand) //команда
                 {
                     string[] command = resultString.Split('@');
+
+                    var subset = from UIElement s in GlobalDataStatic.Controller.cnvMain.Children
+                                 where (s as WorldElement != null) && ((WorldElement)s).ID == int.Parse(command[1])
+                                 select s;
+                    WorldElement elementCollection = null;
+                    foreach (WorldElement worldElement in subset)
+                    {
+                        elementCollection = worldElement;
+                    }
+                                                   
                     switch (command[0])
                     {
                         case "ADD":
+                            MyPoint pos = new MyPoint(double.Parse(command[1]), double.Parse(command[2]));
+                            new WorldElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[3])));
                             break;
                         case "REMOVE":
+                            if(elementCollection != null)
+                                GlobalDataStatic.Controller.cnvMain.Children.Remove(elementCollection);
                             break;
                         case "SKIN":
+                            if (elementCollection != null)
+                                elementCollection.SkinElement((SkinsEnum)(int.Parse(command[2])));
                             break;
                         case "X":
+                            if (elementCollection != null)
+                                elementCollection.MoveElement(x: double.Parse(command[2]));
                             break;
                         case "Y":
+                            if (elementCollection != null)
+                                elementCollection.MoveElement(y: double.Parse(command[2]));
                             break;
-
                     }
                 }
                 else //звук

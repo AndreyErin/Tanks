@@ -11,6 +11,8 @@ namespace Server
 {
     public partial class MainWindow : Window
     {
+        public Network network;
+
         public delegate void gEvent(GameEnum gameEvent);
         public event gEvent? GameEvent;
 
@@ -40,6 +42,10 @@ namespace Server
             //настраеваем таймер респавна ботов-танков
             tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
             tTimer_RespawnBotTank.EndInit();
+
+            MessageBox.Show("количество загруженных карт: " + mapPool.Count().ToString() );
+
+            network = new Network();
         }
 
         //таймер респавна танков-ботов

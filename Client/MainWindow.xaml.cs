@@ -88,7 +88,7 @@ namespace Client
         //загрузка программы ----------------
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
-
+            tcpClient = new TcpClient();
         }
 
         //завершение программы ---------------
@@ -105,7 +105,9 @@ namespace Client
         //новая игра
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("контроллер клиентской программы");
             tcpClient.MenuComand(MenuComandEnum.NewGame);
+            
         }
         //новый раунд
         private void btnRaundWin_Click(object sender, RoutedEventArgs e)

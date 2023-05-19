@@ -19,6 +19,7 @@ namespace Server.Model
 
         public Network()
         {
+            
             Task.Factory.StartNew(()=> StartListen()); //запускаем функцию прослушивания в отдельном потоке            
         }
 
@@ -27,16 +28,19 @@ namespace Server.Model
             //сокет для прослушки входящих подключений
             using var listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
+            IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, 7071);
             try
             {
-                IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, 7070);
+                
                 listenSocket.Bind(iPEndPoint);
-                listenSocket.Listen(10);
+                listenSocket.Listen();
+
+                MessageBox.Show("Сервер запущен");
 
                 while (true)
                 {
                     var newClient = await listenSocket.AcceptAsync();
-                    Task.Run(() => new clientClass(listenSocket, clientList)); //создаем класс клиента
+                    Task.Run(() => new clientClass(newClient, clientList)); //создаем класс клиента
                 }
             }
             catch (Exception ex)
@@ -70,6 +74,8 @@ namespace Server.Model
             //конструктор
             public clientClass(Socket clientSocket, List<clientClass> clientList)
             {
+                MessageBox.Show("на сервере создан класс клиента");
+
                 //определяем клияента как основного(либо ведомого)
                 if (clientList.Count == 0) isFirstClient = true;
 
@@ -78,33 +84,42 @@ namespace Server.Model
 
                 //подписываемся на события в игре
                 GlobalDataStatic.Controller.GameEvent += EventOfGame;
+
+                GetDataAsynk();
             }
 
             //получение данных
             protected async Task GetDataAsynk()
             {
+                MessageBox.Show("на сервере запущено получение данных");
                 List<byte> data = new List<byte>(); //весь пакет данных
                 byte[] character = new byte[1];//один байт из данных
                 int haveData; //проверка остались ли еще данные
                 while (true) 
                 {
+                    
                     //считываем весь пакет
                     while (true)
                     {
                         haveData = await client.ReceiveAsync(character, SocketFlags.None);
                         // ^ - символ означающий конец  пакета
-                        if (haveData == 0 || haveData == '^') break;//если считаны все данные
+                        if (haveData == 0 || character[0] == '^') break;//если считаны все данные
                         data.Add(character[0]);
+                        
                     }
 
                     //перевод массива байт в команды от клиента
-                    var command = Encoding.UTF8.GetString(data.ToArray());
+                    string command = Encoding.UTF8.GetString(data.ToArray());
+
+                    
 
                     switch (command) 
                     {
                         //Навигация по меню
                         case "NEWGAME":
-                            GlobalDataStatic.Controller?.NewGame();                            
+                            MessageBox.Show("новая игра - сервер");
+                            GlobalDataStatic.Controller?.NewGame();
+                            
                             break;
                         case "NEWRAUND":
                             GlobalDataStatic.Controller?.NewRaund();

@@ -118,27 +118,49 @@ namespace Client.Model
                 }
             };
             GlobalDataStatic.DispatcherMain.Invoke(action);
+        }
 
+        //скин
+        public void SkinElement(SkinsEnum skin)
+        {
+            Action action = () =>
+            {
+                Source = GlobalDataStatic.SkinDictionary[skin];
+            };
+            GlobalDataStatic.DispatcherMain.Invoke(action);
         }
 
         //движение
-        public void MoveElement(MyPoint pos ,VectorEnum vectorEnum) 
+        public void MoveElement(double x = -10, double y = -10 ) 
         {
-            //если направление сменилось
-            if (vector != vectorEnum)
-            {
-                vector = vectorEnum;
-                VectorElement(vector);
-            }
 
+            VectorEnum vek = VectorEnum.Top;
             Action action = () =>
             {
-                if (pos.X != null)
-                    Canvas.SetLeft(this, pos.X);
+                if (x != -10)
+                {
+                    Canvas.SetLeft(this, x);
+                    if (x < ePos.X)
+                        vek = VectorEnum.Left;
+                    else
+                        vek = VectorEnum.Right;
+                }
 
-                if (pos.Y != null)
-                    Canvas.SetTop(this, pos.Y);
+                if (y != -10)
+                {
+                    Canvas.SetTop(this, y);
+                    if (y < ePos.Y)
+                        vek = VectorEnum.Top;
+                    else
+                        vek = VectorEnum.Down;
+                }
 
+                //если направление сменилось
+                if (vector != vek)
+                {
+                    vector = vek;
+                    VectorElement(vector);
+                }
             };
             GlobalDataStatic.DispatcherMain.Invoke(action);
 
