@@ -16,6 +16,8 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
+            GlobalDataStatic.Controller = this;
+            GlobalDataStatic.DispatcherMain = Dispatcher;
         }
 
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение

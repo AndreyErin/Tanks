@@ -5,11 +5,15 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace Client.Model
 {
     static class GlobalDataStatic
     {
+        public static MainWindow Controller { get; set; }
+        public static Dispatcher DispatcherMain { get; set; }
+
         //музыка
         public static Dictionary<SoundsEnum, Uri> SoundDictionary = new Dictionary<SoundsEnum, Uri>() 
         {            

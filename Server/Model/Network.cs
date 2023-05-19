@@ -85,15 +85,15 @@ namespace Server.Model
             {
                 List<byte> data = new List<byte>(); //весь пакет данных
                 byte[] character = new byte[1];//один байт из данных
-                int havaData; //проверка остались ли еще данные
+                int haveData; //проверка остались ли еще данные
                 while (true) 
                 {
                     //считываем весь пакет
                     while (true)
                     {
-                        havaData = await client.ReceiveAsync(character, SocketFlags.None);
+                        haveData = await client.ReceiveAsync(character, SocketFlags.None);
                         // ^ - символ означающий конец  пакета
-                        if (havaData == 0 || havaData == '^') break;//если считаны все данные
+                        if (haveData == 0 || haveData == '^') break;//если считаны все данные
                         data.Add(character[0]);
                     }
 
@@ -141,7 +141,8 @@ namespace Server.Model
                             tank?.ToFire();
                             break;
 
-                    }                   
+                    }
+                    data.Clear();
                 }
             }
 
@@ -199,7 +200,7 @@ namespace Server.Model
                         {
                             ((ISoundsObjects)e.NewItems[0]).SoundEvent += Sounds;
                         }
-                        commandString = $"ADD@{((WorldElement)e.NewItems[0]).ID}@{((WorldElement)e.NewItems[0]).ePos}@{((WorldElement)e.NewItems[0]).Skin}^";
+                        commandString = $"ADD@{((WorldElement)e.NewItems[0]).ID}@{((WorldElement)e.NewItems[0]).ePos.X}@{((WorldElement)e.NewItems[0]).ePos.Y}@{(int)(((WorldElement)e.NewItems[0]).Skin)}^";
                         break;
 
                     //при удаление объекта будем отписываться

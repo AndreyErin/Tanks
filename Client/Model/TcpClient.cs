@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,8 +12,7 @@ namespace Client.Model
     public class TcpClient
     {
         protected Socket clientSocket { get; set; }
-
-        //protected TcpClient() { }
+      
         public TcpClient()
         {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -106,7 +106,62 @@ namespace Client.Model
         //получить данные
         private async Task GetDataOfServer()
         {
-            
+            List<byte> data = new List<byte>(); //весь пакет данных
+            byte[] character = new byte[1];//один байт из данных
+            int haveData; //проверка остались ли еще данные
+            while (true)
+            {
+                //считываем весь пакет
+                while (true)
+                {
+                    haveData = await clientSocket.ReceiveAsync(character, SocketFlags.None);
+                    // ^ - символ означающий конец  пакета
+                    if (haveData == 0 || haveData == '^') break;//если считаны все данные
+                    data.Add(character[0]);
+                }
+
+                string resultString = Encoding.UTF8.GetString(data.ToArray());
+                bool isCommand = resultString.Contains('@');
+
+                if (isCommand) //команда
+                {
+                    string[] command = resultString.Split('@');
+                    switch (command[0])
+                    {
+                        case "ADD":
+                            break;
+                        case "REMOVE":
+                            break;
+                        case "SKIN":
+                            break;
+                        case "X":
+                            break;
+                        case "Y":
+                            break;
+
+                    }
+                }
+                else //звук
+                {
+                    switch (resultString)
+                    {
+                        case "BONUSSOUND":
+                            break;
+                        case "FERUMSOUND":
+                            break;
+                        case "FOCKSOUND":
+                            break;
+                        case "SHOTSOUND":
+                            break;
+                        case "SHOTTARGETSSOUND":
+                            break;
+                    }
+                }
+
+
+
+                data.Clear();
+            }
         }
     }
 }
