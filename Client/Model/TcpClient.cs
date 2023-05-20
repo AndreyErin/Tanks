@@ -125,6 +125,10 @@ namespace Client.Model
                 }
 
                 string resultString = Encoding.UTF8.GetString(data.ToArray());
+                ///////////////
+                MessageBox.Show("получена строка" + resultString);
+
+
                 bool isCommand = resultString.Contains('@');
 
                 if (isCommand) //команда

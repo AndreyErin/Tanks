@@ -126,7 +126,7 @@ namespace Server
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Чёйта карта не загрузилась");
+                MessageBox.Show("Чёйта карта не загрузилась\n" + ex.Message);
                 return;
             }
         }

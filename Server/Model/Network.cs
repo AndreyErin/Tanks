@@ -209,6 +209,7 @@ namespace Server.Model
                 {
                     //при добавление объкта будем подписываться
                     case NotifyCollectionChangedAction.Add:
+                        //MessageBox.Show("добавление новых объектов в коллекцию");
                         ((WorldElement)e.NewItems[0]).PropertyChanged += ChangedElement;
                         //если элемент может издавать звуки
                         if (e.NewItems[0] is ISoundsObjects)
@@ -216,6 +217,7 @@ namespace Server.Model
                             ((ISoundsObjects)e.NewItems[0]).SoundEvent += Sounds;
                         }
                         commandString = $"ADD@{((WorldElement)e.NewItems[0]).ID}@{((WorldElement)e.NewItems[0]).ePos.X}@{((WorldElement)e.NewItems[0]).ePos.Y}@{(int)(((WorldElement)e.NewItems[0]).Skin)}^";
+                        MessageBox.Show("добавление новых объектов в коллекцию\n" + commandString);
                         break;
 
                     //при удаление объекта будем отписываться
