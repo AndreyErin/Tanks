@@ -1,17 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-
 
 namespace Client.Model
 {
     public class WorldElement : Image
     {
         public int ID { get; set; }
-        protected double _height { get; set; }
-        protected double _width { get; set; }
+        //protected double _height { get; set; }
+        //protected double _width { get; set; }
         public MyPoint ePos { get; set; }
         public VectorEnum vector { get; set; }  
 
@@ -20,17 +19,26 @@ namespace Client.Model
         //4й параметр не обязателен
         public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
         {
+            
+            //MessageBox.Show("новый элемент с ID: " + id + "\n соличество элементов канваса" + GlobalDataStatic.Controller.MainWin.cnvMain.Children.Count);
+
             ID = id;
             ePos = pos;
             Source = GlobalDataStatic.SkinDictionary[skin];
+            
+            SizeElement(skin);
 
             vector = vectorEnum;
             if (vector != VectorEnum.Top)
                 VectorElement(vector);
 
-            Canvas.SetTop(this, ePos.Y);
-            Canvas.SetLeft(this, ePos.X);
-            GlobalDataStatic.Controller.cnvMain.Children.Add(this);
+            Action action = () =>
+            {
+                Canvas.SetTop(this, ePos.X);
+                Canvas.SetLeft(this, ePos.Y);
+                GlobalDataStatic.Controller.cnvMain.Children.Add(this);
+            };
+            GlobalDataStatic.DispatcherMain.Invoke(action);
         }
 
         //размер
@@ -54,8 +62,8 @@ namespace Client.Model
                     case SkinsEnum.PictureBunkerEnamy:
                     case SkinsEnum.PictureBunkerEnamy2:
                     case SkinsEnum.PictureBunkerEnamy3:
-                        _height = 40;
-                        _width = 40;
+                        Height = 40;
+                        Width = 40;
                         break;
                     //30
                     case SkinsEnum.PictureTank1:
@@ -80,16 +88,16 @@ namespace Client.Model
                     case SkinsEnum.PictureLocationGun1:
                     case SkinsEnum.PictureLocationGun2:
                     case SkinsEnum.PictureLocationGun3:
-                        _height = 30;
-                        _width = 30;
+                        Height = 30;
+                        Width = 30;
                         break;
                     //10
                     case SkinsEnum.PictureBullet1:
                     case SkinsEnum.PictureBullet2:
                     case SkinsEnum.PictureBullet3:
                     case SkinsEnum.PictureBullet4:
-                        _height = 10;
-                        _width = 10;
+                        Height = 10;
+                        Width = 10;
                         break;
                 }
             };

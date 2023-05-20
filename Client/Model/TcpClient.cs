@@ -28,8 +28,8 @@ namespace Client.Model
             try
             {
                 await clientSocket.ConnectAsync("127.0.0.1", 7071);
-                MessageBox.Show("подключено");
-                Task.Factory.StartNew(() => GetDataOfServer());
+                //MessageBox.Show("подключено");---------------------
+                Task.Factory.StartNew( async () => await GetDataOfServer());
             }
             catch (System.Exception e)
             {
@@ -104,7 +104,7 @@ namespace Client.Model
         private async Task SetDataOfServer(byte[] data)
         {
             await clientSocket.SendAsync(data, SocketFlags.None);
-            MessageBox.Show("нова игра - отправлено на сервер");
+            //MessageBox.Show("нова игра - отправлено на сервер");--------
         }
 
         //получить данные
@@ -126,29 +126,42 @@ namespace Client.Model
 
                 string resultString = Encoding.UTF8.GetString(data.ToArray());
                 ///////////////
-                MessageBox.Show("получена строка" + resultString);
+                
 
 
                 bool isCommand = resultString.Contains('@');
 
+                //MessageBox.Show("сообщение является командой\n" + isCommand);-------
                 if (isCommand) //команда
                 {
+                    
                     string[] command = resultString.Split('@');
-
-                    var subset = from UIElement s in GlobalDataStatic.Controller.cnvMain.Children
-                                 where (s as WorldElement != null) && ((WorldElement)s).ID == int.Parse(command[1])
-                                 select s;
-                    WorldElement elementCollection = null;
-                    foreach (WorldElement worldElement in subset)
-                    {
-                        elementCollection = worldElement;
-                    }
-                                                   
+                    ///////////////////////////////////////////////////////////////////////
+//                   var subset = from UIElement s in GlobalDataStatic.Controller.cnvMain.Children
+//                                where (s as WorldElement != null) && ((WorldElement)s).ID == int.Parse(command[1])
+//                                select s;
+                   WorldElement elementCollection = null;
+//                   foreach (WorldElement worldElement in subset)
+//                   {
+//                       elementCollection = worldElement;
+//                   }
+                    
                     switch (command[0])
                     {
+                        
+
                         case "ADD":
-                            MyPoint pos = new MyPoint(double.Parse(command[1]), double.Parse(command[2]));
-                            new WorldElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[3])));
+                            
+                            //Action action = () =>
+                            //{
+                               
+                                    MyPoint pos = new MyPoint(double.Parse(command[2]), double.Parse(command[3]));
+                                //MessageBox.Show("команда создать элемент");
+                                //WorldElement w = new WorldElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
+                                GlobalDataStatic.Controller.AddElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
+
+                            //};GlobalDataStatic.DispatcherMain.Invoke(action);
+                            
                             break;
                         case "REMOVE":
                             if(elementCollection != null)

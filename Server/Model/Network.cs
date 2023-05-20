@@ -74,7 +74,7 @@ namespace Server.Model
             //конструктор
             public clientClass(Socket clientSocket, List<clientClass> clientList)
             {
-                MessageBox.Show("на сервере создан класс клиента");
+                //MessageBox.Show("на сервере создан класс клиента");
 
                 //определяем клияента как основного(либо ведомого)
                 if (clientList.Count == 0) isFirstClient = true;
@@ -217,7 +217,7 @@ namespace Server.Model
                             ((ISoundsObjects)e.NewItems[0]).SoundEvent += Sounds;
                         }
                         commandString = $"ADD@{((WorldElement)e.NewItems[0]).ID}@{((WorldElement)e.NewItems[0]).ePos.X}@{((WorldElement)e.NewItems[0]).ePos.Y}@{(int)(((WorldElement)e.NewItems[0]).Skin)}^";
-                        MessageBox.Show("добавление новых объектов в коллекцию\n" + commandString);
+                        //MessageBox.Show("добавление новых объектов в коллекцию\n" + commandString);
                         break;
 
                     //при удаление объекта будем отписываться

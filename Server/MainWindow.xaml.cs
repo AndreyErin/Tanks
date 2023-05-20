@@ -43,7 +43,7 @@ namespace Server
             tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
             tTimer_RespawnBotTank.EndInit();
 
-            MessageBox.Show("количество загруженных карт: " + mapPool.Count().ToString() );
+            //MessageBox.Show("количество загруженных карт: " + mapPool.Count().ToString() );
 
             network = new Network();
         }

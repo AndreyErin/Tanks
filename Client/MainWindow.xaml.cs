@@ -4,6 +4,7 @@ using System.Windows;
 using System.IO;
 using System.Windows.Input;
 using Client.Model;
+using System;
 
 namespace Client
 {
@@ -18,6 +19,8 @@ namespace Client
             InitializeComponent();
             GlobalDataStatic.Controller = this;
             GlobalDataStatic.DispatcherMain = Dispatcher;
+            ///////////////////////////////////////////////////////////////////
+            //WorldElement w = new WorldElement(21,new MyPoint(10,20), SkinsEnum.PictureBlock1);
         }
 
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
@@ -121,9 +124,20 @@ namespace Client
         }
 
         //добавление объекта на поле боя
-        public void AddElement() 
+        public void AddElement(int id, MyPoint pos, SkinsEnum skin) 
         {
-
+            try
+            {    
+                Action action = () =>
+                {
+                    WorldElement w = new WorldElement(id, pos, skin);
+                }; 
+                GlobalDataStatic.DispatcherMain.Invoke(action);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("попытка создать объект" + ex.Message);
+            }
         }
         //удаление объекта с поля боя
         public void RemoveElement() 
