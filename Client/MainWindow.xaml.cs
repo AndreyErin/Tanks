@@ -127,12 +127,13 @@ namespace Client
         public void AddElement(int id, MyPoint pos, SkinsEnum skin) 
         {
             try
-            {    
-                Action action = () =>
-                {
-                    WorldElement w = new WorldElement(id, pos, skin);
-                }; 
-                GlobalDataStatic.DispatcherMain.Invoke(action);
+            {
+                //MessageBox.Show("контроллер клиента\n" + Thread.CurrentThread.ManagedThreadId.ToString());
+                //Action action = () =>
+                //{
+                WorldElement w = new WorldElement(id, pos, skin);
+                //}; 
+                //GlobalDataStatic.DispatcherMain.Invoke(action);
             }
             catch (Exception ex)
             {

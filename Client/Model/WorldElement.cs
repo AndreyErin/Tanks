@@ -20,7 +20,7 @@ namespace Client.Model
         public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
         {
             
-            //MessageBox.Show("новый элемент с ID: " + id + "\n соличество элементов канваса" + GlobalDataStatic.Controller.MainWin.cnvMain.Children.Count);
+            MessageBox.Show("новый элемент с ID: " + id + "\n соличество элементов канваса" + GlobalDataStatic.Controller.MainWin.cnvMain.Children.Count);
 
             ID = id;
             ePos = pos;
@@ -32,20 +32,21 @@ namespace Client.Model
             if (vector != VectorEnum.Top)
                 VectorElement(vector);
 
-            Action action = () =>
-            {
+            //Action action = () =>
+            //{
                 Canvas.SetTop(this, ePos.X);
                 Canvas.SetLeft(this, ePos.Y);
                 GlobalDataStatic.Controller.cnvMain.Children.Add(this);
-            };
-            GlobalDataStatic.DispatcherMain.Invoke(action);
+
+            //};
+            //GlobalDataStatic.DispatcherMain.Invoke(action);
         }
 
         //размер
         protected void SizeElement(SkinsEnum skin) 
         {
-            Action action = () =>
-            {
+            //Action action = () =>
+            //{
                 switch (skin)
                 {
                     //40
@@ -100,15 +101,15 @@ namespace Client.Model
                         Width = 10;
                         break;
                 }
-            };
-            GlobalDataStatic.DispatcherMain.Invoke(action);
+            //};
+            //GlobalDataStatic.DispatcherMain.Invoke(action);
         }
 
         //направление
         public void VectorElement(VectorEnum vectorEnum) 
         {
-            Action action = () =>
-            {
+           // Action action = () =>
+            //{
                 switch (vectorEnum)
                 {
                     case VectorEnum.Top:
@@ -124,18 +125,18 @@ namespace Client.Model
                         this.LayoutTransform = new RotateTransform(90);
                         break;
                 }
-            };
-            GlobalDataStatic.DispatcherMain.Invoke(action);
+            //};
+            //GlobalDataStatic.DispatcherMain.Invoke(action);
         }
 
         //скин
         public void SkinElement(SkinsEnum skin)
         {
-            Action action = () =>
-            {
+            //Action action = () =>
+            //{
                 Source = GlobalDataStatic.SkinDictionary[skin];
-            };
-            GlobalDataStatic.DispatcherMain.Invoke(action);
+            //};
+            //GlobalDataStatic.DispatcherMain.Invoke(action);
         }
 
         //движение
@@ -143,8 +144,8 @@ namespace Client.Model
         {
 
             VectorEnum vek = VectorEnum.Top;
-            Action action = () =>
-            {
+            //Action action = () =>
+            //{
                 if (x != -10)
                 {
                     Canvas.SetLeft(this, x);
@@ -169,8 +170,8 @@ namespace Client.Model
                     vector = vek;
                     VectorElement(vector);
                 }
-            };
-            GlobalDataStatic.DispatcherMain.Invoke(action);
+            //};
+            //GlobalDataStatic.DispatcherMain.Invoke(action);
 
         }
     }

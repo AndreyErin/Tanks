@@ -35,7 +35,7 @@ namespace Server.Model
                 listenSocket.Bind(iPEndPoint);
                 listenSocket.Listen();
 
-                MessageBox.Show("Сервер запущен");
+                //MessageBox.Show("Сервер запущен");
 
                 while (true)
                 {
@@ -91,7 +91,7 @@ namespace Server.Model
             //получение данных
             protected async Task GetDataAsynk()
             {
-                MessageBox.Show("на сервере запущено получение данных");
+                //MessageBox.Show("на сервере запущено получение данных");-------------------
                 List<byte> data = new List<byte>(); //весь пакет данных
                 byte[] character = new byte[1];//один байт из данных
                 int haveData; //проверка остались ли еще данные
@@ -117,9 +117,18 @@ namespace Server.Model
                     {
                         //Навигация по меню
                         case "NEWGAME":
-                            MessageBox.Show("новая игра - сервер");
-                            GlobalDataStatic.Controller?.NewGame();
+                            //MessageBox.Show("новая игра - сервер");
+
                             
+
+
+
+                            //Action action = () =>
+                            //{
+                                GlobalDataStatic.Controller?.NewGame();
+                            //};
+                            //GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+
                             break;
                         case "NEWRAUND":
                             GlobalDataStatic.Controller?.NewRaund();
@@ -307,11 +316,15 @@ namespace Server.Model
                 switch (gameEvent)
                 {
                     case GameEnum.NewGame:
-                        tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
-                        GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
-                        GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя
-                        //подписываемся на события коллекции
-                        SubscribeForEventsElements();
+                        Action action = () =>
+                        {
+                            tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
+                            GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
+                            GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя
+                                                                              //подписываемся на события коллекции
+                            SubscribeForEventsElements();
+                        };
+                        GlobalDataStatic.Controller.Dispatcher.Invoke(action);
                         break;
 
                     case GameEnum.NewRound:

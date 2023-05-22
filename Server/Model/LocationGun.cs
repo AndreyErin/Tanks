@@ -26,7 +26,8 @@ namespace Server.Model
             timerRotation.Interval = 500;
             timerRotation.Elapsed += GunAutoRotation;
             timerRotation.EndInit();
-            timerRotation.Start();            
+            timerRotation.Start();
+            AddMe();
         }
 
         //Таймер повороты - поиск врага

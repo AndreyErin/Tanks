@@ -22,7 +22,7 @@ namespace Server.Model
             tAutoMove.Elapsed += AutoMove;
             tAutoMove.EndInit();
             tAutoMove.Start();
-            
+            AddMe();
         }
         //таймер для автоматического передвижения
         protected void AutoMove(object sender, System.Timers.ElapsedEventArgs e) 

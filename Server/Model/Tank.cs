@@ -35,9 +35,6 @@ namespace Server.Model
             _height = 30;
             _width = 30;
             
-            //добавление на поле боя
-            GlobalDataStatic.BattleGroundCollection.Add(this);
-
             //настройка таймера движения
             tTimerMove.Interval = 10;
             tTimerMove.Elapsed += tTimerMove_Elapsed;

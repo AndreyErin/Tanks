@@ -35,6 +35,7 @@ namespace Server.Model
                     Skin = SkinsEnum.PictureTankOfDestroySpeed2;
                     break;
             }
+            AddMe();
         }
 
         //получение урона объктом

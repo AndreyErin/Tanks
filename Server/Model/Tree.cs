@@ -12,7 +12,7 @@ namespace Server.Model
             _height = 40;           
             Skin = SkinsEnum.PictureWood1;
 
-            GlobalDataStatic.BattleGroundCollection.Add(this);          
+            AddMe();          
         }
     }
 }

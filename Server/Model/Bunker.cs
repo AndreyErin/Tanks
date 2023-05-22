@@ -12,6 +12,7 @@ namespace Server.Model
         {
             Skin = SkinsEnum.PictureBunker;
             IsPlayer = true;
+            if(this as BunkerEnamy == null) AddMe();
         }
 
         public override void GetDamage(int damage)

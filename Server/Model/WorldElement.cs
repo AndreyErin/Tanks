@@ -47,6 +47,9 @@ namespace Server.Model
             } 
         }
 
+        //добавление себя на поле боя
+        protected void AddMe() { GlobalDataStatic.BattleGroundCollection.Add(this); }
+
 
     }
 }

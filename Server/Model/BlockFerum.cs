@@ -10,6 +10,7 @@ namespace Server.Model
         {
             Skin = SkinsEnum.PictureBlockFerum1;
             HP = 90;
+            AddMe();
         }
 
         //получение урона объктом

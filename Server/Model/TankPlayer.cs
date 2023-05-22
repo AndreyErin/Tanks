@@ -13,6 +13,7 @@ namespace Server.Model
         {
             IsPlayer = true;
             Skin = SkinsEnum.PictureTank1;
+            AddMe();
         }
 
         protected override void DistroyMy()

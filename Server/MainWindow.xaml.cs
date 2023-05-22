@@ -77,6 +77,7 @@ namespace Server
             //очищаем поле
             GlobalDataStatic.BattleGroundCollection.Clear();
             GlobalDataStatic.PartyTankBots.Clear();
+            GlobalDataStatic.IdNumberElement = 0;
 
             //заполняем поле
             try
@@ -89,7 +90,7 @@ namespace Server
                 //каменные блоки
                 foreach (MyPoint pos in map.rockBlocs)
                 {
-                    Block b = new Block(pos);
+                    BlockIron b = new BlockIron(pos);
                 }
                 //железные блоки
                 foreach (MyPoint pos in map.ironBlocs)
@@ -104,7 +105,7 @@ namespace Server
                 //дружеские каменные блоки
                 foreach (MyPoint pos in map.friendlyRockBlocs)
                 {
-                    Block b = new Block(pos) { IsPlayer = true };
+                    BlockIron b = new BlockIron(pos) { IsPlayer = true };
                 }
                 //локальные пушки
                 foreach (MyPoint pos in map.LocationGun)
@@ -138,7 +139,7 @@ namespace Server
             //должны загружаться до респавнов
             CreateWorldElements(mapPool[lvlMap]);
 
-            if (GameEvent != null) GameEvent.Invoke(GameEnum.NewGame);
+            GameEvent?.Invoke(GameEnum.NewGame);
             //подписываемся
             foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
             {
@@ -146,7 +147,7 @@ namespace Server
             }
             
             //запускаем респавн  ботов-танков
-            tTimer_RespawnBotTank.Start();
+            //tTimer_RespawnBotTank.Start();
         }
 
         //уничтожение танков-ботов

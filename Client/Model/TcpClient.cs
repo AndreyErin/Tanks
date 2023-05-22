@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Linq;
+using System.Threading;
 
 namespace Client.Model
 {
@@ -113,6 +114,7 @@ namespace Client.Model
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
             int haveData; //проверка остались ли еще данные
+            string[] command;
             while (true)
             {
                 //считываем весь пакет
@@ -135,7 +137,7 @@ namespace Client.Model
                 if (isCommand) //команда
                 {
                     
-                    string[] command = resultString.Split('@');
+                    command = resultString.Split('@');
                     ///////////////////////////////////////////////////////////////////////
 //                   var subset = from UIElement s in GlobalDataStatic.Controller.cnvMain.Children
 //                                where (s as WorldElement != null) && ((WorldElement)s).ID == int.Parse(command[1])
@@ -151,16 +153,16 @@ namespace Client.Model
                         
 
                         case "ADD":
-                            
-                            //Action action = () =>
-                            //{
+                            //MessageBox.Show("до вхождения в диспетчер\n" + Thread.CurrentThread.ManagedThreadId.ToString());
+                            Action action = () =>
+                            {
                                
-                                    MyPoint pos = new MyPoint(double.Parse(command[2]), double.Parse(command[3]));
-                                //MessageBox.Show("команда создать элемент");
+                                MyPoint pos = new MyPoint(double.Parse(command[2]), double.Parse(command[3]));
+                                MessageBox.Show("команда создать элемент\n" + Thread.CurrentThread.ManagedThreadId.ToString());
                                 //WorldElement w = new WorldElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
                                 GlobalDataStatic.Controller.AddElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
 
-                            //};GlobalDataStatic.DispatcherMain.Invoke(action);
+                            };GlobalDataStatic.DispatcherMain.Invoke(action);
                             
                             break;
                         case "REMOVE":
@@ -180,6 +182,7 @@ namespace Client.Model
                                 elementCollection.MoveElement(y: double.Parse(command[2]));
                             break;
                     }
+                    
                 }
                 else //звук
                 {
@@ -199,7 +202,7 @@ namespace Client.Model
                 }
 
 
-
+                command = null;
                 data.Clear();
             }
         }

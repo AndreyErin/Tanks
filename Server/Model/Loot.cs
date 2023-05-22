@@ -33,7 +33,7 @@ namespace Server.Model
             _height = 30;
             _width = 30;
             ePos = pos;
-            GlobalDataStatic.BattleGroundCollection.Add(this);
+            AddMe();
         }
 
         //проверка попадания по нашему обьекту

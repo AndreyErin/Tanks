@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 //ред
 namespace Server.Model
@@ -15,5 +16,6 @@ namespace Server.Model
         public static MainWindow? Controller { get; set; }
         public static bool readyCheck { get; set; } = false;
         public static int IdNumberElement { get; set; } = 0;
+        
     }
 }
