@@ -28,6 +28,7 @@ namespace Client
         //двигаем танк
         private void MainWin_KeyDown(object sender, KeyEventArgs e)
         {
+            
             switch (e.Key)
             {
                 case Key.W:
@@ -35,6 +36,7 @@ namespace Client
                     //сообщение серверу
                     tcpClient.KeyOfControlTank(Key.Up);
                     _moveKey = e.Key;
+                    MessageBox.Show(" ");
                     break;
                 case Key.S:
                 case Key.Down:
@@ -108,7 +110,7 @@ namespace Client
         //новая игра
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("контроллер клиентской программы");
+            //MessageBox.Show("контроллер клиентской программы");
             tcpClient.MenuComand(MenuComandEnum.NewGame);
             
         }

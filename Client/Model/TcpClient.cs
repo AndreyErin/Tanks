@@ -41,34 +41,38 @@ namespace Client.Model
         //управление танком
         public void KeyOfControlTank(Key key) 
         {
-            byte[] data;
-            string command = "";
 
-            switch (key)
-            {
-                case Key.Up:
-                    command = "MOVEUP^";
-                    break;
-                case Key.Down:
-                    command = "MOVEDOWN^";
-                    break;
-                case Key.Left:
-                    command = "MOVELEFT^";
-                    break;
-                case Key.Right:
-                    command = "MOVERIGHT^";
-                    break;
-                case Key.S:
-                    command = "STOP^";
-                    break;
+                byte[] data;
+                string command = "";
 
-                case Key.Space:
-                    command = "FIRE^";
-                    break;                    
-            }
+                MessageBox.Show("");
 
-            data = Encoding.UTF8.GetBytes(command);
-            SetDataOfServer(data);
+                switch (key)
+                {
+                    case Key.Up:
+
+                        command = "MOVEUP^";
+                        break;
+                    case Key.Down:
+                        command = "MOVEDOWN^";
+                        break;
+                    case Key.Left:
+                        command = "MOVELEFT^";
+                        break;
+                    case Key.Right:
+                        command = "MOVERIGHT^";
+                        break;
+                    case Key.S:
+                        command = "STOP^";
+                        break;
+
+                    case Key.Space:
+                        command = "FIRE^";
+                        break;
+                }
+                data = Encoding.UTF8.GetBytes(command);
+                SetDataOfServer(data);
+
         }
 
         //навигация по меню
@@ -111,6 +115,7 @@ namespace Client.Model
         //получить данные
         private async Task GetDataOfServer()
         {
+            //MessageBox.Show("запуск получения данных"); 
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
             int haveData; //проверка остались ли еще данные
@@ -158,7 +163,7 @@ namespace Client.Model
                             {
                                
                                 MyPoint pos = new MyPoint(double.Parse(command[2]), double.Parse(command[3]));
-                                MessageBox.Show("команда создать элемент\n" + Thread.CurrentThread.ManagedThreadId.ToString());
+                                //MessageBox.Show("команда создать элемент\n" + Thread.CurrentThread.ManagedThreadId.ToString());
                                 //WorldElement w = new WorldElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
                                 GlobalDataStatic.Controller.AddElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
 
@@ -178,6 +183,7 @@ namespace Client.Model
                                 elementCollection.MoveElement(x: double.Parse(command[2]));
                             break;
                         case "Y":
+                            MessageBox.Show("передвижение от сервера получено");
                             if (elementCollection != null)
                                 elementCollection.MoveElement(y: double.Parse(command[2]));
                             break;

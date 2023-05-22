@@ -20,7 +20,7 @@ namespace Client.Model
         public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
         {
             
-            MessageBox.Show("новый элемент с ID: " + id + "\n соличество элементов канваса" + GlobalDataStatic.Controller.MainWin.cnvMain.Children.Count);
+            //MessageBox.Show("новый элемент с ID: " + id + "\n соличество элементов канваса" + GlobalDataStatic.Controller.MainWin.cnvMain.Children.Count);
 
             ID = id;
             ePos = pos;

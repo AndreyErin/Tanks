@@ -117,17 +117,10 @@ namespace Server.Model
                     {
                         //Навигация по меню
                         case "NEWGAME":
-                            //MessageBox.Show("новая игра - сервер");
 
-                            
+                            SubscribeForEventsElements(); //подписываемся на события коллекции
+                            GlobalDataStatic.Controller?.NewGame();//запускаем новую игру в контроллере
 
-
-
-                            //Action action = () =>
-                            //{
-                                GlobalDataStatic.Controller?.NewGame();
-                            //};
-                            //GlobalDataStatic.Controller.Dispatcher.Invoke(action);
 
                             break;
                         case "NEWRAUND":
@@ -319,12 +312,14 @@ namespace Server.Model
                         Action action = () =>
                         {
                             tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
-                            GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
-                            GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя
-                                                                              //подписываемся на события коллекции
-                            SubscribeForEventsElements();
+                            
+                            //GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя   
                         };
                         GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+
+                        GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
+                        
+
                         break;
 
                     case GameEnum.NewRound:
