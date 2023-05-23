@@ -5,6 +5,9 @@ using System.IO;
 using System.Windows.Input;
 using Client.Model;
 using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Text;
 
 namespace Client
 {
@@ -12,62 +15,69 @@ namespace Client
 
     public partial class MainWindow : Window
     {
-        private TcpClient tcpClient;
+        private Socket _socket;
+        private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
+        private Key _lastKey = Key.None;//кнопка нажатая пользователем
+
+        private Dictionary<int, WorldElement> SearchElement = new Dictionary<int, WorldElement>();
 
         public MainWindow()
         {
             InitializeComponent();
             GlobalDataStatic.Controller = this;
-            GlobalDataStatic.DispatcherMain = Dispatcher;
-            ///////////////////////////////////////////////////////////////////
-            //WorldElement w = new WorldElement(21,new MyPoint(10,20), SkinsEnum.PictureBlock1);
         }
 
-        private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
-        private Key _lastKey = Key.None;//кнопка нажатая пользователем
+
         //двигаем танк
         private void MainWin_KeyDown(object sender, KeyEventArgs e)
         {
-            
+            byte[] data;
+            string command = "";
+
             switch (e.Key)
             {
-                case Key.W:
-                case Key.Up:
-                    //сообщение серверу
-                    tcpClient.KeyOfControlTank(Key.Up);
-                    _moveKey = e.Key;
-                    
-                    break;
-                case Key.S:
-                case Key.Down:
-                    tcpClient.KeyOfControlTank(Key.Down);
-                    _moveKey = e.Key;
-                    break;
-                case Key.A:
-                case Key.Left:
-                    tcpClient.KeyOfControlTank(Key.Left);
-                    _moveKey = e.Key;
-                    break;
-                case Key.D:
-                case Key.Right:
-                    tcpClient.KeyOfControlTank(Key.Right);
-                    _moveKey = e.Key;
-                    break;
-                case Key.Space: //стрельба
-                    if (cD == false)
-                    {
-                        tcpClient.KeyOfControlTank(Key.Space);
-                        Task.Factory.StartNew(CooldownFire);//запускаем откат в отдельном потоке
-                    }
-                    break;
+            case Key.W:
+            case Key.Up:
+                //сообщение серверу
+                command = "MOVEUP^";
+                _moveKey = e.Key;                   
+                break;
+            case Key.S:
+            case Key.Down:
+                command = "MOVEDOWN^";
+                _moveKey = e.Key;
+                break;
+            case Key.A:
+            case Key.Left:
+                command = "MOVELEFT^";
+                _moveKey = e.Key;
+                break;
+            case Key.D:
+            case Key.Right:
+                command = "MOVERIGHT^";
+                _moveKey = e.Key;
+                break;
+            case Key.Space: //стрельба
+                if (cD == false)
+                {
+                    command = "FIRE^";
+                    Task.Factory.StartNew(CooldownFire);//запускаем откат в отдельном потоке
+                }
+                break;
             }
-
+            data = Encoding.UTF8.GetBytes(command);
+            SetDataOfServer(data);
         }
         
         private void MainWin_KeyUp(object sender, KeyEventArgs e)
         {
+            byte[] data;
+            
             if (e.Key == _moveKey)//если кнопка движения была поднята то останавливаем танк
-                tcpClient.KeyOfControlTank(Key.S);
+            {               
+                data = Encoding.UTF8.GetBytes("STOP^");
+                SetDataOfServer(data);
+            }
 
             _lastKey = Key.None;
         }
@@ -90,62 +100,171 @@ namespace Client
             cD = false;
         }
 
-        //загрузка программы ----------------
-        private void MainWin_Loaded(object sender, RoutedEventArgs e)
+        //загрузка программы
+        private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
-            tcpClient = new TcpClient();
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket = socket;
+
+            try
+            {
+                await _socket.ConnectAsync("127.0.0.1", 7071);                
+                Task.Factory.StartNew(async () => await GetDataOfServer());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось подключиться к серверу\n" + ex.Message);
+            }
         }
 
-        //завершение программы ---------------
+        //завершение программы
         private void MainWin_Unloaded(object sender, RoutedEventArgs e)
         {
-
+            _socket.Shutdown(SocketShutdown.Both);
+            _socket.Close();
         }
 
-        //выход - отключение от сервера дописать------------------
+        //выход - отключение от сервера
         private void btnOut_Click(object sender, RoutedEventArgs e)
         {
-            tcpClient.MenuComand(MenuComandEnum.Out);
+            byte[] data = Encoding.UTF8.GetBytes("OUT^");
+            SetDataOfServer(data);
         }
+
         //новая игра
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-            //MessageBox.Show("контроллер клиентской программы");
-            tcpClient.MenuComand(MenuComandEnum.NewGame);
-            
+            byte[] data = Encoding.UTF8.GetBytes("NEWGAME^");
+            SetDataOfServer(data);
         }
         //новый раунд
         private void btnRaundWin_Click(object sender, RoutedEventArgs e)
         {
-            tcpClient.MenuComand(MenuComandEnum.NewRaund);
+            byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
+            SetDataOfServer(data);
         }
         //переигровка раунда
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
-            tcpClient.MenuComand(MenuComandEnum.Replay);
+            byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
+            SetDataOfServer(data);
+        }
+
+        //готовность 2го игрока///////////не задействованно
+        private void btnReady_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] data = Encoding.UTF8.GetBytes("READY^");
+            SetDataOfServer(data);
         }
 
         //добавление объекта на поле боя
         public void AddElement(int id, MyPoint pos, SkinsEnum skin) 
         {
-            try
-            {
-                //MessageBox.Show("контроллер клиента\n" + Thread.CurrentThread.ManagedThreadId.ToString());
-                //Action action = () =>
-                //{
-                WorldElement w = new WorldElement(id, pos, skin);
-                //}; 
-                //GlobalDataStatic.DispatcherMain.Invoke(action);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("попытка создать объект" + ex.Message);
-            }
+            WorldElement we = new WorldElement(id, pos, skin);
+            SearchElement.Add(id, we);
         }
-        //удаление объекта с поля боя
-        public void RemoveElement() 
-        {
 
+        //удаление объекта с поля боя
+        public void RemoveElement(int id) 
+        {
+            cnvMain.Children.Remove(SearchElement[id]);
+            SearchElement.Remove(id);
+        }
+
+        //изменение скина
+        public void SkinUloadeElement(int id ,SkinsEnum skin)
+        {
+            SearchElement[id].SkinElement(skin);            
+        }
+
+        //изменение положения
+        public void PosElement(int id, double x = -10, double y = -10)
+        {
+            SearchElement[id].MoveElement(x, y);
+        }
+
+        //отправить данные
+        private async Task SetDataOfServer(byte[] data)
+        {
+            await _socket.SendAsync(data, SocketFlags.None);
+        }
+
+        //получить данные
+        private async Task GetDataOfServer()
+        {
+           
+            List<byte> data = new List<byte>(); //весь пакет данных
+            byte[] character = new byte[1];//один байт из данных
+            int haveData; //проверка остались ли еще данные
+            string[] command;
+            while (true)
+            {
+                //считываем весь пакет
+                while (true)
+                {
+                    haveData = await _socket.ReceiveAsync(character, SocketFlags.None);
+                    // ^ - символ означающий конец  пакета
+                    if (haveData == 0 || character[0] == '^') break;//если считаны все данные
+                    data.Add(character[0]);
+                }
+
+                string resultString = Encoding.UTF8.GetString(data.ToArray());
+                bool isCommand = resultString.Contains('@');
+
+                Action action = () =>
+                {
+                    if (isCommand) //команда
+                    {
+                        command = resultString.Split('@');
+
+                        switch (command[0])
+                        {
+
+                        case "ADD":
+                            MyPoint pos = new MyPoint(double.Parse(command[2]), double.Parse(command[3]));
+                            AddElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
+                            break;
+
+                        case "REMOVE":
+                            RemoveElement(int.Parse(command[1]));
+                            break;
+
+                        case "SKIN":
+                            SkinUloadeElement(int.Parse(command[1]), (SkinsEnum)(int.Parse(command[2])));                               
+                            break;
+
+                        case "X":
+                            PosElement(int.Parse(command[1]), double.Parse(command[2]));                               
+                            break;
+
+                        case "Y":
+                            PosElement(id: int.Parse(command[1]), y: double.Parse(command[3]));
+                            break;
+                        }
+
+                    }
+                    else //звук
+                    {
+                        switch (resultString)
+                        {
+                        case "BONUSSOUND":
+                            break;
+                        case "FERUMSOUND":
+                            break;
+                        case "FOCKSOUND":
+                            break;
+                        case "SHOTSOUND":
+                            break;
+                        case "SHOTTARGETSSOUND":
+                            break;
+                        }
+                    }
+                };
+                Dispatcher.Invoke(action);
+
+                command = null;
+                data.Clear();
+            }
         }
     }
 }

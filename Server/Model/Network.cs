@@ -121,7 +121,7 @@ namespace Server.Model
 
                             SubscribeForEventsElements(); //подписываемся на события коллекции
                             GlobalDataStatic.Controller?.NewGame();//запускаем новую игру в контроллере
-
+                            MessageBox.Show("сервер получил команду\n" + command);
 
                             break;
                         case "NEWRAUND":
