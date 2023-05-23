@@ -129,21 +129,22 @@ namespace Client
         {
             byte[] data = Encoding.UTF8.GetBytes("OUT^");
             SetDataOfServer(data);
+            MainWin.Close();
         }
 
-        //новая игра
+        //новая игра - сообщение
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("NEWGAME^");
             SetDataOfServer(data);
         }
-        //новый раунд
+        //новый раунд  - сообщение
         private void btnRaundWin_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
             SetDataOfServer(data);
         }
-        //переигровка раунда
+        //переигровка раунда - сообщение
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
@@ -243,8 +244,16 @@ namespace Client
                         }
 
                     }
-                    else //звук
+                    else 
                     {
+                        //отклик от сервера. событие произошедшее на сервере
+                        bool serverEvent = int.TryParse(resultString, out var number);
+                        if (serverEvent)
+                        {
+                            ServerGameEvent((GameEnum)number);
+                        }
+
+                        //звук
                         switch (resultString)
                         {
                         case "BONUSSOUND":
@@ -266,5 +275,64 @@ namespace Client
                 data.Clear();
             }
         }
+
+        //-------------------------------------------------------------------------------
+        //ето пока сервер нам не отправляет. допилить серверную программу
+        private void ServerGameEvent(GameEnum gameEnum) 
+        {
+            //отклик от сервера. событие произошедшее на сервере
+            switch (gameEnum)
+            {
+                case GameEnum.NewGame:
+                    btnStartGame.Visibility = Visibility.Hidden;
+                    lblResultOfBattleText.Visibility = Visibility.Hidden;
+                    btnOut2.Visibility = Visibility.Hidden;                    
+                    break;
+                case GameEnum.NewRound:
+                    btnStartGame.Visibility = Visibility.Hidden;
+                    lblResultOfBattleText.Visibility = Visibility.Hidden;
+                    lblWinText.Visibility = Visibility.Hidden;
+                    btnOut2.Visibility = Visibility.Hidden;
+                    break;
+                case GameEnum.ReplayRound:
+                    btnStartGame.Visibility = Visibility.Hidden;
+                    lblResultOfBattleText.Visibility = Visibility.Hidden;
+                    btnRaundReplay.Visibility = Visibility.Hidden;
+                    btnOut2.Visibility = Visibility.Hidden;
+                    break;
+                case GameEnum.DistroyEnemyTank:
+                    lblResultOfBattleText.Content = "Победа";
+                    lblResultOfBattleText.Visibility = Visibility.Visible;
+                    lblWinText.Content = "Армия врага уничтожена!";
+                    lblWinText.Visibility = Visibility.Visible;
+                    btnRaundWin.Visibility = Visibility.Visible;
+                    btnOut2.Visibility = Visibility.Visible;
+                    break;
+                case GameEnum.DistroyFriendlyTank:
+                    lblResultOfBattleText.Content = "Поражение";
+                    lblResultOfBattleText.Visibility = Visibility.Visible;
+                    lblWinText.Content = "Наша армия уничтожена.";
+                    btnRaundReplay.Visibility = Visibility.Visible;
+                    btnOut2.Visibility = Visibility.Visible;
+                    break;
+                case GameEnum.DestroyBunker:
+                    lblResultOfBattleText.Content = "Поражение";
+                    lblResultOfBattleText.Visibility = Visibility.Visible;
+                    lblWinText.Content = "Наш штаб уничтожен.";
+                    lblWinText.Visibility = Visibility.Visible;
+                    btnRaundReplay.Visibility = Visibility.Visible;
+                    btnOut2.Visibility = Visibility.Visible;
+                    break;
+                case GameEnum.DestroyBunkerEnamy:
+                    lblResultOfBattleText.Content = "Победа";
+                    lblResultOfBattleText.Visibility = Visibility.Visible;
+                    lblWinText.Content = "Штаб врага уничтожен!";
+                    lblWinText.Visibility = Visibility.Visible;
+                    btnRaundWin.Visibility = Visibility.Visible;
+                    btnOut2.Visibility = Visibility.Visible;
+                    break;
+            }
+        }
+
     }
 }
