@@ -36,7 +36,7 @@ namespace Client
                     //сообщение серверу
                     tcpClient.KeyOfControlTank(Key.Up);
                     _moveKey = e.Key;
-                    MessageBox.Show(" ");
+                    
                     break;
                 case Key.S:
                 case Key.Down:

@@ -45,7 +45,7 @@ namespace Client.Model
                 byte[] data;
                 string command = "";
 
-                MessageBox.Show("");
+                
 
                 switch (key)
                 {
@@ -72,6 +72,7 @@ namespace Client.Model
                 }
                 data = Encoding.UTF8.GetBytes(command);
                 SetDataOfServer(data);
+            //MessageBox.Show("нажатие отправлено на вервер\n" + command);
 
         }
 

@@ -46,6 +46,9 @@ namespace Server
             //MessageBox.Show("количество загруженных карт: " + mapPool.Count().ToString() );
 
             network = new Network();
+
+            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(new MyPoint(0, 0)));
+            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(new MyPoint(0, 0)));
         }
 
         //таймер респавна танков-ботов
@@ -124,6 +127,13 @@ namespace Server
                     BunkerEnamy b = new BunkerEnamy(map.BunkerEnamyPos);
                     b.BunkerDestroy += DestroyBunkerEnamy;
                 }
+
+
+                GlobalDataStatic.PartyTanksOfPlayers[0] = new TankPlayer(map.respawnTankPlayer[0]);
+                //GlobalDataStatic.PartyTanksOfPlayers[1] = new TankPlayer(map.respawnTankPlayer[1]);
+                GlobalDataStatic.BattleGroundCollection.Add(GlobalDataStatic.PartyTanksOfPlayers[0]);//добавляемся на поле боя
+                //GlobalDataStatic.BattleGroundCollection.Add(GlobalDataStatic.PartyTanksOfPlayers[1]);//добавляемся на поле боя
+
             }
             catch (Exception ex)
             {
@@ -244,6 +254,11 @@ namespace Server
 
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
+        }
+
+        public void CreatePlayerTank()
+        {
+            
         }
 
     }

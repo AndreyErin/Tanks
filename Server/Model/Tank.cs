@@ -1,5 +1,7 @@
-﻿using System.Linq;
-
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace Server.Model
 {
@@ -44,13 +46,16 @@ namespace Server.Model
         //функция таймера для движения танка
         protected void tTimerMove_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            MyPoint pt;//точки-ледары
-            MyPoint pt2;
-
-            switch (tVec)
+            //tTimerMove.Interval = 100000;
+            Action action = () =>
             {
-                //ВЕРХ
-                case VectorEnum.Top:                   
+            MyPoint pt;//точки-ледары
+                MyPoint pt2;
+
+                switch (tVec)
+                {
+                    //ВЕРХ
+                    case VectorEnum.Top:
                         //проверяем угловые верхние точки танка
                         pt = new MyPoint(ePos.X - 3, ePos.Y);
                         pt2 = new MyPoint(ePos.X - 3, ePos.Y + 29);
@@ -59,13 +64,13 @@ namespace Server.Model
                         //если не достигли границ  поля боя и перед носом у танка нет преграды (дочерних эелметнов поля боя)
                         noEndMap = (ePos.X >= speedTank + 1);
                         if (noEndMap && cMove)
-                            ePos.X -= speedTank;                        
+                            ePos.X -= speedTank;
                         break;
                     //НИЗ
                     case VectorEnum.Down:
                         //проверяем угловые нижние точки танка
-                         pt = new MyPoint(ePos.X + 32, ePos.Y);
-                         pt2 = new MyPoint(ePos.X + 32, ePos.Y + 29);
+                        pt = new MyPoint(ePos.X + 32, ePos.Y);
+                        pt2 = new MyPoint(ePos.X + 32, ePos.Y + 29);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
                         noEndMap = (ePos.X <= 720 - 31 - speedTank);
@@ -84,7 +89,7 @@ namespace Server.Model
                             ePos.Y -= speedTank;
                         break;
                     //ПРАВО
-                    case VectorEnum.Right:                     
+                    case VectorEnum.Right:
                         //проверяем угловые правые точки танка
                         pt = new MyPoint(ePos.X, ePos.Y + 32);
                         pt2 = new MyPoint(ePos.X + 29, ePos.Y + 32);
@@ -95,6 +100,8 @@ namespace Server.Model
                             ePos.Y += speedTank;
                         break;
                 }
+            };
+            GlobalDataStatic.Controller.Dispatcher.Invoke(action);
         }
         
         //начать движение танка(запустить таймер)
@@ -137,18 +144,18 @@ namespace Server.Model
                          select s;
 
             //если мы уперлись в лут то получаем его и едем дальше
-            foreach (Loot s in subset)
-            {
-                bool result = s.HaveHit(posLedarL, posLedarR);
+            //foreach (Loot s in subset)
+            //{
+            //    bool result = s.HaveHit(posLedarL, posLedarR);
 
-                if (result)
-                {                    
-                    GlobalDataStatic.BattleGroundCollection.Remove(s);
-                    GetLoot(s);
-                    return true;
-                }
+            //    if (result)
+            //    {                    
+            //        GlobalDataStatic.BattleGroundCollection.Remove(s);
+            //        GetLoot(s);
+            //        return true;
+            //    }
                 
-            }
+            //}
 
             //если есть препятствие, то двигаться нельзя
             foreach (HPElement s in subset ) 

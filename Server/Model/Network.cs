@@ -74,6 +74,7 @@ namespace Server.Model
             //конструктор
             public clientClass(Socket clientSocket, List<clientClass> clientList)
             {
+                
                 //MessageBox.Show("на сервере создан класс клиента");
 
                 //определяем клияента как основного(либо ведомого)
@@ -138,6 +139,7 @@ namespace Server.Model
 
                         //Движение
                         case "MOVEUP":
+                            //MessageBox.Show("команда получена сервером\n" + command );
                             tank?.Move(VectorEnum.Top);
                             break;
                         case "MOVEDOWN":
@@ -309,16 +311,18 @@ namespace Server.Model
                 switch (gameEvent)
                 {
                     case GameEnum.NewGame:
-                        Action action = () =>
-                        {
-                            tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
-                            
-                            //GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя   
-                        };
-                        GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+                        //Action action = () =>
+                        //{
+                        //    tank = new TankPlayer(isFirstClient ? GlobalDataStatic.Controller.map.respawnTankPlayer[0] : GlobalDataStatic.Controller.map.respawnTankPlayer[1]);
 
-                        GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
-                        
+                        //    //GlobalDataStatic.BattleGroundCollection.Add(tank);//добавляемся на поле боя   
+                        //};
+                        //GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+
+                        //GlobalDataStatic.PartyTanksOfPlayers.Add(tank);//добавляемся в армию
+                        tank = (isFirstClient ? GlobalDataStatic.PartyTanksOfPlayers[0] : GlobalDataStatic.PartyTanksOfPlayers[0]);
+
+
 
                         break;
 
