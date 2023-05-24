@@ -5,14 +5,17 @@ using System.Text.Json;
 using System.Threading;
 using System;
 using System.Windows;
-
+using System.Net.Sockets;
+using System.Net;
+using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Text;
+using System.ComponentModel;
 
 namespace Server
 {
     public partial class MainWindow : Window
     {
-        public Network network;
-
         public delegate void gEvent(GameEnum gameEvent);
         public event gEvent? GameEvent;
 
@@ -20,6 +23,8 @@ namespace Server
         public Map? map;
         int lvlMap = 0;
         string[] mapPool;
+
+        public int clientNumber = 0;
 
         private System.Timers.Timer tTimer_RespawnBotTank = new System.Timers.Timer();
         private int countTimerRespawn = 0;
@@ -43,12 +48,67 @@ namespace Server
             tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
             tTimer_RespawnBotTank.EndInit();
 
-            //MessageBox.Show("количество загруженных карт: " + mapPool.Count().ToString() );
-
-            network = new Network();
-
             GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(new MyPoint(0, 0)));
             GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(new MyPoint(0, 0)));
+
+            //запускаем функцию прослушивания в отдельном потоке
+            Task.Factory.StartNew(() => StartListen());  
+        }
+
+        //слушаем входящие подключения
+        protected async Task StartListen()
+        {
+            //сокет для прослушки входящих подключений
+            using var listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, 7071);
+            try
+            {
+                listenSocket.Bind(iPEndPoint);
+                listenSocket.Listen();
+               
+                while (true)
+                {
+                    var newClient = await listenSocket.AcceptAsync();
+                    Task.Run(() => new Client(newClient, ++clientNumber)); //создаем класс клиента
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Сервер не был запущен.\n" + ex.Message);
+            }
+        }
+
+        //получаем команды от клиента
+        public void GetCommandsOfClient(ComandEnum comandEnum) 
+        {
+            switch (comandEnum)
+            {
+                case ComandEnum.NewGame:
+                    break;
+                case ComandEnum.NewRaund:
+                    break;
+                case ComandEnum.Replay:
+                    break;
+                case ComandEnum.Out:
+                    break;
+                case ComandEnum.Ready:
+                    break;
+                case ComandEnum.MoveUp:
+                    break;
+                case ComandEnum.MoveDown:
+                    break;
+                case ComandEnum.MoveLeft:
+                    break;
+                case ComandEnum.MoveRight:
+                    break;
+                case ComandEnum.Stop:
+                    break;
+                case ComandEnum.Fire:
+                    break;
+
+            }
+
         }
 
         //таймер респавна танков-ботов
@@ -261,5 +321,62 @@ namespace Server
             
         }
 
+
+        /////////////////////////////////////////////////////////////////
+        //отлавливаем изменения в коллекции поля боя
+        protected void ChangedBattleGround(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            string commandString = "";
+            switch (e.Action)
+            {
+                //при добавление объкта будем подписываться
+                case NotifyCollectionChangedAction.Add:
+                    //MessageBox.Show("добавление новых объектов в коллекцию");
+                    ((WorldElement)e.NewItems[0]).PropertyChanged += ChangedElement;
+                    //если элемент может издавать звуки
+                    if (e.NewItems[0] is ISoundsObjects)
+                    {
+                        ((ISoundsObjects)e.NewItems[0]).SoundEvent += Sounds;
+                    }
+                    commandString = $"ADD@{((WorldElement)e.NewItems[0]).ID}@{((WorldElement)e.NewItems[0]).ePos.X}@{((WorldElement)e.NewItems[0]).ePos.Y}@{(int)(((WorldElement)e.NewItems[0]).Skin)}^";
+                    //MessageBox.Show("добавление новых объектов в коллекцию\n" + commandString);
+                    break;
+
+                //при удаление объекта будем отписываться
+                case NotifyCollectionChangedAction.Remove:
+                    ((WorldElement)e.NewItems[0]).PropertyChanged -= ChangedElement;
+                    //если элемент может издавать звуки
+                    if (e.NewItems[0] is ISoundsObjects)
+                    {
+                        ((ISoundsObjects)e.NewItems[0]).SoundEvent -= Sounds;
+                    }
+                    commandString = $"REMOVE@{((WorldElement)e.OldItems[0]).ID}^";
+                    break;
+            }
+            byte[] data = Encoding.UTF8.GetBytes(commandString);
+            SetDataAsynk(data);
+        }
+
+        //отлавливаем изменения в конкретных элементах
+        protected void ChangedElement(object? sender, PropertyChangedEventArgs e)
+        {
+            string commandString = "";
+            switch (e.PropertyName?.ToUpper())
+            {
+                case "SKIN":
+                    commandString = $"SKIN@{((WorldElement)sender).ID}@{((WorldElement)sender).Skin}^";
+                    break;
+                case "X":
+                    commandString = $"X@{((WorldElement)sender).ID}@{((WorldElement)sender).ePos.X}^";
+                    break;
+                case "Y":
+                    commandString = $"Y@{((WorldElement)sender).ID}@{((WorldElement)sender).ePos.Y}^";
+                    break;
+            }
+
+            byte[] data = Encoding.UTF8.GetBytes(commandString);
+            SetDataAsynk(data);
+
+        }
     }
 }
