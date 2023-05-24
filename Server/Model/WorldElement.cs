@@ -42,7 +42,7 @@ namespace Server.Model
                 if (_ePos != value) 
                 {
                     _ePos = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ePos)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ePos.X)));
                 }
             } 
         }

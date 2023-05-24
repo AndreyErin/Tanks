@@ -8,6 +8,7 @@ namespace Server.Model
 {
     public enum SkinsEnum
     {
+        None,
         PictureBlock1,
         PictureBlock2,
         PictureBlock3,

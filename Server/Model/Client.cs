@@ -28,7 +28,7 @@ namespace Server.Model
 
             //подписываемся на события в игре
             GlobalDataStatic.Controller.GameEvent += EventOfGame;
-
+            GlobalDataStatic.Controller.ElementEvent += EventOfElement;
             //получение данных в отдельном потоке
             Task.Factory.StartNew(()=> GetDataAsynk());
         }
@@ -151,8 +151,33 @@ namespace Server.Model
         protected void EventOfGame(GameEnum gameEvent)
         {
             int command = (int)gameEvent;
-            byte[] data = Encoding.UTF8.GetBytes(command.ToString());
+            byte[] data = Encoding.UTF8.GetBytes(command.ToString() + '^');
             SetDataAsynk(data);
-        }        
+        } 
+        
+        protected void EventOfElement(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None) 
+        {
+            string commandString = "";
+            switch (elementEvent)
+            {
+                case ElementEventEnum.Add:
+                    commandString = $"ADD@{id}@{x}@{y}@{(int)skin}^";
+                    break;
+                case ElementEventEnum.Remove:
+                    commandString = $"REMOVE@{id}^";
+                    break;
+                case ElementEventEnum.Skin:
+                    commandString = $"SKIN@{id}@{(int)skin}^";
+                    break;
+                case ElementEventEnum.X:
+                    commandString = $"X@{id}@{x}^";
+                    break;
+                case ElementEventEnum.Y:
+                    commandString = $"Y@{id}@{y}^";
+                    break;
+            }
+            byte[] data = Encoding.UTF8.GetBytes(commandString);
+            SetDataAsynk(data);
+        }
     }
 }

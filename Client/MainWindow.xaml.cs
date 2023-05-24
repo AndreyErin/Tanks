@@ -187,7 +187,7 @@ namespace Client
         //отправить данные
         private async Task SetDataOfServer(byte[] data)
         {
-            await _socket.SendAsync(data, SocketFlags.None);
+            await _socket.SendAsync(data, SocketFlags.None);           
         }
 
         //получить данные
@@ -207,9 +207,12 @@ namespace Client
                     // ^ - символ означающий конец  пакета
                     if (haveData == 0 || character[0] == '^') break;//если считаны все данные
                     data.Add(character[0]);
+
+                    
                 }
 
                 string resultString = Encoding.UTF8.GetString(data.ToArray());
+                
                 bool isCommand = resultString.Contains('@');
 
                 Action action = () =>
@@ -276,8 +279,7 @@ namespace Client
             }
         }
 
-        //-------------------------------------------------------------------------------
-        //ето пока сервер нам не отправляет. допилить серверную программу
+        //события произошедшие на сервере
         private void ServerGameEvent(GameEnum gameEnum) 
         {
             //отклик от сервера. событие произошедшее на сервере
