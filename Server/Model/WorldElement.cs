@@ -34,15 +34,23 @@ namespace Server.Model
             }
         }
 
-        private MyPoint _ePos;
+        private MyPoint _ePos = new MyPoint();
         public MyPoint ePos {
             get => _ePos;
             set 
             {
-                if (_ePos != value) 
+                if (_ePos.X != value.X) 
                 {
-                    _ePos = value;
+                    _ePos.X = value.X;
+                    ePos.X = _ePos.X;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ePos.X)));
+                }
+
+                if (_ePos.Y != value.Y)
+                {
+                    _ePos.Y = value.Y;
+                    ePos.Y = _ePos.Y;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ePos.Y)));
                 }
             } 
         }

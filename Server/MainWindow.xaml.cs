@@ -210,11 +210,12 @@ namespace Server
                 GlobalDataStatic.PartyTanksOfPlayers[0] = new TankPlayer(map.respawnTankPlayer[0]);
                 //потом убрать-------------------------------------
                 mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
-                mainTank.PropertyChanged += ChangedElement;
+                //mainTank.PropertyChanged += ChangedElement;
                 //GlobalDataStatic.PartyTanksOfPlayers[1] = new TankPlayer(map.respawnTankPlayer[1]);
                 GlobalDataStatic.BattleGroundCollection.Add(GlobalDataStatic.PartyTanksOfPlayers[0]);//добавляемся на поле боя
                 //GlobalDataStatic.BattleGroundCollection.Add(GlobalDataStatic.PartyTanksOfPlayers[1]);//добавляемся на поле боя
 
+                mainTank.Skin = SkinsEnum.PictureTank3;
             }
             catch (Exception ex)
             {
