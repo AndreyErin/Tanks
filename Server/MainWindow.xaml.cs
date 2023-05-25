@@ -169,6 +169,10 @@ namespace Server
                 //запихиваем ети данные в объект
                 map = JsonSerializer.Deserialize<Map>(jsonText);
 
+                GlobalDataStatic.PartyTanksOfPlayers[0] = new TankPlayer(map.respawnTankPlayer[0]);
+                //потом убрать-------------------------------------
+                mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+                
                 //каменные блоки
                 foreach (MyPoint pos in map.rockBlocs)
                 {
@@ -207,15 +211,13 @@ namespace Server
                     b.BunkerDestroy += DestroyBunkerEnamy;
                 }
 
-                GlobalDataStatic.PartyTanksOfPlayers[0] = new TankPlayer(map.respawnTankPlayer[0]);
-                //потом убрать-------------------------------------
-                mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+                //mainTank.Skin = SkinsEnum.PictureTank3;
                 //mainTank.PropertyChanged += ChangedElement;
                 //GlobalDataStatic.PartyTanksOfPlayers[1] = new TankPlayer(map.respawnTankPlayer[1]);
-                GlobalDataStatic.BattleGroundCollection.Add(GlobalDataStatic.PartyTanksOfPlayers[0]);//добавляемся на поле боя
+               
                 //GlobalDataStatic.BattleGroundCollection.Add(GlobalDataStatic.PartyTanksOfPlayers[1]);//добавляемся на поле боя
 
-                mainTank.Skin = SkinsEnum.PictureTank3;
+                
             }
             catch (Exception ex)
             {
@@ -239,7 +241,7 @@ namespace Server
             }
             
             //запускаем респавн  ботов-танков
-            //tTimer_RespawnBotTank.Start();
+            tTimer_RespawnBotTank.Start();
         }
 
         //уничтожение танков-ботов
@@ -350,16 +352,18 @@ namespace Server
         //отлавливаем изменения в коллекции поля боя
         protected void ChangedBattleGround(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            int ID = ((WorldElement)e.NewItems[0]).ID;
-            double X = ((WorldElement)e.NewItems[0]).X;
-            double Y = ((WorldElement)e.NewItems[0]).Y;
-            SkinsEnum skinEnum = ((WorldElement)e.NewItems[0]).Skin;
+
 
             switch (e.Action)
             {
                 //при добавление объкта будем подписываться
                 case NotifyCollectionChangedAction.Add:
-                    
+
+                    int ID = ((WorldElement)e.NewItems[0]).ID;
+                    double X = ((WorldElement)e.NewItems[0]).X;
+                    double Y = ((WorldElement)e.NewItems[0]).Y;
+                    SkinsEnum skinEnum = ((WorldElement)e.NewItems[0]).Skin;
+
                     ((WorldElement)e.NewItems[0]).PropertyChanged += ChangedElement;
                     //если элемент может издавать звуки
                     //if (e.NewItems[0] is ISoundsObjects)
@@ -377,8 +381,8 @@ namespace Server
                     //{
                     //    ((ISoundsObjects)e.NewItems[0]).SoundEvent -= Sounds;
                     //}
-                    ID = ((WorldElement)e.OldItems[0]).ID;
-                    ElementEvent?.Invoke(ElementEventEnum.Remove, ID);
+                    int IdOld = ((WorldElement)e.OldItems[0]).ID;
+                    ElementEvent?.Invoke(ElementEventEnum.Remove, IdOld);
                     break;
             }
         }

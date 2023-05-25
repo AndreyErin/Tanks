@@ -25,8 +25,15 @@ namespace Client
         {
             InitializeComponent();
             GlobalDataStatic.Controller = this;
+            //ФПС
+            System.Windows.Media.CompositionTarget.Rendering += RenderingFPS;
         }
 
+        //ФПС
+        private void RenderingFPS(object sender, EventArgs e)
+        {
+            cnvMain.InvalidateVisual();
+        }
 
         //двигаем танк
         private void MainWin_KeyDown(object sender, KeyEventArgs e)
@@ -238,11 +245,11 @@ namespace Client
                             break;
 
                         case "X":
-                            PosElement(int.Parse(command[1]), double.Parse(command[2]));                               
+                            PosElement(int.Parse(command[1]), x: double.Parse(command[2]));                               
                             break;
 
                         case "Y":
-                            PosElement(id: int.Parse(command[1]), y: double.Parse(command[3]));
+                            PosElement(int.Parse(command[1]), y: double.Parse(command[2]));
                             break;
                         }
 

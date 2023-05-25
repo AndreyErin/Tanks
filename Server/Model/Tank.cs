@@ -145,29 +145,32 @@ namespace Server.Model
                          select s;
 
             //если мы уперлись в лут то получаем его и едем дальше
-            //foreach (Loot s in subset)
-            //{
-            //    bool result = s.HaveHit(posLedarL, posLedarR);
-
-            //    if (result)
-            //    {                    
-            //        GlobalDataStatic.BattleGroundCollection.Remove(s);
-            //        GetLoot(s);
-            //        return true;
-            //    }
-                
-            //}
-
-            //если есть препятствие, то двигаться нельзя
-            foreach (HPElement s in subset ) 
-            {               
-                bool result = s.HaveHit(posLedarL, posLedarR);
-
-                if (result) 
+            foreach (WorldElement s in subset)
+            {
+                bool result;
+                switch (s)
                 {
-                    return false;//двигаться нельзя
-                }                     
+                    case Loot:
+                        result = ((Loot)s).HaveHit(posLedarL, posLedarR);
+
+                        if (result)
+                        {
+                            GetLoot((Loot)s);
+                            GlobalDataStatic.BattleGroundCollection.Remove(s);                            
+                            return true;
+                        }
+                        break;
+                    case HPElement:
+                        result = ((HPElement)s).HaveHit(posLedarL, posLedarR);
+
+                        if (result)
+                        {
+                            return false;//двигаться нельзя
+                        }
+                        break;
+                }
             }
+
             return true;
         }
         

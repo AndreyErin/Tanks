@@ -10,6 +10,7 @@ namespace Server.Model
         protected Bunker() { }
         public Bunker(MyPoint ePos):base(ePos)
         {
+            HP = 3;
             Skin = SkinsEnum.PictureBunker;
             IsPlayer = true;
             if(this as BunkerEnamy == null) AddMe();

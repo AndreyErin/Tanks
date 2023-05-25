@@ -51,8 +51,9 @@ namespace Server.Model
 
         protected override void DistroyMy()
         {
-            base.DistroyMy();
+            
             Loot loot = new Loot(new MyPoint(X, Y));
+            base.DistroyMy();
         }
     }
 }

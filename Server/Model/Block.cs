@@ -5,7 +5,8 @@ namespace Server.Model
     {               
         protected Block() { }
         public Block(MyPoint Pos)
-        {           
+        {
+            HP = 3;
             _width = 40;
             _height = 40;
             X = Pos.X;

@@ -122,33 +122,32 @@ namespace Client.Model
         //движение
         public void MoveElement(double x = -10, double y = -10 ) 
         {
+           
+            if (x != -10)
+            {
+                Canvas.SetTop(this, x);
+                if (x < ePos.X)
+                    vector = VectorEnum.Top;
+                else
+                    vector = VectorEnum.Down;
 
-            VectorEnum vek = VectorEnum.Top;
+                ePos.X = x;
+            }
 
-                if (x != -10)
-                {
-                    Canvas.SetLeft(this, x);
-                    if (x < ePos.X)
-                        vek = VectorEnum.Left;
-                    else
-                        vek = VectorEnum.Right;
-                }
+            if (y != -10)
+            {
+                Canvas.SetLeft(this, y);
+                if (y < ePos.Y)
+                vector = VectorEnum.Left;
+                else
+                vector = VectorEnum.Right;
 
-                if (y != -10)
-                {
-                    Canvas.SetTop(this, y);
-                    if (y < ePos.Y)
-                        vek = VectorEnum.Top;
-                    else
-                        vek = VectorEnum.Down;
-                }
+                ePos.Y = y;
+            }
 
-                //если направление сменилось
-                if (vector != vek)
-                {
-                    vector = vek;
-                    VectorElement(vector);
-                }
+            //если направление сменилось
+ 
+             VectorElement(vector);           
         }
 
         //удаление объекта

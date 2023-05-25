@@ -8,7 +8,7 @@ namespace Server.Model
         protected BlockIron() { }
         public BlockIron(MyPoint pos):base(pos)
         {
-            HP = 3;
+            
             Skin = SkinsEnum.PictureBlock1;
             AddMe();
         }
