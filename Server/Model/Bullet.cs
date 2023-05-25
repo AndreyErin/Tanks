@@ -175,7 +175,7 @@ namespace Server.Model
                                     break;
                             }
 
-                        if (SoundEvent != null) SoundEvent(sound);//играть звук
+                        SoundEvent?.Invoke(sound);//играть звук
 
                         return true;
 //                                       

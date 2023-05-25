@@ -169,9 +169,7 @@ namespace Server
                 //запихиваем ети данные в объект
                 map = JsonSerializer.Deserialize<Map>(jsonText);
 
-                GlobalDataStatic.PartyTanksOfPlayers[0] = new TankPlayer(map.respawnTankPlayer[0]);
-                //потом убрать-------------------------------------
-                mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+
                 
                 //каменные блоки
                 foreach (MyPoint pos in map.rockBlocs)
@@ -229,11 +227,16 @@ namespace Server
         //начальное меню - новая игра
         public void NewGame()
         {
+
             GameEvent?.Invoke(GameEnum.NewGame);
 
             //создаем элементы окружения
             CreateWorldElements(mapPool[lvlMap]);
-          
+
+            GlobalDataStatic.PartyTanksOfPlayers[0] = new TankPlayer(map.respawnTankPlayer[0]);
+            //потом убрать-------------------------------------
+            mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+
             //подписываемся
             foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
             {
@@ -243,6 +246,52 @@ namespace Server
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
         }
+
+        //следующий раунд
+        public void NewRaund()
+        {
+
+
+            if (mapPool.Length > (++lvlMap))
+            {
+                GameEvent?.Invoke(GameEnum.NewRound);
+
+                //заполняем карту элементами мира следующего уговня
+                CreateWorldElements(mapPool[lvlMap]);
+
+                mainTank.ID = GlobalDataStatic.IdNumberElement++;
+                GlobalDataStatic.BattleGroundCollection.Add(mainTank);
+
+                //подписываемся
+                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+                {
+                    tank.DestroyPayerTank += DistroyFriendlyTank;
+                }
+
+                //запускаем респавн  ботов-танков
+                tTimer_RespawnBotTank.Start();
+            }
+        }
+
+        //повторяем раунд при проигрыше 
+        public void ReplayRaund()
+        {
+            GameEvent?.Invoke(GameEnum.ReplayRound);
+
+            //заполняем карту элементами мира следующего уровня
+            CreateWorldElements(mapPool[lvlMap]);
+
+            //подписываемся
+            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tank.DestroyPayerTank += DistroyFriendlyTank;
+            }
+
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
+        }
+
+
 
         //уничтожение танков-ботов
         private void DistroyEnemyTank(TankBot tankBot)
@@ -304,45 +353,6 @@ namespace Server
                 tank.DestroyPayerTank -= DistroyFriendlyTank;
             }
             GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
-        }
-
-        //следующий раунд
-        public void NewRaund()
-        {
-            if (mapPool.Length > (++lvlMap))
-            {
-                GameEvent?.Invoke(GameEnum.NewRound);
-
-                //заполняем карту элементами мира следующего уговня
-                CreateWorldElements(mapPool[lvlMap]);
-
-                //подписываемся
-                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
-                {
-                    tank.DestroyPayerTank += DistroyFriendlyTank;
-                }
-
-                //запускаем респавн  ботов-танков
-                tTimer_RespawnBotTank.Start();
-            }
-        }
-
-        //повторяем раунд при проигрыше 
-        public void ReplayRaund()
-        {
-            GameEvent?.Invoke(GameEnum.ReplayRound);
-
-            //заполняем карту элементами мира следующего уровня
-            CreateWorldElements(mapPool[lvlMap]);
-           
-            //подписываемся
-            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
-            {
-                tank.DestroyPayerTank += DistroyFriendlyTank;
-            }
-
-            //запускаем респавн  ботов-танков
-            tTimer_RespawnBotTank.Start();
         }
 
 

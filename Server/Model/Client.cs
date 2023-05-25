@@ -131,7 +131,7 @@ namespace Server.Model
 
                 }
                 byte[] data = Encoding.UTF8.GetBytes(commandString);
-                SetDataAsynk(data);
+                Task.Run(() => SetDataAsynk(data));
             }
 
         //отправка данных
@@ -152,7 +152,7 @@ namespace Server.Model
         {
             int command = (int)gameEvent;
             byte[] data = Encoding.UTF8.GetBytes(command.ToString() + '^');
-            SetDataAsynk(data);
+            Task.Run(() => SetDataAsynk(data));
         } 
         
         protected void EventOfElement(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None) 

@@ -135,7 +135,7 @@ namespace Client
         private void btnOut_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("OUT^");
-            SetDataOfServer(data);
+            Task.Run(() => SetDataOfServer(data));
             MainWin.Close();
         }
 
@@ -143,26 +143,28 @@ namespace Client
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("NEWGAME^");
-            SetDataOfServer(data);
+            Task.Run(() => SetDataOfServer(data));
         }
         //новый раунд  - сообщение
         private void btnRaundWin_Click(object sender, RoutedEventArgs e)
         {
+            SearchElement = new Dictionary<int, WorldElement>();
+            cnvMain.Children.Clear();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
-            SetDataOfServer(data);
+            Task.Run(() => SetDataOfServer(data));
         }
         //переигровка раунда - сообщение
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
-            SetDataOfServer(data);
+            Task.Run(() => SetDataOfServer(data));
         }
 
         //готовность 2го игрока///////////не задействованно
         private void btnReady_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("READY^");
-            SetDataOfServer(data);
+            Task.Run(() => SetDataOfServer(data));
         }
 
         //добавление объекта на поле боя
@@ -281,7 +283,6 @@ namespace Client
                 };
                 Dispatcher.Invoke(action);
 
-                //command = null;
                 data.Clear();
             }
         }
@@ -298,7 +299,7 @@ namespace Client
                     btnOut2.Visibility = Visibility.Hidden;                    
                     break;
                 case GameEnum.NewRound:
-                    btnStartGame.Visibility = Visibility.Hidden;
+                    btnRaundWin.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     lblWinText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
@@ -316,6 +317,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
+                    SearchElement.Clear();//очищаем словарь
                     break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
@@ -323,6 +325,7 @@ namespace Client
                     lblWinText.Content = "Наша армия уничтожена.";
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
+                    SearchElement.Clear();//очищаем словарь
                     break;
                 case GameEnum.DestroyBunker:
                     lblResultOfBattleText.Content = "Поражение";
@@ -331,6 +334,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
+                    SearchElement.Clear();//очищаем словарь
                     break;
                 case GameEnum.DestroyBunkerEnamy:
                     lblResultOfBattleText.Content = "Победа";
@@ -339,6 +343,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
+                    //SearchElement.Clear();//очищаем словарь
                     break;
             }
         }
