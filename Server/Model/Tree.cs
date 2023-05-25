@@ -7,7 +7,8 @@ namespace Server.Model
         protected Tree() { }
         public Tree(MyPoint pos)
         {
-            ePos = pos;
+            X = pos.X;
+            Y = pos.Y;
             _width = 40;
             _height = 40;           
             Skin = SkinsEnum.PictureWood1;

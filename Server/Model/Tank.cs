@@ -33,7 +33,8 @@ namespace Server.Model
         //конструктор
         public Tank(MyPoint tPos)
         {            
-            ePos = tPos;
+            X = tPos.X;
+            Y = tPos.Y;
             _height = 30;
             _width = 30;
             
@@ -57,47 +58,47 @@ namespace Server.Model
                     //ВЕРХ
                     case VectorEnum.Top:
                         //проверяем угловые верхние точки танка
-                        pt = new MyPoint(ePos.X - 3, ePos.Y);
-                        pt2 = new MyPoint(ePos.X - 3, ePos.Y + 29);
+                        pt = new MyPoint(X - 3, Y);
+                        pt2 = new MyPoint(X - 3, Y + 29);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
                         //если не достигли границ  поля боя и перед носом у танка нет преграды (дочерних эелметнов поля боя)
-                        noEndMap = (ePos.X >= speedTank + 1);
+                        noEndMap = (X >= speedTank + 1);
                         if (noEndMap && cMove)
-                            ePos.X -= speedTank;
+                            X -= speedTank;
                         break;
                     //НИЗ
                     case VectorEnum.Down:
                         //проверяем угловые нижние точки танка
-                        pt = new MyPoint(ePos.X + 32, ePos.Y);
-                        pt2 = new MyPoint(ePos.X + 32, ePos.Y + 29);
+                        pt = new MyPoint(X + 32, Y);
+                        pt2 = new MyPoint(X + 32, Y + 29);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
-                        noEndMap = (ePos.X <= 720 - 31 - speedTank);
+                        noEndMap = (X <= 720 - 31 - speedTank);
                         if (noEndMap && cMove)
-                            ePos.X += speedTank;
+                            X += speedTank;
                         break;
                     //ЛЕВО
                     case VectorEnum.Left:
                         //проверяем угловые левые точки танка
-                        pt = new MyPoint(ePos.X, ePos.Y - 3);
-                        pt2 = new MyPoint(ePos.X + 29, ePos.Y - 3);
+                        pt = new MyPoint(X, Y - 3);
+                        pt2 = new MyPoint(X + 29, Y - 3);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
-                        noEndMap = (ePos.Y >= speedTank + 1);
+                        noEndMap = (Y >= speedTank + 1);
                         if (noEndMap && cMove)
-                            ePos.Y -= speedTank;
+                            Y -= speedTank;
                         break;
                     //ПРАВО
                     case VectorEnum.Right:
                         //проверяем угловые правые точки танка
-                        pt = new MyPoint(ePos.X, ePos.Y + 32);
-                        pt2 = new MyPoint(ePos.X + 29, ePos.Y + 32);
+                        pt = new MyPoint(X, Y + 32);
+                        pt2 = new MyPoint(X + 29, Y + 32);
                         //проверяем нет ли препятствий для движения
                         cMove = CanMove(pt, pt2);
-                        noEndMap = (ePos.Y <= 1320 - 31 - speedTank);
+                        noEndMap = (Y <= 1320 - 31 - speedTank);
                         if (noEndMap && cMove)
-                            ePos.Y += speedTank;
+                            Y += speedTank;
                         break;
                 }
             };
@@ -131,7 +132,7 @@ namespace Server.Model
              if (GlobalDataStatic.BattleGroundCollection.Contains(this))
              {
                  //огонь. пуля стреляет сразу при создание объекта
-                 Bullet bullet = new Bullet(tVec, ePos, damageTank);
+                 Bullet bullet = new Bullet(tVec, new MyPoint(X, Y), damageTank);
                  sound = SoundsEnum.shotSoung;
              }
         }
@@ -185,7 +186,7 @@ namespace Server.Model
         {
             tTimerMove.Stop();
             base.DistroyMy();            
-            TankOfDistroy tankOfDistroy = new TankOfDistroy(ePos, tVec, lvlTank, speedTank);
+            TankOfDistroy tankOfDistroy = new TankOfDistroy(new MyPoint(X, Y), tVec, lvlTank, speedTank);
         }
 
         //обработка получения лута

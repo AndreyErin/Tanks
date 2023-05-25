@@ -43,8 +43,8 @@ namespace Server.Model
                 //ВЕРХ
                 case VectorEnum.Top:
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new MyPoint(ePos.X - 3, ePos.Y + 9);
-                    pt2 = new MyPoint(ePos.X - 3, ePos.Y + 19);
+                    pt = new MyPoint(X - 3, Y + 9);
+                    pt2 = new MyPoint(X - 3, Y + 19);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -57,8 +57,8 @@ namespace Server.Model
 
                     
 
-                    pt = new MyPoint(ePos.X - 29, ePos.Y + 9);
-                    pt2 = new MyPoint(ePos.X - 29, ePos.Y + 19);
+                    pt = new MyPoint(X - 29, Y + 9);
+                    pt2 = new MyPoint(X - 29, Y + 19);
 
                     //если нет попадания продолжаем перечислять
                     while ((CanTarget(pt, pt2) == false) && (pt.X > 29))
@@ -76,8 +76,8 @@ namespace Server.Model
                 case VectorEnum.Down:
 
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new MyPoint(ePos.X + 32, ePos.Y + 9);
-                    pt2 = new MyPoint(ePos.X + 32, ePos.Y + 19);
+                    pt = new MyPoint(X + 32, Y + 9);
+                    pt2 = new MyPoint(X + 32, Y + 19);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -88,8 +88,8 @@ namespace Server.Model
                         }
                     }
 
-                    pt = new MyPoint(ePos.X + 58, ePos.Y + 9);
-                    pt2 = new MyPoint(ePos.X + 58, ePos.Y + 19);
+                    pt = new MyPoint(X + 58, Y + 9);
+                    pt2 = new MyPoint(X + 58, Y + 19);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.X < (720 - 29)))
                     {
@@ -106,8 +106,8 @@ namespace Server.Model
                 case VectorEnum.Left:
 
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new MyPoint(ePos.X + 9, ePos.Y - 3);
-                    pt2 = new MyPoint(ePos.X + 19, ePos.Y - 3);
+                    pt = new MyPoint(X + 9, Y - 3);
+                    pt2 = new MyPoint(X + 19, Y - 3);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -118,8 +118,8 @@ namespace Server.Model
                         }
                     }
 
-                    pt = new MyPoint(ePos.X + 9, ePos.Y - 29);
-                    pt2 = new MyPoint(ePos.X + 19, ePos.Y - 29);
+                    pt = new MyPoint(X + 9, Y - 29);
+                    pt2 = new MyPoint(X + 19, Y - 29);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.Y > 29))
                     {
@@ -136,8 +136,8 @@ namespace Server.Model
                 case VectorEnum.Right:
 
                     //если уперлись в разбитый танк, то стреляем
-                    pt = new MyPoint(ePos.X + 9, ePos.Y + 32);
-                    pt2 = new MyPoint(ePos.X + 19, ePos.Y + 32);
+                    pt = new MyPoint(X + 9, Y + 32);
+                    pt2 = new MyPoint(X + 19, Y + 32);
                     if (CanTarget(pt, pt2))
                     {
                         enemy = CanTargetDestroyTank();
@@ -148,8 +148,8 @@ namespace Server.Model
                         }
                     }
 
-                    pt = new MyPoint(ePos.X + 9, ePos.Y + 58);
-                    pt2 = new MyPoint(ePos.X + 19, ePos.Y + 58);
+                    pt = new MyPoint(X + 9, Y + 58);
+                    pt2 = new MyPoint(X + 19, Y + 58);
 
                     while ((CanTarget(pt, pt2) == false) && (pt.Y < (1320 - 29)))
                     {

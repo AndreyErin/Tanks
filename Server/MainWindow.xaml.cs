@@ -351,8 +351,8 @@ namespace Server
         protected void ChangedBattleGround(object? sender, NotifyCollectionChangedEventArgs e)
         {
             int ID = ((WorldElement)e.NewItems[0]).ID;
-            double X = ((WorldElement)e.NewItems[0]).ePos.X;
-            double Y = ((WorldElement)e.NewItems[0]).ePos.Y;
+            double X = ((WorldElement)e.NewItems[0]).X;
+            double Y = ((WorldElement)e.NewItems[0]).Y;
             SkinsEnum skinEnum = ((WorldElement)e.NewItems[0]).Skin;
 
             switch (e.Action)
@@ -392,11 +392,12 @@ namespace Server
                     ElementEvent?.Invoke(ElementEventEnum.Skin, ((WorldElement)sender).ID, skin: ((WorldElement)sender).Skin);
                     break;
                 case "X":
-                    ElementEvent?.Invoke(ElementEventEnum.X, ((WorldElement)sender).ID, x: ((WorldElement)sender).ePos.X);
+                    ElementEvent?.Invoke(ElementEventEnum.X, ((WorldElement)sender).ID, x: ((WorldElement)sender).X);
                     break;
                 case "Y":
-                    ElementEvent?.Invoke(ElementEventEnum.Y, ((WorldElement)sender).ID, y: ((WorldElement)sender).ePos.Y);
+                    ElementEvent?.Invoke(ElementEventEnum.Y, ((WorldElement)sender).ID, y: ((WorldElement)sender).Y);
                     break;
+
             }
         }
     }

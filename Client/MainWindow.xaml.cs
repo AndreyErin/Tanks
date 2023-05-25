@@ -274,7 +274,7 @@ namespace Client
                 };
                 Dispatcher.Invoke(action);
 
-                command = null;
+                //command = null;
                 data.Clear();
             }
         }

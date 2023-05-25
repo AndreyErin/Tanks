@@ -23,26 +23,27 @@ namespace Server.Model
         {    
             _damage = damage;
             _vector = vector;
-            ePos = tpos;
+            X = tpos.X;
+            Y = tpos.Y;
             
             //задаем начальное положение пули
             switch (vector)
             {
                 case VectorEnum.Top:
-                    ePos.X -= 10; 
-                    ePos.Y += 10;
+                    X -= 10; 
+                    Y += 10;
                     break;
                 case VectorEnum.Down:
-                    ePos.X += 30;
-                    ePos.Y += 10;
+                    X += 30;
+                    Y += 10;
                     break;
                 case VectorEnum.Left:
-                    ePos.X += 10;
-                    ePos.Y -= 10;
+                    X += 10;
+                    Y -= 10;
                     break;
                 case VectorEnum.Right:
-                    ePos.X += 10;
-                    ePos.Y += 30;
+                    X += 10;
+                    Y += 30;
                     break;
             }
 
@@ -88,12 +89,12 @@ namespace Server.Model
             {
                 //ВЕРХ
                 case VectorEnum.Top:
-                    pt = new MyPoint(ePos.X, ePos.Y);
-                    pt2 = new MyPoint(ePos.X, ePos.Y + this._width -1);
+                    pt = new MyPoint(X, Y);
+                    pt2 = new MyPoint(X, Y + this._width -1);
                     haveHit = HaveShot(pt, pt2);
 
-                    if ((ePos.X >= 1.5) && (haveHit == false))
-                        ePos.X -= 5;
+                    if ((X >= 1.5) && (haveHit == false))
+                        X -= 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -101,11 +102,11 @@ namespace Server.Model
                     break;
                 //НИЗ
                 case VectorEnum.Down:
-                    pt = new MyPoint(ePos.X + this._height -1, ePos.Y);
-                    pt2 = new MyPoint(ePos.X + this._height - 1, ePos.Y + this._width - 1);
+                    pt = new MyPoint(X + this._height -1, Y);
+                    pt2 = new MyPoint(X + this._height - 1, Y + this._width - 1);
                     haveHit = HaveShot(pt, pt2);
-                    if ((ePos.X <= 720 - 11.5) && (haveHit == false))
-                        ePos.X += 5;
+                    if ((X <= 720 - 11.5) && (haveHit == false))
+                        X += 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -113,11 +114,11 @@ namespace Server.Model
                     break;
                 //ЛЕВО
                 case VectorEnum.Left:
-                    pt = new MyPoint(ePos.X , ePos.Y);
-                    pt2 = new MyPoint(ePos.X + this._height -1  , ePos.Y);
+                    pt = new MyPoint(X , Y);
+                    pt2 = new MyPoint(X + this._height -1  , Y);
                     haveHit = HaveShot(pt, pt2); 
-                    if ((ePos.Y >= 1.5) && (haveHit == false))
-                        ePos.Y -= 5;
+                    if ((Y >= 1.5) && (haveHit == false))
+                        Y -= 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -125,11 +126,11 @@ namespace Server.Model
                     break;
                 //ПРАВО
                 case VectorEnum.Right:
-                    pt = new MyPoint(ePos.X, ePos.Y + this._width - 1);
-                    pt2 = new MyPoint(ePos.X + this._height - 1, ePos.Y +   this._width - 1);
+                    pt = new MyPoint(X, Y + this._width - 1);
+                    pt2 = new MyPoint(X + this._height - 1, Y +   this._width - 1);
                     haveHit = HaveShot(pt, pt2);
-                    if ((ePos.Y <= 1320 - 11.5) && (haveHit == false))
-                        ePos.Y += 5;
+                    if ((Y <= 1320 - 11.5) && (haveHit == false))
+                        Y += 5;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);

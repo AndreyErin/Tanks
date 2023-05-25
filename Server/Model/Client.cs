@@ -177,7 +177,7 @@ namespace Server.Model
                     break;
             }
             byte[] data = Encoding.UTF8.GetBytes(commandString);
-            SetDataAsynk(data);
+            Task.Run(()=> SetDataAsynk(data));
         }
     }
 }

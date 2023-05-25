@@ -17,7 +17,8 @@ namespace Server.Model
 
         public LocationGun(MyPoint pos, int damage)
         {
-            ePos = pos;
+            X = pos.X;
+            Y = pos.Y;
             _width = 30;
             _height = 30;
             _damage = damage;
@@ -47,11 +48,11 @@ namespace Server.Model
             {
                     //ВЕРХ
                 case VectorEnum.Top:
-                    pt = new MyPoint(ePos.X - 29, ePos.Y + 9);
-                    pt2 = new MyPoint(ePos.X - 29, ePos.Y + 19);
+                    pt = new MyPoint(X - 29, Y + 9);
+                    pt2 = new MyPoint(X - 29, Y + 19);
 
                     //если нет попадания продолжаем перечислять
-                    while ((CanTarget(pt, pt2) == false) && (pt.X > 29) && (pt.X > (ePos.X - 120)))
+                    while ((CanTarget(pt, pt2) == false) && (pt.X > 29) && (pt.X > (X - 120)))
                     {
                         pt.X -= 29;
                         pt2.X -= 29;
@@ -64,10 +65,10 @@ namespace Server.Model
                     break;
                 //НИЗ
                 case VectorEnum.Down:
-                    pt = new MyPoint(ePos.X + 58, ePos.Y + 9);
-                    pt2 = new MyPoint(ePos.X + 58, ePos.Y + 19);
+                    pt = new MyPoint(X + 58, Y + 9);
+                    pt2 = new MyPoint(X + 58, Y + 19);
 
-                    while ((CanTarget(pt, pt2) == false) && (pt.X < (720 - 29)) && (pt.X < (ePos.X + 120)))
+                    while ((CanTarget(pt, pt2) == false) && (pt.X < (720 - 29)) && (pt.X < (X + 120)))
                     {
                         pt.X += 29;
                         pt2.X += 29;
@@ -80,10 +81,10 @@ namespace Server.Model
                     break;
                 //ЛЕВО
                 case VectorEnum.Left:
-                    pt = new MyPoint(ePos.X + 9, ePos.Y - 29);
-                    pt2 = new MyPoint(ePos.X + 19, ePos.Y - 29);
+                    pt = new MyPoint(X + 9, Y - 29);
+                    pt2 = new MyPoint(X + 19, Y - 29);
 
-                    while ((CanTarget(pt, pt2) == false) && (pt.Y > 29) && (pt.Y > (ePos.Y - 120)))
+                    while ((CanTarget(pt, pt2) == false) && (pt.Y > 29) && (pt.Y > (Y - 120)))
                     {
                         pt.Y -= 29;
                         pt2.Y -= 29;
@@ -96,10 +97,10 @@ namespace Server.Model
                     break;
                 //ПРАВО
                 case VectorEnum.Right:
-                    pt = new MyPoint(ePos.X + 9, ePos.Y + 58);
-                    pt2 = new MyPoint(ePos.X + 19, ePos.Y + 58);
+                    pt = new MyPoint(X + 9, Y + 58);
+                    pt2 = new MyPoint(X + 19, Y + 58);
 
-                    while ((CanTarget(pt, pt2) == false) && (pt.Y < (1320 - 29)) && (pt.Y < (ePos.Y + 120)))
+                    while ((CanTarget(pt, pt2) == false) && (pt.Y < (1320 - 29)) && (pt.Y < (Y + 120)))
                     {
                         pt.Y += 29;
                         pt2.Y += 29;
@@ -139,7 +140,7 @@ namespace Server.Model
         protected void ToFire()
         {
             //огонь. пуля стреляет сразу при создание объекта
-            Bullet bullet = new Bullet(Vec, ePos, _damage);
+            Bullet bullet = new Bullet(Vec, new MyPoint(X, Y), _damage);
             sound = SoundsEnum.shotSoung;
             if (SoundEvent != null) SoundEvent(sound);
 

@@ -32,7 +32,8 @@ namespace Server.Model
 
             _height = 30;
             _width = 30;
-            ePos = pos;
+            X = pos.X;
+            Y = pos.Y;
             AddMe();
         }
 
@@ -40,14 +41,14 @@ namespace Server.Model
         //метод отвечает попали по нему или нет
         public bool HaveHit(MyPoint posLedarL, MyPoint posLedarR)
         {
-            if ((posLedarL.X >= ePos.X) && (posLedarL.X <= (ePos.X + _height))
-                && (posLedarL.Y >= ePos.Y) && (posLedarL.Y <= (ePos.Y + _width)))
+            if ((posLedarL.X >= X) && (posLedarL.X <= (X + _height))
+                && (posLedarL.Y >= Y) && (posLedarL.Y <= (Y + _width)))
             {
                 return true;
             }
 
-            if ((posLedarR.X >= ePos.X) && (posLedarR.X <= (ePos.X + _height))
-                && (posLedarR.Y >= ePos.Y) && (posLedarR.Y <= (ePos.Y + _width)))
+            if ((posLedarR.X >= X) && (posLedarR.X <= (X + _height))
+                && (posLedarR.Y >= Y) && (posLedarR.Y <= (Y + _width)))
             {
                 return true;
             }

@@ -8,7 +8,8 @@ namespace Server.Model
         {           
             _width = 40;
             _height = 40;
-            ePos = Pos;
+            X = Pos.X;
+            Y = Pos.Y;
 
         }
 

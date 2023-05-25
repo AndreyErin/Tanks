@@ -34,26 +34,33 @@ namespace Server.Model
             }
         }
 
-        private MyPoint _ePos = new MyPoint();
-        public MyPoint ePos {
-            get => _ePos;
+        private double _x;
+        public double X {
+            get { return _x; }
             set 
-            {
-                if (_ePos.X != value.X) 
+            { 
+                if (_x != value) 
                 {
-                    _ePos.X = value.X;
-                    ePos.X = _ePos.X;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ePos.X)));
+                    _x = value;
+                    PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(nameof(X)));
                 }
-
-                if (_ePos.Y != value.Y)
-                {
-                    _ePos.Y = value.Y;
-                    ePos.Y = _ePos.Y;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ePos.Y)));
-                }
-            } 
+            }
         }
+
+        private double _y;
+        public double Y
+        {
+            get { return _y; }
+            set
+            {
+                if (_y != value)
+                {
+                    _y = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Y)));
+                }
+            }
+        }
+
 
         //добавление себя на поле боя
         protected void AddMe() { GlobalDataStatic.BattleGroundCollection.Add(this); }
