@@ -10,6 +10,7 @@ namespace Server.Model
         DistroyEnemyTank,
         DistroyFriendlyTank,
         DestroyBunker,
-        DestroyBunkerEnamy
+        DestroyBunkerEnamy,
+        Win
     }
 }

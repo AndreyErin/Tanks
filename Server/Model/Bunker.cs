@@ -36,7 +36,7 @@ namespace Server.Model
 
                     case (<= 0): //если нет хп, то объект уничтожается
                         DistroyMy();
-                        BunkerDestroy();//сообщает в Main о своем разрушение
+                        BunkerDestroy?.Invoke();//сообщает в Main о своем разрушение
                         break;
                 }
 

@@ -19,7 +19,7 @@ namespace Client
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
 
-        private Dictionary<int, WorldElement> SearchElement = new Dictionary<int, WorldElement>();
+        public static Dictionary<int, WorldElement> SearchElement = new Dictionary<int, WorldElement>();
 
         public MainWindow()
         {
@@ -148,14 +148,26 @@ namespace Client
         //новый раунд  - сообщение
         private void btnRaundWin_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             SearchElement = new Dictionary<int, WorldElement>();
             cnvMain.Children.Clear();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
             Task.Run(() => SetDataOfServer(data));
+
         }
         //переигровка раунда - сообщение
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
+            SearchElement = new Dictionary<int, WorldElement>();
+            cnvMain.Children.Clear();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
             Task.Run(() => SetDataOfServer(data));
         }
@@ -307,6 +319,7 @@ namespace Client
                 case GameEnum.ReplayRound:
                     btnStartGame.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
+                    lblWinText.Visibility = Visibility.Hidden;
                     btnRaundReplay.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
                     break;
@@ -317,15 +330,16 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                    SearchElement.Clear();//очищаем словарь
+                    //SearchElement.Clear();//очищаем словарь
                     break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
                     lblWinText.Content = "Наша армия уничтожена.";
+                    lblWinText.Visibility = Visibility.Visible;
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                    SearchElement.Clear();//очищаем словарь
+                    //SearchElement.Clear();//очищаем словарь
                     break;
                 case GameEnum.DestroyBunker:
                     lblResultOfBattleText.Content = "Поражение";
@@ -334,7 +348,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                    SearchElement.Clear();//очищаем словарь
+                    //SearchElement.Clear();//очищаем словарь
                     break;
                 case GameEnum.DestroyBunkerEnamy:
                     lblResultOfBattleText.Content = "Победа";
@@ -344,6 +358,17 @@ namespace Client
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
                     //SearchElement.Clear();//очищаем словарь
+                    //SearchElement = new Dictionary<int, WorldElement>();
+                    break;
+                case GameEnum.Win:
+                    lblResultOfBattleText.Content = "Игра пройдена";
+                    lblResultOfBattleText.Visibility = Visibility.Visible;
+                    lblWinText.Content = "Маладес!";
+                    lblWinText.Visibility = Visibility.Visible;
+                    
+                    btnOut2.Visibility = Visibility.Visible;
+                    //SearchElement.Clear();//очищаем словарь
+                    //SearchElement = new Dictionary<int, WorldElement>();
                     break;
             }
         }

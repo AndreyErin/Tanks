@@ -301,7 +301,7 @@ namespace Server.Model
         {
             tAutoMove.Stop();
             base.DistroyMy();            
-            DistroyEvent(this); //передаем информацию о разрущшение танка
+            DistroyEvent?.Invoke(this); //передаем информацию о разрущшение танка
         }
         //повышение уровня танка
         protected override void UpgradeWiewTank(int teer)

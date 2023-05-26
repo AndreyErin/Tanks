@@ -80,6 +80,8 @@ namespace Server.Model
         //таймер
         protected void tTimerToFire_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            if (!GlobalDataStatic.BattleGroundCollection.Contains(this)) tTimerToFire.Stop();
+
             //пуля
             MyPoint pt;//точки-ледары
             MyPoint pt2;

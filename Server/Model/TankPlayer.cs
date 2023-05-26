@@ -20,7 +20,7 @@ namespace Server.Model
         {
             base.DistroyMy();
 
-            DestroyPayerTank(this);           
+            DestroyPayerTank?.Invoke(this);           
         }
         //повышение уровня танка - визуализация
         protected override void UpgradeWiewTank(int teer)

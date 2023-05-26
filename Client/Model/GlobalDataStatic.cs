@@ -11,7 +11,7 @@ namespace Client.Model
 {
     static class GlobalDataStatic
     {
-        public static MainWindow Controller { get; set; }
+        public static MainWindow Controller { get; set; }        
 
         //музыка
         public static Dictionary<SoundsEnum, Uri> SoundDictionary = new Dictionary<SoundsEnum, Uri>() 
