@@ -58,6 +58,9 @@ namespace Server.Model
 
                 Action action = () =>
                 {
+                    
+                    GlobalDataStatic.Controller.lblGetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblGetPocketCount.Content.ToString()) +1;
+
                     //отправляем команды в контроллер
                     switch (command)
                     {
@@ -136,9 +139,15 @@ namespace Server.Model
 
         //отправка данных
         protected async Task SetDataAsynk(byte[] data)
+        {
+            Action action = () =>
             {
-                await client.SendAsync(data, SocketFlags.None);
-            }
+                GlobalDataStatic.Controller.lblSetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblSetPocketCount.Content.ToString()) + 1;
+            };
+            GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+
+            await client.SendAsync(data, SocketFlags.None);
+        }
 
         //останавливаем клиент (сокет этого клиента)
         public void StopClient()

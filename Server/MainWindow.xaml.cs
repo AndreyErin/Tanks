@@ -376,8 +376,9 @@ namespace Server
             {
                 tank.DestroyPayerTank -= DistroyFriendlyTank;
             }
-            GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
+            
             StopEventsElement();//////////////////////////////////////////////////////////////////
+            GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
             //очищаем поле
             GlobalDataStatic.BattleGroundCollection.Clear();
             if (mapPool.Length > (++lvlMap))
@@ -395,6 +396,7 @@ namespace Server
         {
             foreach (WorldElement worldElement in GlobalDataStatic.BattleGroundCollection) 
             {
+                //if(worldElement != null)
                 worldElement.PropertyChanged -= ChangedElement;
             }
         }

@@ -150,23 +150,24 @@ namespace Client
         {
             try
             {
-
+                SearchElement = new Dictionary<int, WorldElement>();
+                SearchElement.Clear();
+                cnvMain.Children.Clear();//очищаем канвас
+                byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
+                Task.Run(() => SetDataOfServer(data));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
 
-            SearchElement = new Dictionary<int, WorldElement>();
-            cnvMain.Children.Clear();//очищаем канвас
-            byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
-            Task.Run(() => SetDataOfServer(data));
+
 
         }
         //переигровка раунда - сообщение
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
-            SearchElement = new Dictionary<int, WorldElement>();
+            SearchElement.Clear();
             cnvMain.Children.Clear();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
             Task.Run(() => SetDataOfServer(data));
@@ -208,12 +209,19 @@ namespace Client
         //отправить данные
         private async Task SetDataOfServer(byte[] data)
         {
+            Action action = () =>
+            {
+                GlobalDataStatic.Controller.lblSetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblSetPocketCount.Content.ToString()) + 1;
+            };
+            GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+
             await _socket.SendAsync(data, SocketFlags.None);           
         }
 
         //получить данные
         private async Task GetDataOfServer()
         {
+
            
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
@@ -238,6 +246,10 @@ namespace Client
 
                 Action action = () =>
                 {
+                    GlobalDataStatic.Controller.lblGetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblGetPocketCount.Content.ToString()) + 1;
+
+
+
                     if (isCommand) //команда
                     {
                         command = resultString.Split('@');

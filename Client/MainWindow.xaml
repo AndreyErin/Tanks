@@ -18,10 +18,10 @@
 
         <!-- верхнее меню -->
         <StackPanel  Grid.Row="0" Orientation="Horizontal" Background="#FF310309">
-            <Label Content="Подбито танков: " Foreground="Beige"/>
-            <Label x:Name="lblStatisticTank" Content="0" Foreground="Beige" Width="1000"/>
-            <Label Content="FPS" Foreground="Beige"/>
-            <Label x:Name="lblFPS" Content="0" Foreground="Beige" Width="1000"/>
+            <Label Content="Полученно пакетов: " Foreground="Beige"/>
+            <Label x:Name="lblGetPocketCount" Content="0" Foreground="Beige" Width="1000"/>
+            <Label Content="Отправленно пакетов" Foreground="Beige"/>
+            <Label x:Name="lblSetPocketCount" Content="0" Foreground="Beige" Width="1000"/>
             <Button Content="Выход" Name="btnOut" Click="btnOut_Click" />
         </StackPanel>
 

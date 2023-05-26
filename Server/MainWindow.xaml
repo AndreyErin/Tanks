@@ -8,26 +8,42 @@
         Title="Сервер" x:Name="MainWin" Height="200" Width="500" Loaded="MainWin_Loaded">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition />
             <RowDefinition/>
+            <RowDefinition />
+            <RowDefinition/>
+            <RowDefinition />
+            <RowDefinition/>
+
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Label Grid.Column="0" Content="Количество подключений"/>
+            <Label Grid.Column="1" x:Name="lblClientCount" Content="0" />
         </Grid>
+
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Количетсво отправленных пакетов"/>
+            <Label Grid.Column="1" x:Name="lblSetPocketCount" Content="0" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" x:Name="lblClientCount" Content="0" FontSize="30"/>
-           
+            <Label Grid.Column="0" Content="Количество принятых пакетов"/>
+            <Label Grid.Column="1" x:Name="lblGetPocketCount" Content="0" />
         </Grid>
+        
+        
     </Grid>
 </Window>
