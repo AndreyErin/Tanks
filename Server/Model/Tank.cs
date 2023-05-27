@@ -140,7 +140,7 @@ namespace Server.Model
         //если ледары насчупали препятсвие то двигаться дальше нельзя
         protected bool CanMove(MyPoint posLedarL, MyPoint posLedarR)
         {            
-            var subset = from s in GlobalDataStatic.BattleGroundCollection
+            var subset = from WorldElement s in GlobalDataStatic.BattleGroundCollection
                          where ((s as HPElement) != null) || ((s as Loot) != null)
                          select s;
 

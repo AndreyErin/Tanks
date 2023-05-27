@@ -135,7 +135,7 @@ namespace Client
         private void btnOut_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("OUT^");
-            Task.Run(() => SetDataOfServer(data));
+            SetDataOfServer(data);
             MainWin.Close();
         }
 
@@ -143,18 +143,18 @@ namespace Client
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("NEWGAME^");
-            Task.Run(() => SetDataOfServer(data));
+            SetDataOfServer(data);
         }
         //новый раунд  - сообщение
         private void btnRaundWin_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                SearchElement = new Dictionary<int, WorldElement>();
+                //SearchElement = new Dictionary<int, WorldElement>();
                 SearchElement.Clear();
                 cnvMain.Children.Clear();//очищаем канвас
                 byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
-                Task.Run(() => SetDataOfServer(data));
+                SetDataOfServer(data);
             }
             catch (Exception ex)
             {
@@ -170,59 +170,91 @@ namespace Client
             SearchElement.Clear();
             cnvMain.Children.Clear();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
-            Task.Run(() => SetDataOfServer(data));
+            SetDataOfServer(data);
         }
 
         //готовность 2го игрока///////////не задействованно
         private void btnReady_Click(object sender, RoutedEventArgs e)
         {
             byte[] data = Encoding.UTF8.GetBytes("READY^");
-            Task.Run(() => SetDataOfServer(data));
+            SetDataOfServer(data);
         }
 
         //добавление объекта на поле боя
         public void AddElement(int id, MyPoint pos, SkinsEnum skin) 
         {
-            WorldElement we = new WorldElement(id, pos, skin);
-            SearchElement.Add(id, we);
+            Action action = () =>
+            {
+                WorldElement we = new WorldElement(id, pos, skin);
+                SearchElement.Add(id, we);
+
+                lblElementInCanvasCount.Content = cnvMain.Children.Count;
+                lblElementInDictionaryCount.Content = SearchElement.Count;
+            };
+            Dispatcher.Invoke(action);
+
+
         }
 
         //удаление объекта с поля боя
         public void RemoveElement(int id) 
         {
-            cnvMain.Children.Remove(SearchElement[id]);
-            SearchElement.Remove(id);
+            Action action = () =>
+            {
+                cnvMain.Children.Remove(SearchElement[id]);
+                SearchElement.Remove(id);
+
+            };
+            Dispatcher.Invoke(action);
         }
 
         //изменение скина
         public void SkinUloadeElement(int id ,SkinsEnum skin)
         {
-            SearchElement[id].SkinElement(skin);            
+            Action action = () =>
+            {
+                SearchElement[id].SkinElement(skin);
+            };
+            Dispatcher.Invoke(action);                      
         }
 
         //изменение положения
         public void PosElement(int id, double x = -10, double y = -10)
         {
-            SearchElement[id].MoveElement(x, y);
+            Action action = () =>
+            {
+                SearchElement[id].MoveElement(x, y);
+            };
+            Dispatcher.Invoke(action);
+
+            
         }
 
         //отправить данные
         private async Task SetDataOfServer(byte[] data)
         {
+
             Action action = () =>
             {
                 GlobalDataStatic.Controller.lblSetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblSetPocketCount.Content.ToString()) + 1;
             };
             GlobalDataStatic.Controller.Dispatcher.Invoke(action);
 
-            await _socket.SendAsync(data, SocketFlags.None);           
+            
+            try
+            {
+                await _socket.SendAsync(data, SocketFlags.None);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("сообщение при отправке\n" + ex.Message);
+              
+            }
         }
 
         //получить данные
         private async Task GetDataOfServer()
-        {
-
-           
+        {         
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
             int haveData; //проверка остались ли еще данные
@@ -235,22 +267,21 @@ namespace Client
                     haveData = await _socket.ReceiveAsync(character, SocketFlags.None);
                     // ^ - символ означающий конец  пакета
                     if (haveData == 0 || character[0] == '^') break;//если считаны все данные
-                    data.Add(character[0]);
-
-                    
+                    data.Add(character[0]);                  
                 }
 
                 string resultString = Encoding.UTF8.GetString(data.ToArray());
                 
                 bool isCommand = resultString.Contains('@');
-
+                ///////////////////////////////////////////////////
                 Action action = () =>
                 {
                     GlobalDataStatic.Controller.lblGetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblGetPocketCount.Content.ToString()) + 1;
+                };
+                Dispatcher.Invoke(action);
 
 
-
-                    if (isCommand) //команда
+                if (isCommand) //команда
                     {
                         command = resultString.Split('@');
 
@@ -304,8 +335,7 @@ namespace Client
                             break;
                         }
                     }
-                };
-                Dispatcher.Invoke(action);
+
 
                 data.Clear();
             }
@@ -314,8 +344,10 @@ namespace Client
         //события произошедшие на сервере
         private void ServerGameEvent(GameEnum gameEnum) 
         {
-            //отклик от сервера. событие произошедшее на сервере
-            switch (gameEnum)
+            Action action = () =>
+            {
+                //отклик от сервера. событие произошедшее на сервере
+                switch (gameEnum)
             {
                 case GameEnum.NewGame:
                     btnStartGame.Visibility = Visibility.Hidden;
@@ -383,7 +415,12 @@ namespace Client
                     //SearchElement = new Dictionary<int, WorldElement>();
                     break;
             }
+
+            };
+            Dispatcher.Invoke(action);
         }
+
+
 
     }
 }

@@ -19,10 +19,14 @@
         <!-- верхнее меню -->
         <StackPanel  Grid.Row="0" Orientation="Horizontal" Background="#FF310309">
             <Label Content="Полученно пакетов: " Foreground="Beige"/>
-            <Label x:Name="lblGetPocketCount" Content="0" Foreground="Beige" Width="1000"/>
+            <Label x:Name="lblGetPocketCount" Content="0" Foreground="Beige" Width="50"/>
             <Label Content="Отправленно пакетов" Foreground="Beige"/>
-            <Label x:Name="lblSetPocketCount" Content="0" Foreground="Beige" Width="1000"/>
-            <Button Content="Выход" Name="btnOut" Click="btnOut_Click" />
+            <Label x:Name="lblSetPocketCount" Content="0" Foreground="Beige" Width="50"/>
+
+            <Label Content="Элементов в канвасе " Foreground="Beige"/>
+            <Label x:Name="lblElementInCanvasCount" Content="0" Foreground="Beige" Width="50"/>
+            <Label Content="Элементов в словаре" Foreground="Beige"/>
+            <Label x:Name="lblElementInDictionaryCount" Content="0" Foreground="Beige" Width="50"/>
         </StackPanel>
 
 
