@@ -76,7 +76,8 @@ namespace Server
                 while (true)
                 {
                     var newClient = await listenSocket.AcceptAsync();
-                    Task.Run(() => new Client(newClient, ++clientNumber)); //создаем класс клиента
+                    //Task.Run(() => 
+                    new Client(newClient, ++clientNumber);//); //создаем класс клиента
                 }
             }
             catch (Exception ex)

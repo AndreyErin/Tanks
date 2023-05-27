@@ -15,7 +15,8 @@ namespace Client
 
     public partial class MainWindow : Window
     {
-        private Socket _socket;
+
+        private static Socket _socket;
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
 
@@ -116,7 +117,7 @@ namespace Client
             try
             {
                 await _socket.ConnectAsync("127.0.0.1", 7071);                
-                Task.Factory.StartNew(async () => await GetDataOfServer());
+                Task.Factory.StartNew(() => GetDataOfServer());
             }
             catch (Exception ex)
             {
@@ -185,11 +186,19 @@ namespace Client
         {
             Action action = () =>
             {
-                WorldElement we = new WorldElement(id, pos, skin);
-                SearchElement.Add(id, we);
+                try
+                {
+                    WorldElement we = new WorldElement(id, pos, skin);
+                    SearchElement.Add(id, we);
 
-                lblElementInCanvasCount.Content = cnvMain.Children.Count;
-                lblElementInDictionaryCount.Content = SearchElement.Count;
+                    lblElementInCanvasCount.Content = cnvMain.Children.Count;
+                    lblElementInDictionaryCount.Content = SearchElement.Count;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("добавление элемента .клиент-программа\n" + ex.Message);
+                    throw;
+                }
             };
             Dispatcher.Invoke(action);
 
@@ -201,8 +210,17 @@ namespace Client
         {
             Action action = () =>
             {
-                cnvMain.Children.Remove(SearchElement[id]);
-                SearchElement.Remove(id);
+                try
+                {///////////////переставить местами
+                    cnvMain.Children.Remove(SearchElement[id]);
+                    SearchElement.Remove(id);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("удаление элемента .клиент-программа\n" + ex.Message);
+                    throw;
+                }
+
 
             };
             Dispatcher.Invoke(action);
@@ -213,7 +231,16 @@ namespace Client
         {
             Action action = () =>
             {
-                SearchElement[id].SkinElement(skin);
+                
+                try
+                {
+                    SearchElement[id].SkinElement(skin);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("смена скина .клиент-программа\n" + ex.Message);
+                    throw;
+                }
             };
             Dispatcher.Invoke(action);                      
         }
@@ -223,7 +250,16 @@ namespace Client
         {
             Action action = () =>
             {
-                SearchElement[id].MoveElement(x, y);
+                
+                try
+                {
+                    SearchElement[id].MoveElement(x, y);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("движение .клиент-программа\n" + ex.Message);
+                    throw;
+                }
             };
             Dispatcher.Invoke(action);
 
@@ -254,23 +290,26 @@ namespace Client
 
         //получить данные
         private async Task GetDataOfServer()
-        {         
+        {
+            //try
+            //{
+
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
-            int haveData; //проверка остались ли еще данные
-            string[] command;
+            //int haveData; //проверка остались ли еще данные
+            //string[] command;
             while (true)
             {
                 //считываем весь пакет
                 while (true)
                 {
-                    haveData = await _socket.ReceiveAsync(character, SocketFlags.None);
+                    var haveData = await _socket.ReceiveAsync(character, SocketFlags.None);
                     // ^ - символ означающий конец  пакета
                     if (haveData == 0 || character[0] == '^') break;//если считаны все данные
                     data.Add(character[0]);                  
                 }
 
-                string resultString = Encoding.UTF8.GetString(data.ToArray());
+                var resultString = Encoding.UTF8.GetString(data.ToArray());
                 
                 bool isCommand = resultString.Contains('@');
                 ///////////////////////////////////////////////////
@@ -281,9 +320,9 @@ namespace Client
                 Dispatcher.Invoke(action);
 
 
-                if (isCommand) //команда
+                    if (isCommand) //команда
                     {
-                        command = resultString.Split('@');
+                        var command = resultString.Split('@');
 
                         switch (command[0])
                         {
@@ -336,9 +375,15 @@ namespace Client
                         }
                     }
 
-
+                
                 data.Clear();
             }
+            //}
+
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("получение данных клиент программа\n" + ex.Message);
+            //}
         }
 
         //события произошедшие на сервере

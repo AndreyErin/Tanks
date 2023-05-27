@@ -9,8 +9,6 @@ namespace Client.Model
     public class WorldElement : Image
     {
         public int ID { get; set; }
-        //protected double _height { get; set; }
-        //protected double _width { get; set; }
         public MyPoint ePos { get; set; }
         public VectorEnum vector { get; set; }  
 

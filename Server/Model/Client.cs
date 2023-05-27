@@ -39,14 +39,14 @@ namespace Server.Model
                 
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
-            int haveData; //проверка остались ли еще данные
+            //int haveData; //проверка остались ли еще данные
             while (true)
             {
 
                 //считываем весь пакет
                 while (true)
                 {
-                    haveData = await client.ReceiveAsync(character, SocketFlags.None);
+                    var haveData = await client.ReceiveAsync(character, SocketFlags.None);
                     // ^ - символ означающий конец  пакета
                     if (haveData == 0 || character[0] == '^') break;//если считаны все данные
                     data.Add(character[0]);
@@ -54,7 +54,7 @@ namespace Server.Model
                 }
 
                 //перевод массива байт в команды от клиента
-                string command = Encoding.UTF8.GetString(data.ToArray());
+                var command = Encoding.UTF8.GetString(data.ToArray());
 
                 Action action = () =>
                 {
@@ -103,9 +103,11 @@ namespace Server.Model
                             GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Fire);
                             break;
                     }
-                    data.Clear();
+                    
                 };
                 GlobalDataStatic.Controller?.Dispatcher.Invoke(action);
+
+                data.Clear();
             }
         }
 
