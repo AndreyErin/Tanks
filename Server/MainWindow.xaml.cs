@@ -396,8 +396,8 @@ namespace Server
         {
             foreach (WorldElement worldElement in GlobalDataStatic.BattleGroundCollection) 
             {
-                //if(worldElement != null)
-                worldElement.PropertyChanged -= ChangedElement;
+                //останавливаем отсылку сообщений в объекте
+                worldElement?.StopEvent();
             }
         }
 
@@ -428,7 +428,7 @@ namespace Server
 
                 //при удаление объекта будем отписываться
                 case NotifyCollectionChangedAction.Remove:
-                    ((WorldElement)e.OldItems[0]).PropertyChanged -= ChangedElement;
+                    //((WorldElement)e.OldItems[0]).PropertyChanged -= ChangedElement;
                     //если элемент может издавать звуки
                     //if (e.OldItems[0] is ISoundsObjects)
                     //{

@@ -189,8 +189,10 @@ namespace Server.Model
         //уничтожение пули при попадание
         protected void DistroyMy()
         {
-               tTimerToFire.Stop();
-               GlobalDataStatic.BattleGroundCollection.Remove(this);                                   
+            tTimerToFire.Stop();
+            StopEvent();
+            SoundEvent = null;
+            GlobalDataStatic.BattleGroundCollection.Remove(this);                                   
         }
     }
 }
