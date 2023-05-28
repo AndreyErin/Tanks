@@ -72,7 +72,7 @@ namespace Server.Model
                     break;
             }
 
-            GlobalDataStatic.BattleGroundCollection.TryAdd(ID ,this);
+            AddMe();
 
             tTimerToFire.Start();
 

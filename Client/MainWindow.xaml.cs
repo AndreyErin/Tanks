@@ -21,7 +21,7 @@ namespace Client
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
 
-        public static ConcurrentDictionary<int, WorldElement> SearchElement = new ConcurrentDictionary<int, WorldElement>();
+        public ConcurrentDictionary<int, WorldElement> SearchElement = new ConcurrentDictionary<int, WorldElement>();
 
         public MainWindow()
         {
@@ -34,7 +34,7 @@ namespace Client
         //ФПС
         private void RenderingFPS(object sender, EventArgs e)
         {
-            cnvMain.InvalidateVisual();
+            //cnvMain.InvalidateVisual();
         }
 
         //двигаем танк
@@ -71,6 +71,10 @@ namespace Client
                 {
                     command = "FIRE^";
                     Task.Factory.StartNew(CooldownFire);//запускаем откат в отдельном потоке
+                }
+                else
+                {
+                    return;
                 }
                 break;
             }
@@ -190,10 +194,8 @@ namespace Client
                 try
                 {
                     WorldElement we = new WorldElement(id, pos, skin);
-                    bool result = SearchElement.TryAdd(id, we);
-                    if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }
                     
-
+                    
                     lblElementInCanvasCount.Content = cnvMain.Children.Count;
                     lblElementInDictionaryCount.Content = SearchElement.Count;
                 }
@@ -214,9 +216,9 @@ namespace Client
             Action action = () =>
             {
                 try
-                {///////////////переставить местами
-                    cnvMain.Children.Remove(SearchElement[id]);
+                {                    
                     bool result = SearchElement.TryRemove(id, out WorldElement worldElement);
+                    worldElement.DeleteElement();
                     if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
                 }
                 catch (Exception ex)

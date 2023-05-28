@@ -108,13 +108,13 @@ namespace Server.Model
         //начать движение танка(запустить таймер)
         public void Move(VectorEnum vector)
         {
-            //если танк не уничтожен, то едем
-            if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
-            {
+            ////если танк не уничтожен, то едем
+            //if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
+            //{
                 //направление движения
                 tVec = vector;
                 tTimerMove.Start();
-            }
+            //}
         }
         
         //остановыть движение(остановить таймер)
@@ -140,28 +140,28 @@ namespace Server.Model
         //если ледары насчупали препятсвие то двигаться дальше нельзя
         protected bool CanMove(MyPoint posLedarL, MyPoint posLedarR)
         {            
-            var subset = from WorldElement s in GlobalDataStatic.BattleGroundCollection
-                         where ((s as HPElement) != null) || ((s as Loot) != null)
+            var subset = from s in GlobalDataStatic.BattleGroundCollection
+                         where ((s.Value as HPElement) != null) || ((s.Value as Loot) != null)
                          select s;
 
             //если мы уперлись в лут то получаем его и едем дальше
-            foreach (WorldElement s in subset)
+            foreach (var s in subset)
             {
                 bool result;
-                switch (s)
+                switch (s.Value)
                 {
                     case Loot:
-                        result = ((Loot)s).HaveHit(posLedarL, posLedarR);
+                        result = ((Loot)s.Value).HaveHit(posLedarL, posLedarR);
 
                         if (result)
                         {
-                            GetLoot((Loot)s);
-                            GlobalDataStatic.BattleGroundCollection.TryRemove(s.ID, out WorldElement worldElement);                            
+                            GetLoot((Loot)s.Value);
+                            ((Loot)s.Value).RemoveMe();
                             return true;
                         }
                         break;
                     case HPElement:
-                        result = ((HPElement)s).HaveHit(posLedarL, posLedarR);
+                        result = ((HPElement)s.Value).HaveHit(posLedarL, posLedarR);
 
                         if (result)
                         {

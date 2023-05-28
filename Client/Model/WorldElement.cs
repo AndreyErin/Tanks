@@ -27,9 +27,7 @@ namespace Client.Model
             if (vector != VectorEnum.Top)
                 VectorElement(vector);
 
-            Canvas.SetTop(this, ePos.X);
-            Canvas.SetLeft(this, ePos.Y);
-            GlobalDataStatic.Controller.cnvMain.Children.Add(this);
+            AddMe();
         }
 
         //размер
@@ -151,7 +149,25 @@ namespace Client.Model
         //удаление объекта
         public void DeleteElement() 
         {
-            GlobalDataStatic.Controller.cnvMain.Children.Remove(this);
+            try
+            {
+                GlobalDataStatic.Controller.cnvMain.Children.Remove(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Удаление элемента. Класс WorldElement - клиент\n" + ex.Message);
+            }
+            
+        }
+
+        protected void AddMe() 
+        {
+            Canvas.SetTop(this, ePos.X);
+            Canvas.SetLeft(this, ePos.Y);
+            GlobalDataStatic.Controller.cnvMain.Children.Add(this);
+
+            bool result = GlobalDataStatic.Controller.SearchElement.TryAdd(ID, this);
+            if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }
         }
     }
 }
