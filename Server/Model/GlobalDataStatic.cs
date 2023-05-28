@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 
@@ -8,7 +10,7 @@ namespace Server.Model
     public static class GlobalDataStatic
     {
         //поле боя
-        public static ObservableCollection<WorldElement> BattleGroundCollection = new ObservableCollection<WorldElement>();
+        public static ConcurrentDictionary<int ,WorldElement> BattleGroundCollection { get; set; } = new ConcurrentDictionary<int ,WorldElement>();
 
         public static bool RespawnBotON { get; set; } //будут ли еще появляться танки врага
         public static List<TankPlayer> PartyTanksOfPlayers { get; set; } = new List<TankPlayer>(); //коллекция играков танков

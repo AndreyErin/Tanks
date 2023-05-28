@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Text;
 using System.ComponentModel;
 
+
 namespace Server
 {
     public partial class MainWindow : Window
@@ -35,7 +36,7 @@ namespace Server
         {
             InitializeComponent();
 
-            GlobalDataStatic.Controller = this;
+            GlobalDataStatic.Controller = this;           
         }
 
         //загрузка программы
@@ -157,11 +158,9 @@ namespace Server
             tTimer_RespawnBotTank.Interval = 1;          
             countTimerRespawn = 0;
 
-            //GlobalDataStatic.BattleGroundCollection = new System.Collections.ObjectModel.ObservableCollection<WorldElement>();
             GlobalDataStatic.PartyTankBots.Clear();
             GlobalDataStatic.IdNumberElement = 0;
 
-            GlobalDataStatic.BattleGroundCollection.CollectionChanged += ChangedBattleGround;
             //заполняем поле
             try
             {
@@ -228,24 +227,32 @@ namespace Server
         //начальное меню - новая игра
         public void NewGame()
         {
-
-            GameEvent?.Invoke(GameEnum.NewGame);
-
-            //создаем элементы окружения
-            CreateWorldElements(mapPool[lvlMap]);
-
-            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
-            //потом убрать-------------------------------------
-            mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
-
-            //подписываемся
-            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            try
             {
-                tank.DestroyPayerTank += DistroyFriendlyTank;
+                GameEvent?.Invoke(GameEnum.NewGame);
+
+                //создаем элементы окружения
+                CreateWorldElements(mapPool[lvlMap]);
+
+                GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
+                //потом убрать-------------------------------------
+                mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+
+                //подписываемся
+                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+                {
+                    tank.DestroyPayerTank += DistroyFriendlyTank;
+                }
+
+                //запускаем респавн  ботов-танков
+                //tTimer_RespawnBotTank.Start();
             }
-            
-            //запускаем респавн  ботов-танков
-            tTimer_RespawnBotTank.Start();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Новая игра" + ex.Message);
+            }
+
+
         }
 
         //следующий раунд
@@ -315,9 +322,9 @@ namespace Server
                 {
                     tank.DestroyPayerTank -= DistroyFriendlyTank;
                 }
-                GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
-                StopEventsElement();//////////////////////////////////////////////////////////////////
-                                    //очищаем поле
+
+                //очищаем поле
+                RemoteAllElement();//////////////////////////////////////////////////////////////////
                 GlobalDataStatic.BattleGroundCollection.Clear();
 
                 
@@ -342,9 +349,9 @@ namespace Server
                 GameEvent?.Invoke(GameEnum.DistroyFriendlyTank);
                 tTimer_RespawnBotTank.Stop();
                 GlobalDataStatic.IdNumberElement = 0;
-                GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
-                StopEventsElement();//////////////////////////////////////////////////////////////////
-                                    //очищаем поле
+
+                //очищаем поле
+                RemoteAllElement();//////////////////////////////////////////////////////////////////
                 GlobalDataStatic.BattleGroundCollection.Clear();
             }
         }
@@ -360,9 +367,9 @@ namespace Server
             {
                 tank.DestroyPayerTank -= DistroyFriendlyTank;
             }
-            GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
-            StopEventsElement();//////////////////////////////////////////////////////////////////
+
             //очищаем поле
+            RemoteAllElement();//////////////////////////////////////////////////////////////////            
             GlobalDataStatic.BattleGroundCollection.Clear();
         }
 
@@ -377,12 +384,12 @@ namespace Server
             {
                 tank.DestroyPayerTank -= DistroyFriendlyTank;
             }
-            
-            StopEventsElement();//////////////////////////////////////////////////////////////////
-            GlobalDataStatic.BattleGroundCollection.CollectionChanged -= ChangedBattleGround;
+
             //очищаем поле
+            RemoteAllElement();//////////////////////////////////////////////////////////////////            
             GlobalDataStatic.BattleGroundCollection.Clear();
-            if (mapPool.Length > (++lvlMap))
+
+            if (mapPool.Length > (++lvlMap))//если арунды еще будут
             {
                 GameEvent?.Invoke(GameEnum.DestroyBunkerEnamy);
             }
@@ -392,57 +399,19 @@ namespace Server
             }
         }
 
-        //отписываемся от оставшихся элементов
-        protected void StopEventsElement() 
+        //удаляем оставшиеся на карте элементы
+        protected void RemoteAllElement() 
         {
-            foreach (WorldElement worldElement in GlobalDataStatic.BattleGroundCollection) 
+            foreach (var worldElement in GlobalDataStatic.BattleGroundCollection) 
             {
-                //останавливаем отсылку сообщений в объекте
-                worldElement?.StopEvent();
+                //останавливаем отсылку сообщений в объекте и удаляем его из коллекции
+                worldElement.Value.RemoveMe();
             }
         }
 
-        
-        //отлавливаем изменения в коллекции поля боя
-        protected void ChangedBattleGround(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-
-
-            switch (e.Action)
-            {
-                //при добавление объкта будем подписываться
-                case NotifyCollectionChangedAction.Add:
-
-                    int ID = ((WorldElement)e.NewItems[0]).ID;
-                    double X = ((WorldElement)e.NewItems[0]).X;
-                    double Y = ((WorldElement)e.NewItems[0]).Y;
-                    SkinsEnum skinEnum = ((WorldElement)e.NewItems[0]).Skin;
-
-                    ((WorldElement)e.NewItems[0]).PropertyChanged += ChangedElement;
-                    //если элемент может издавать звуки
-                    //if (e.NewItems[0] is ISoundsObjects)
-                    //{
-                    //    ((ISoundsObjects)e.NewItems[0]).SoundEvent += Sounds;
-                    //}
-                    ElementEvent?.Invoke(ElementEventEnum.Add, ID, X, Y, skinEnum);
-                    break;
-
-                //при удаление объекта будем отписываться
-                case NotifyCollectionChangedAction.Remove:
-                    //((WorldElement)e.OldItems[0]).PropertyChanged -= ChangedElement;
-                    //если элемент может издавать звуки
-                    //if (e.OldItems[0] is ISoundsObjects)
-                    //{
-                    //    ((ISoundsObjects)e.NewItems[0]).SoundEvent -= Sounds;
-                    //}
-                    int IdOld = ((WorldElement)e.OldItems[0]).ID;
-                    ElementEvent?.Invoke(ElementEventEnum.Remove, IdOld);
-                    break;
-            }
-        }
-
+            
         //отлавливаем изменения в конкретных элементах
-        protected void ChangedElement(object? sender, PropertyChangedEventArgs e)
+        public void ChangedElement(object? sender, PropertyChangedEventArgs e)
         {            
             switch (e.PropertyName?.ToUpper())
             {
@@ -456,6 +425,20 @@ namespace Server
                     ElementEvent?.Invoke(ElementEventEnum.Y, ((WorldElement)sender).ID, y: ((WorldElement)sender).Y);
                     break;
 
+                case "ADD":
+                    int ID = ((WorldElement)sender).ID;
+                    double X = ((WorldElement)sender).X;
+                    double Y = ((WorldElement)sender).Y;
+                    SkinsEnum skinEnum = ((WorldElement)sender).Skin;
+
+                    ElementEvent?.Invoke(ElementEventEnum.Add, ID, X, Y, skinEnum);
+                    break;
+
+                case "REMOVE":
+                    int IdOld = ((WorldElement)sender).ID;
+
+                    ElementEvent?.Invoke(ElementEventEnum.Remove, IdOld);
+                    break;
             }
         }
     }

@@ -28,7 +28,7 @@ namespace Server.Model
         protected void AutoMove(object sender, System.Timers.ElapsedEventArgs e) 
         {
             //если объект удален с карты, то останавливаем таймер
-            if (!GlobalDataStatic.BattleGroundCollection.Contains(this))
+            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
             {
                 tAutoMove.Stop();
             }
@@ -253,16 +253,16 @@ namespace Server.Model
         protected bool CanTarget(MyPoint posLedarL, MyPoint posLedarR)
         {
             var subset = from s in GlobalDataStatic.BattleGroundCollection
-                         where (s as HPElement) != null
+                         where (s.Value as HPElement) != null
                          select s;
 
-            foreach (HPElement s in subset)
+            foreach (var s in subset)
             {
-                bool result = s.HaveHit(posLedarL, posLedarR);
+                bool result = ((HPElement)s.Value).HaveHit(posLedarL, posLedarR);
 
                 if (result)
                 {
-                    target = s; //цель найдена
+                    target = (HPElement)s.Value; //цель найдена
                     return true;
                 }                       
             }
@@ -299,9 +299,9 @@ namespace Server.Model
         //уничтожение объекта
         protected override void DistroyMy()
         {
-            tAutoMove.Stop();
-            base.DistroyMy();            
+            tAutoMove.Stop();                        
             DistroyEvent?.Invoke(this); //передаем информацию о разрущшение танка
+            base.DistroyMy();
         }
         //повышение уровня танка
         protected override void UpgradeWiewTank(int teer)

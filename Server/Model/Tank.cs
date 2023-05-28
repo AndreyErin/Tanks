@@ -109,7 +109,7 @@ namespace Server.Model
         public void Move(VectorEnum vector)
         {
             //если танк не уничтожен, то едем
-            if (GlobalDataStatic.BattleGroundCollection.Contains(this))
+            if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
             {
                 //направление движения
                 tVec = vector;
@@ -129,7 +129,7 @@ namespace Server.Model
         public void ToFire()
         {
              //если танк не уничтожен, то стреляем
-             if (GlobalDataStatic.BattleGroundCollection.Contains(this))
+             if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
              {
                  //огонь. пуля стреляет сразу при создание объекта
                  Bullet bullet = new Bullet(tVec, new MyPoint(X, Y), damageTank);
@@ -156,7 +156,7 @@ namespace Server.Model
                         if (result)
                         {
                             GetLoot((Loot)s);
-                            GlobalDataStatic.BattleGroundCollection.Remove(s);                            
+                            GlobalDataStatic.BattleGroundCollection.TryRemove(s.ID, out WorldElement worldElement);                            
                             return true;
                         }
                         break;

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Client.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
 
@@ -20,7 +21,7 @@ namespace Client
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
 
-        public static Dictionary<int, WorldElement> SearchElement = new Dictionary<int, WorldElement>();
+        public static ConcurrentDictionary<int, WorldElement> SearchElement = new ConcurrentDictionary<int, WorldElement>();
 
         public MainWindow()
         {
@@ -189,7 +190,9 @@ namespace Client
                 try
                 {
                     WorldElement we = new WorldElement(id, pos, skin);
-                    SearchElement.Add(id, we);
+                    bool result = SearchElement.TryAdd(id, we);
+                    if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }
+                    
 
                     lblElementInCanvasCount.Content = cnvMain.Children.Count;
                     lblElementInDictionaryCount.Content = SearchElement.Count;
@@ -197,7 +200,7 @@ namespace Client
                 catch (Exception ex)
                 {
                     MessageBox.Show("добавление элемента .клиент-программа\n" + ex.Message);
-                    throw;
+                    
                 }
             };
             Dispatcher.Invoke(action);
@@ -213,12 +216,12 @@ namespace Client
                 try
                 {///////////////переставить местами
                     cnvMain.Children.Remove(SearchElement[id]);
-                    SearchElement.Remove(id);
+                    bool result = SearchElement.TryRemove(id, out WorldElement worldElement);
+                    if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("удаление элемента .клиент-программа\n" + ex.Message);
-                    throw;
+                     MessageBox.Show("удаление элемента .клиент-программа\n" + ex.Message);                   
                 }
 
 
@@ -238,8 +241,7 @@ namespace Client
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("смена скина .клиент-программа\n" + ex.Message);
-                    throw;
+                    MessageBox.Show("смена скина .клиент-программа\n" + ex.Message);                   
                 }
             };
             Dispatcher.Invoke(action);                      
@@ -257,8 +259,7 @@ namespace Client
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("движение .клиент-программа\n" + ex.Message);
-                    throw;
+                    MessageBox.Show("движение .клиент-программа\n" + ex.Message);                   
                 }
             };
             Dispatcher.Invoke(action);

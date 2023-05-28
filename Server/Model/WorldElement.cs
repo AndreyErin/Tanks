@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-
+using System.Windows;
 
 namespace Server.Model
 {
@@ -63,11 +63,34 @@ namespace Server.Model
 
 
         //добавление себя на поле боя
-        protected void AddMe() { GlobalDataStatic.BattleGroundCollection.Add(this); }
+        protected void AddMe() 
+        { 
 
-        public void StopEvent() 
-        {
-            PropertyChanged = null;
+            try
+            {
+                GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this));
+                PropertyChanged += GlobalDataStatic.Controller.ChangedElement;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ADD"));
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Добавление объекта" + ex.Message);
+            }
         }
+        public void RemoveMe()
+        {
+            try
+            {
+                GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryRemove(ID, out var element));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
+                PropertyChanged = null;
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Удаление объекта" + ex.Message);
+            }
+
+        }
+
     }
 }

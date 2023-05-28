@@ -72,7 +72,7 @@ namespace Server.Model
                     break;
             }
 
-            GlobalDataStatic.BattleGroundCollection.Add(this);
+            GlobalDataStatic.BattleGroundCollection.TryAdd(ID ,this);
 
             tTimerToFire.Start();
 
@@ -80,7 +80,7 @@ namespace Server.Model
         //таймер
         protected void tTimerToFire_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (!GlobalDataStatic.BattleGroundCollection.Contains(this)) tTimerToFire.Stop();
+            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) tTimerToFire.Stop();
 
             //пуля
             MyPoint pt;//точки-ледары
@@ -145,21 +145,21 @@ namespace Server.Model
         public bool HaveShot(MyPoint posLedarL, MyPoint posLedarR)
         {
                 var subset = from s in GlobalDataStatic.BattleGroundCollection
-                             where (s as HPElement) != null
+                             where (s.Value as HPElement) != null
                              select s;
 
                 //если есть попадние, то двигаться нельзя
-                foreach (HPElement s in subset)
+                foreach (var s in subset)
                 {
-                    bool result = s.HaveHit(posLedarL, posLedarR);
+                    bool result = ((HPElement)s.Value).HaveHit(posLedarL, posLedarR);
 
                     if (result)
                     {                
-                            s.GetDamage(_damage);
-                            switch (s)
+                            ((HPElement)s.Value).GetDamage(_damage);
+                            switch (s.Value)
                             {
                                 case Tank:
-                                if (s.HP <= 0)
+                                if (((HPElement)s.Value).HP <= 0)
 
                                     sound = SoundsEnum.shotTargetSound;
                                     break;
@@ -189,10 +189,9 @@ namespace Server.Model
         //уничтожение пули при попадание
         protected void DistroyMy()
         {
-            tTimerToFire.Stop();
-            StopEvent();
+            tTimerToFire.Stop();            
             SoundEvent = null;
-            GlobalDataStatic.BattleGroundCollection.Remove(this);                                   
+            RemoveMe();                                   
         }
     }
 }

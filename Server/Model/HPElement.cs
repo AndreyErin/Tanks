@@ -31,8 +31,7 @@ namespace Server.Model
         //разрушение объекта
         protected virtual void DistroyMy()
         {
-            StopEvent();
-            GlobalDataStatic.BattleGroundCollection.Remove(this);
+            RemoveMe();
         }
 
         public abstract void GetDamage(int damage);//получение дамага
