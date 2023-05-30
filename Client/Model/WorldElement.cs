@@ -1,31 +1,32 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Client.Model
 {
-    public class WorldElement : Image
+    public class WorldElement : DrawingVisual
     {
         public int ID { get; set; }
         public MyPoint ePos { get; set; }
-        public VectorEnum vector { get; set; }  
+        public VectorEnum vector { get; set; }
+        private double vek { get; set; } = 0;
+
+        private double Width { get; set; }
+        private double Height { get; set; }
 
         private WorldElement(){}
 
-        //4й параметр не обязателен
+        //конструктор
         public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
         {            
             ID = id;
-            ePos = pos;
-            Source = GlobalDataStatic.SkinDictionary[skin];
-            
+            ePos = pos;           
+            //размер перед скином
             SizeElement(skin);
 
-            vector = vectorEnum;
-            if (vector != VectorEnum.Top)
-                VectorElement(vector);
+            SkinElement(skin);
+
+            //PosAndVectorElement();
 
             AddMe();
         }
@@ -89,69 +90,87 @@ namespace Client.Model
             }
         }
 
-        //направление
-        public void VectorElement(VectorEnum vectorEnum) 
-        {
-            switch (vectorEnum)
-            {
-            case VectorEnum.Top:
-                this.LayoutTransform = new RotateTransform(0);
-                break;
-            case VectorEnum.Down:
-                this.LayoutTransform = new RotateTransform(180);
-                break;
-            case VectorEnum.Left:
-                this.LayoutTransform = new RotateTransform(270);
-                break;
-            case VectorEnum.Right:
-                this.LayoutTransform = new RotateTransform(90);
-                break;
-            }
-        }
-
         //скин
         public void SkinElement(SkinsEnum skin)
         {
-            Source = GlobalDataStatic.SkinDictionary[skin];
+            DrawingContext dc = this.RenderOpen();
+            dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(ePos.X, ePos.Y, Width, Height));
+            dc.Close();
+
+            TransformGroup Tgroup = new TransformGroup()
+            {
+                Children =
+                {
+                    new RotateTransform(vek, Width/2, Height/2),
+                    new TranslateTransform(ePos.Y, ePos.X)
+                }
+            };
+            Transform = Tgroup;
         }
 
-        //движение
-        public void MoveElement(double x = -10, double y = -10 ) 
+        //позиция и вектор
+        public void PosAndVectorElement(double posX = -10, double posY = -10, VectorEnum vectorEnum = VectorEnum.Top) 
         {
-           
-            if (x != -10)
-            {
-                Canvas.SetTop(this, x);
-                if (x < ePos.X)
+            //позиция
+            if (posX != -10)
+            {                
+                if (posX < ePos.X)
                     vector = VectorEnum.Top;
                 else
                     vector = VectorEnum.Down;
 
-                ePos.X = x;
+                ePos.X = posX;
             }
 
-            if (y != -10)
+            if (posY != -10)
             {
-                Canvas.SetLeft(this, y);
-                if (y < ePos.Y)
+                if (posY < ePos.Y)
                 vector = VectorEnum.Left;
                 else
                 vector = VectorEnum.Right;
 
-                ePos.Y = y;
+                ePos.Y = posY;
             }
 
-            //если направление сменилось
- 
-             VectorElement(vector);           
+            //вектор
+            if (vector != vectorEnum)
+            {
+                vector = vectorEnum;
+                switch (vector)
+                {
+                    case VectorEnum.Top:
+                        vek = 0;
+                        break;
+                    case VectorEnum.Down:
+                        vek = 180;
+                        break;
+                    case VectorEnum.Left:
+                        vek = 270;
+                        break;
+                    case VectorEnum.Right:
+                        vek = 90;
+                        break;
+                }
+            }
+            TransformGroup Tgroup = new TransformGroup()
+            {
+                Children =
+                {
+                    new RotateTransform(vek, Width/2, Height/2),
+                    new TranslateTransform(ePos.Y, ePos.X)
+                }
+            };
+            Transform = Tgroup;
         }
 
         //удаление объекта
-        public void DeleteElement() 
+        public void DeleteMe() 
         {
             try
             {
-                GlobalDataStatic.Controller.cnvMain.Children.Remove(this);
+                GlobalDataStatic.Controller.cnvMain.DeleteElement(this);
+                bool result = GlobalDataStatic.Controller.SearchElement.TryRemove(ID, out WorldElement worldElement);
+                if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
             }
             catch (Exception ex)
             {
@@ -162,9 +181,7 @@ namespace Client.Model
 
         protected void AddMe() 
         {
-            Canvas.SetTop(this, ePos.X);
-            Canvas.SetLeft(this, ePos.Y);
-            GlobalDataStatic.Controller.cnvMain.Children.Add(this);
+            GlobalDataStatic.Controller.cnvMain.AddElement(this);
 
             bool result = GlobalDataStatic.Controller.SearchElement.TryAdd(ID, this);
             if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }

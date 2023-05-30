@@ -30,11 +30,11 @@
         </StackPanel>
 
 
-
+        
 
 
         <!-- основное поле -->
-        <Canvas Grid.Row="1" Width="1320" Height="720" x:Name="cnvMain"  Background="LightYellow"/>
+        <local:DrawingCanvas Grid.Row="1" Width="1320" Height="720" x:Name="cnvMain"  />
         <!--  меню  -->
 
         <Grid x:Name="gridMenu" Grid.Row="1" Width="1000" Height="auto">

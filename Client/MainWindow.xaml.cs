@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
+using System.Windows.Controls;
 
 namespace Client
 {
@@ -22,6 +23,7 @@ namespace Client
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
 
         public ConcurrentDictionary<int, WorldElement> SearchElement = new ConcurrentDictionary<int, WorldElement>();
+        //public DrawingCanvas CustomCanvas = new DrawingCanvas();
 
         public MainWindow()
         {
@@ -116,6 +118,9 @@ namespace Client
         //загрузка программы
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
+            //GlobalDataStatic.Controller.cnvMain.Children.Add(CustomCanvas);
+
+
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket = socket;
 
@@ -158,7 +163,7 @@ namespace Client
             {
                 //SearchElement = new Dictionary<int, WorldElement>();
                 SearchElement.Clear();
-                cnvMain.Children.Clear();//очищаем канвас
+                cnvMain.ClearChildrens();//очищаем канвас
                 byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
                 SetDataOfServer(data);
             }
@@ -174,7 +179,7 @@ namespace Client
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
             SearchElement.Clear();
-            cnvMain.Children.Clear();//очищаем канвас
+            cnvMain.ClearChildrens();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
             SetDataOfServer(data);
         }
@@ -196,7 +201,7 @@ namespace Client
                     WorldElement we = new WorldElement(id, pos, skin);
                     
                     
-                    lblElementInCanvasCount.Content = cnvMain.Children.Count;
+                    lblElementInCanvasCount.Content = cnvMain.Count();
                     lblElementInDictionaryCount.Content = SearchElement.Count;
                 }
                 catch (Exception ex)
@@ -215,18 +220,7 @@ namespace Client
         {
             Action action = () =>
             {
-                try
-                {                    
-                    bool result = SearchElement.TryRemove(id, out WorldElement worldElement);
-                    worldElement.DeleteElement();
-                    if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
-                }
-                catch (Exception ex)
-                {
-                     MessageBox.Show("удаление элемента .клиент-программа\n" + ex.Message);                   
-                }
-
-
+                SearchElement[id].DeleteMe();
             };
             Dispatcher.Invoke(action);
         }
@@ -257,7 +251,7 @@ namespace Client
                 
                 try
                 {
-                    SearchElement[id].MoveElement(x, y);
+                    SearchElement[id].PosAndVectorElement(posX: x, posY: y);
                 }
                 catch (Exception ex)
                 {
