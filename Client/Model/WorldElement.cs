@@ -26,7 +26,7 @@ namespace Client.Model
 
             SkinElement(skin);
 
-            //PosAndVectorElement();
+            vector = vectorEnum;
 
             AddMe();
         }
@@ -93,8 +93,8 @@ namespace Client.Model
         //скин
         public void SkinElement(SkinsEnum skin)
         {
-            DrawingContext dc = this.RenderOpen();
-            dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(ePos.X, ePos.Y, Width, Height));
+            DrawingContext dc = base.RenderOpen();
+            dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(0, 0, Width, Height));
             dc.Close();
 
             TransformGroup Tgroup = new TransformGroup()
@@ -105,7 +105,7 @@ namespace Client.Model
                     new TranslateTransform(ePos.Y, ePos.X)
                 }
             };
-            Transform = Tgroup;
+            base.Transform = Tgroup;
         }
 
         //позиция и вектор
@@ -133,9 +133,9 @@ namespace Client.Model
             }
 
             //вектор
-            if (vector != vectorEnum)
-            {
+            if (vectorEnum != VectorEnum.Top)           
                 vector = vectorEnum;
+
                 switch (vector)
                 {
                     case VectorEnum.Top:
@@ -151,7 +151,7 @@ namespace Client.Model
                         vek = 90;
                         break;
                 }
-            }
+            
             TransformGroup Tgroup = new TransformGroup()
             {
                 Children =

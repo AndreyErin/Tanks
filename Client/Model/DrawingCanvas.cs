@@ -14,11 +14,11 @@ namespace Client
         public DrawingCanvas()
         {
             CollectionVisualElements = new VisualCollection(this);
-            Height = 720;
-            Width = 1320;
+            //Height = 720;
+            //Width = 1320;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
-          
+
         }
 
         //обязательные служебные
