@@ -1,15 +1,12 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
-using System.IO;
 using System.Windows.Input;
 using Client.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
-using System.Windows.Controls;
 
 namespace Client
 {
@@ -22,7 +19,7 @@ namespace Client
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
 
-        public ConcurrentDictionary<int, WorldElement> SearchElement = new ConcurrentDictionary<int, WorldElement>();
+       // public ConcurrentDictionary<int, WorldElement> SearchElement = new ConcurrentDictionary<int, WorldElement>();
         //public DrawingCanvas CustomCanvas = new DrawingCanvas();
 
         public MainWindow()
@@ -162,7 +159,7 @@ namespace Client
             try
             {
                 //SearchElement = new Dictionary<int, WorldElement>();
-                SearchElement.Clear();
+                //SearchElement.Clear();
                 cnvMain.ClearChildrens();//очищаем канвас
                 byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
                 SetDataOfServer(data);
@@ -178,7 +175,7 @@ namespace Client
         //переигровка раунда - сообщение
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
-            SearchElement.Clear();
+            //SearchElement.Clear();
             cnvMain.ClearChildrens();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
             SetDataOfServer(data);
@@ -202,7 +199,7 @@ namespace Client
                     
                     
                     lblElementInCanvasCount.Content = cnvMain.Count();
-                    lblElementInDictionaryCount.Content = SearchElement.Count;
+                    //lblElementInDictionaryCount.Content = SearchElement.Count;
                 }
                 catch (Exception ex)
                 {
@@ -220,20 +217,20 @@ namespace Client
         {
             Action action = () =>
             {
-                SearchElement[id].DeleteMe();
+                cnvMain.DeleteElement(id);
             };
             Dispatcher.Invoke(action);
         }
 
         //изменение скина
-        public void SkinUloadeElement(int id ,SkinsEnum skin)
+        public void SkinUploadeElement(int id ,SkinsEnum skin)
         {
             Action action = () =>
             {
                 
                 try
                 {
-                    SearchElement[id].SkinElement(skin);
+                    cnvMain.SkinUpload(id, skin);
                 }
                 catch (Exception ex)
                 {
@@ -251,7 +248,7 @@ namespace Client
                 
                 try
                 {
-                    SearchElement[id].PosAndVectorElement(posX: x, posY: y);
+                    cnvMain.PosElement(id, x, y);
                 }
                 catch (Exception ex)
                 {
@@ -293,8 +290,7 @@ namespace Client
 
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
-            //int haveData; //проверка остались ли еще данные
-            //string[] command;
+
             while (true)
             {
                 //считываем весь пакет
@@ -334,7 +330,7 @@ namespace Client
                             break;
 
                         case "SKIN":
-                            SkinUloadeElement(int.Parse(command[1]), (SkinsEnum)(int.Parse(command[2])));                               
+                            SkinUploadeElement(int.Parse(command[1]), (SkinsEnum)(int.Parse(command[2])));                               
                             break;
 
                         case "X":

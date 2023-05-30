@@ -1,6 +1,5 @@
 ﻿using Client.Model;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 
@@ -14,11 +13,8 @@ namespace Client
         public DrawingCanvas()
         {
             CollectionVisualElements = new VisualCollection(this);
-            //Height = 720;
-            //Width = 1320;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
-
         }
 
         //обязательные служебные
@@ -42,17 +38,44 @@ namespace Client
         }
 
         //удаляем элемент
-        public void DeleteElement(Visual visual)
+        public void DeleteElement(int id)
         {
-            CollectionVisualElements.Remove(visual);
+            WorldElement? visual = GetElementByID(id);
+
+            if (visual != null) CollectionVisualElements.Remove(visual);
         }
 
         //получить количество элементов из вне
         public int Count() { return CollectionVisualElements.Count; }
 
-        //получить доступ к объекту из вне
-        public Visual GetElement(int index) { return CollectionVisualElements[index]; }
-
         public void ClearChildrens() { CollectionVisualElements.Clear(); }
+
+        //получаем элемент по индексу
+        private WorldElement? GetElementByID(int id) 
+        {
+            foreach (WorldElement visual in CollectionVisualElements) 
+            {
+                if(visual.ID == id) return visual;
+            }
+
+            return null;
+        }
+
+        //обновляем скин элемента
+        public void SkinUpload(int id, SkinsEnum skin) 
+        {
+            WorldElement? visual = GetElementByID(id);
+
+            if (visual != null) visual.SkinElement(skin);
+        }
+
+        //позиция элемента
+        public void PosElement(int id, double x = -10, double y = -10) 
+        {
+            WorldElement? visual = GetElementByID(id);
+
+            if (visual != null) visual.PosAndVectorElement(posX: x, posY: y);
+        }
+
     }
 }

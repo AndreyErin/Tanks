@@ -13,6 +13,8 @@ namespace Client.Model
 
         private double Width { get; set; }
         private double Height { get; set; }
+        private TransformGroup Tgroup { get; set; }
+        
 
         private WorldElement(){}
 
@@ -97,7 +99,7 @@ namespace Client.Model
             dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(0, 0, Width, Height));
             dc.Close();
 
-            TransformGroup Tgroup = new TransformGroup()
+            Tgroup = new TransformGroup()
             {
                 Children =
                 {
@@ -152,7 +154,7 @@ namespace Client.Model
                         break;
                 }
             
-            TransformGroup Tgroup = new TransformGroup()
+            Tgroup = new TransformGroup()
             {
                 Children =
                 {
@@ -168,9 +170,9 @@ namespace Client.Model
         {
             try
             {
-                GlobalDataStatic.Controller.cnvMain.DeleteElement(this);
-                bool result = GlobalDataStatic.Controller.SearchElement.TryRemove(ID, out WorldElement worldElement);
-                if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
+                GlobalDataStatic.Controller.cnvMain.DeleteElement(ID);
+                //bool result = GlobalDataStatic.Controller.SearchElement.TryRemove(ID, out WorldElement worldElement);
+                //if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
             }
             catch (Exception ex)
             {
@@ -183,8 +185,8 @@ namespace Client.Model
         {
             GlobalDataStatic.Controller.cnvMain.AddElement(this);
 
-            bool result = GlobalDataStatic.Controller.SearchElement.TryAdd(ID, this);
-            if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }
+            //bool result = GlobalDataStatic.Controller.SearchElement.TryAdd(ID, this);
+            //if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }
         }
     }
 }
