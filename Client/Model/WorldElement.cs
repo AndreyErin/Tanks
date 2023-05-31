@@ -8,12 +8,12 @@ namespace Client.Model
     {
         public int ID { get; set; }
         public MyPoint ePos { get; set; }
-        public VectorEnum vector { get; set; }
-        private double vek { get; set; } = 0;
+        public VectorEnum Vector { get; set; }
+        public SkinsEnum Skin { get; set; }
 
-        private double Width { get; set; }
-        private double Height { get; set; }
-        private TransformGroup Tgroup { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        
         
 
         private WorldElement(){}
@@ -22,13 +22,15 @@ namespace Client.Model
         public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
         {            
             ID = id;
-            ePos = pos;           
+            ePos = pos; 
+            Skin = skin;
+            Vector = vectorEnum;
             //размер перед скином
             SizeElement(skin);
 
-            SkinElement(skin);
+            //SkinElement(skin);
 
-            vector = vectorEnum;
+            
 
             AddMe();
         }
@@ -93,22 +95,22 @@ namespace Client.Model
         }
 
         //скин
-        public void SkinElement(SkinsEnum skin)
-        {
-            DrawingContext dc = base.RenderOpen();
-            dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(0, 0, Width, Height));
-            dc.Close();
+        //public void SkinElement(SkinsEnum skin)
+        //{
+        //    DrawingContext dc = base.RenderOpen();
+        //    dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(0, 0, Width, Height));
+        //    dc.Close();
 
-            Tgroup = new TransformGroup()
-            {
-                Children =
-                {
-                    new RotateTransform(vek, Width/2, Height/2),
-                    new TranslateTransform(ePos.Y, ePos.X)
-                }
-            };
-            base.Transform = Tgroup;
-        }
+        //    Tgroup = new TransformGroup()
+        //    {
+        //        Children =
+        //        {
+        //            new RotateTransform(vek, Width/2, Height/2),
+        //            new TranslateTransform(ePos.Y, ePos.X)
+        //        }
+        //    };
+        //    base.Transform = Tgroup;
+        //}
 
         //позиция и вектор
         public void PosAndVectorElement(double posX = -10, double posY = -10, VectorEnum vectorEnum = VectorEnum.Top) 
@@ -117,9 +119,11 @@ namespace Client.Model
             if (posX != -10)
             {                
                 if (posX < ePos.X)
-                    vector = VectorEnum.Top;
+                    Vector = VectorEnum.Top;
                 else
-                    vector = VectorEnum.Down;
+                    Vector = VectorEnum.Down;
+
+
 
                 ePos.X = posX;
             }
@@ -127,42 +131,44 @@ namespace Client.Model
             if (posY != -10)
             {
                 if (posY < ePos.Y)
-                vector = VectorEnum.Left;
+                    Vector = VectorEnum.Left;
                 else
-                vector = VectorEnum.Right;
+                    Vector = VectorEnum.Right;
+
+                
 
                 ePos.Y = posY;
             }
 
             //вектор
             if (vectorEnum != VectorEnum.Top)           
-                vector = vectorEnum;
+                Vector = vectorEnum;
 
-                switch (vector)
-                {
-                    case VectorEnum.Top:
-                        vek = 0;
-                        break;
-                    case VectorEnum.Down:
-                        vek = 180;
-                        break;
-                    case VectorEnum.Left:
-                        vek = 270;
-                        break;
-                    case VectorEnum.Right:
-                        vek = 90;
-                        break;
-                }
+                //switch (Vector)
+                //{
+                //    case VectorEnum.Top:
+                //        vek = 0;
+                //        break;
+                //    case VectorEnum.Down:
+                //        vek = 180;
+                //        break;
+                //    case VectorEnum.Left:
+                //        vek = 270;
+                //        break;
+                //    case VectorEnum.Right:
+                //        vek = 90;
+                //        break;
+                //}
             
-            Tgroup = new TransformGroup()
-            {
-                Children =
-                {
-                    new RotateTransform(vek, Width/2, Height/2),
-                    new TranslateTransform(ePos.Y, ePos.X)
-                }
-            };
-            Transform = Tgroup;
+            //Tgroup = new TransformGroup()
+            //{
+            //    Children =
+            //    {
+            //        new RotateTransform(vek, Width/2, Height/2),
+            //        new TranslateTransform(ePos.Y, ePos.X)
+            //    }
+            //};
+            //Transform = Tgroup;
         }
 
         //удаление объекта
@@ -170,9 +176,8 @@ namespace Client.Model
         {
             try
             {
-                GlobalDataStatic.Controller.cnvMain.DeleteElement(ID);
-                //bool result = GlobalDataStatic.Controller.SearchElement.TryRemove(ID, out WorldElement worldElement);
-                //if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
+                GlobalDataStatic.Controller.CollectionWorldElements.Remove(this);
+
             }
             catch (Exception ex)
             {
@@ -183,10 +188,7 @@ namespace Client.Model
 
         protected void AddMe() 
         {
-            GlobalDataStatic.Controller.cnvMain.AddElement(this);
-
-            //bool result = GlobalDataStatic.Controller.SearchElement.TryAdd(ID, this);
-            //if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }
+            GlobalDataStatic.Controller.CollectionWorldElements.Add(this);
         }
     }
 }

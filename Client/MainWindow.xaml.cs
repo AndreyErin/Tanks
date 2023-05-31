@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace Client
 {
@@ -14,27 +16,110 @@ namespace Client
 
     public partial class MainWindow : Window
     {
+        public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();
+        DrawingCanvas drawingCanvas = new DrawingCanvas();
+
 
         private static Socket _socket;
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
-
-       // public ConcurrentDictionary<int, WorldElement> SearchElement = new ConcurrentDictionary<int, WorldElement>();
-        //public DrawingCanvas CustomCanvas = new DrawingCanvas();
+        private System.Timers.Timer _timerRender = new System.Timers.Timer();
 
         public MainWindow()
         {
             InitializeComponent();
             GlobalDataStatic.Controller = this;
-            //ФПС
-            //System.Windows.Media.CompositionTarget.Rendering += RenderingFPS;
         }
 
-        //ФПС
-        //private void RenderingFPS(object sender, EventArgs e)
-        //{
-        //    //cnvMain.InvalidateVisual();
-        //}
+        //загрузка программы
+        private async void MainWin_Loaded(object sender, RoutedEventArgs e)
+        {
+            _timerRender.Elapsed += RenderingFPS;
+            _timerRender.Interval = 100;
+            Canvas.SetLeft(drawingCanvas, 0);
+            Canvas.SetTop(drawingCanvas, 0);
+            cnvMain.Children.Add(drawingCanvas);
+
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket = socket;
+
+            try
+            {
+                await _socket.ConnectAsync("127.0.0.1", 7071);
+                Task.Factory.StartNew(() => GetDataOfServer());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось подключиться к серверу\n" + ex.Message);
+            }
+        }
+
+        //рендер
+        private void RenderingFPS(object sender, EventArgs e)
+        {
+            Action action = () =>
+            {
+                
+                DrawingVisual visual = new DrawingVisual();
+                DrawingContext dc = visual.RenderOpen();
+                double doubleVek = 0;
+
+                foreach (WorldElement worldElement in CollectionWorldElements)
+                {
+                    switch (worldElement.Vector)
+                    {
+                        case VectorEnum.Down:
+                            doubleVek = 180;
+                            break;
+                        case VectorEnum.Left:
+                            doubleVek = 270;
+                            break;
+                        case VectorEnum.Right:
+                            doubleVek = 90;
+                            break;
+                    }
+
+
+                    //TransformGroup Tgroup = new TransformGroup()
+                    //{
+                    //    Children =
+                    //        {
+                    //            new RotateTransform(doubleVek, worldElement.Width/2, worldElement.Height/2),
+                    //            new TranslateTransform(worldElement.ePos.X, worldElement.ePos.Y)
+                    //        }
+                    //};
+
+                    Matrix matrix = new Matrix();
+                    matrix.M11 = 0;
+                    matrix.M12 = 1;
+                    matrix.M21 = 1;
+                    matrix.M22 = 0;
+                    matrix.OffsetX = worldElement.ePos.Y;
+                    matrix.OffsetY = worldElement.ePos.X;
+
+                    Rect rect = new Rect(0, 0, worldElement.Width, worldElement.Height);
+
+                    rect.Transform(matrix);
+
+                    dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                    
+
+
+                }
+
+                dc.Close();
+
+                if (drawingCanvas.Visual.Count == 0)
+                    drawingCanvas.Visual.Add(visual);
+                else
+                {
+                    drawingCanvas.Visual.Clear();
+                    drawingCanvas.Visual.Add(visual);
+                }
+
+                };
+            Dispatcher.Invoke(action);
+        }
 
         //двигаем танк
         private void MainWin_KeyDown(object sender, KeyEventArgs e)
@@ -112,25 +197,7 @@ namespace Client
             cD = false;
         }
 
-        //загрузка программы
-        private async void MainWin_Loaded(object sender, RoutedEventArgs e)
-        {
-            //GlobalDataStatic.Controller.cnvMain.Children.Add(CustomCanvas);
-            
 
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socket = socket;
-
-            try
-            {
-                await _socket.ConnectAsync("127.0.0.1", 7071);                
-                Task.Factory.StartNew(() => GetDataOfServer());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Не удалось подключиться к серверу\n" + ex.Message);
-            }
-        }
 
         //завершение программы
         private void MainWin_Unloaded(object sender, RoutedEventArgs e)
@@ -160,7 +227,7 @@ namespace Client
             {
                 //SearchElement = new Dictionary<int, WorldElement>();
                 //SearchElement.Clear();
-                cnvMain.ClearChildrens();//очищаем канвас
+                CollectionWorldElements.Clear();//очищаем канвас
                 byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
                 SetDataOfServer(data);
             }
@@ -175,8 +242,8 @@ namespace Client
         //переигровка раунда - сообщение
         private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
         {
-            //SearchElement.Clear();
-            cnvMain.ClearChildrens();//очищаем канвас
+            
+            CollectionWorldElements.Clear();//очищаем канвас
             byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
             SetDataOfServer(data);
         }
@@ -198,8 +265,8 @@ namespace Client
                     WorldElement we = new WorldElement(id, pos, skin);
                     
                     
-                    lblElementInCanvasCount.Content = cnvMain.Count();
-                    //lblElementInDictionaryCount.Content = SearchElement.Count;
+                    lblElementInCanvasCount.Content = CollectionWorldElements.Count;
+                    
                 }
                 catch (Exception ex)
                 {
@@ -217,7 +284,14 @@ namespace Client
         {
             Action action = () =>
             {
-                cnvMain.DeleteElement(id);
+                foreach (WorldElement worldElement in CollectionWorldElements) 
+                {
+                    if (worldElement.ID == id) 
+                    {
+                        CollectionWorldElements.Remove(worldElement);
+                        return;
+                    }
+                }
             };
             Dispatcher.Invoke(action);
         }
@@ -230,7 +304,14 @@ namespace Client
                 
                 try
                 {
-                    cnvMain.SkinUpload(id, skin);
+                    foreach (WorldElement worldElement in CollectionWorldElements)
+                    {
+                        if (worldElement.ID == id)
+                        {
+                            worldElement.Skin = skin;
+                            return;
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -248,7 +329,15 @@ namespace Client
                 
                 try
                 {
-                    cnvMain.PosElement(id, x, y);
+                    foreach (WorldElement worldElement in CollectionWorldElements)
+                    {
+                        if (worldElement.ID == id)
+                        {
+                            worldElement.ePos.X = x;
+                            worldElement.ePos.Y = y;
+                            return;
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -390,13 +479,15 @@ namespace Client
                 case GameEnum.NewGame:
                     btnStartGame.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
-                    btnOut2.Visibility = Visibility.Hidden;                    
+                    btnOut2.Visibility = Visibility.Hidden;
+                        _timerRender.Start();
                     break;
                 case GameEnum.NewRound:
                     btnRaundWin.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     lblWinText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
+                        _timerRender.Start();
                     break;
                 case GameEnum.ReplayRound:
                     btnStartGame.Visibility = Visibility.Hidden;
@@ -404,6 +495,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Hidden;
                     btnRaundReplay.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
+                        _timerRender.Start();
                     break;
                 case GameEnum.DistroyEnemyTank:
                     lblResultOfBattleText.Content = "Победа";
@@ -412,7 +504,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                    //SearchElement.Clear();//очищаем словарь
+                        _timerRender.Stop();
                     break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
@@ -421,7 +513,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                    //SearchElement.Clear();//очищаем словарь
+                        _timerRender.Stop();
                     break;
                 case GameEnum.DestroyBunker:
                     lblResultOfBattleText.Content = "Поражение";
@@ -430,7 +522,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                    //SearchElement.Clear();//очищаем словарь
+                        _timerRender.Stop();
                     break;
                 case GameEnum.DestroyBunkerEnamy:
                     lblResultOfBattleText.Content = "Победа";
@@ -439,18 +531,15 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                    //SearchElement.Clear();//очищаем словарь
-                    //SearchElement = new Dictionary<int, WorldElement>();
+                        _timerRender.Stop();
                     break;
                 case GameEnum.Win:
                     lblResultOfBattleText.Content = "Игра пройдена";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
                     lblWinText.Content = "Маладес!";
-                    lblWinText.Visibility = Visibility.Visible;
-                    
+                    lblWinText.Visibility = Visibility.Visible;                   
                     btnOut2.Visibility = Visibility.Visible;
-                    //SearchElement.Clear();//очищаем словарь
-                    //SearchElement = new Dictionary<int, WorldElement>();
+                        _timerRender.Stop();
                     break;
             }
 
