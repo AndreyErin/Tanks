@@ -18,7 +18,7 @@ namespace Client.Model
 
         private WorldElement(){}
 
-        //конструктор
+        //конструктор-------
         public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
         {            
             ID = id;
