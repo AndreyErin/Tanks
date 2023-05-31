@@ -27,6 +27,8 @@
             <Label x:Name="lblElementInCanvasCount" Content="0" Foreground="Beige" Width="50"/>
             <Label Content="Элементов в словаре" Foreground="Beige"/>
             <Label x:Name="lblElementInDictionaryCount" Content="0" Foreground="Beige" Width="50"/>
+            <Button Content="hige" Click="Button_Click"/>
+            <Button Content="visible" Name="bbbb" Click="bbbb_Click" />
         </StackPanel>
 
 

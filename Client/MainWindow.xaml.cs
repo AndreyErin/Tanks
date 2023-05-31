@@ -27,14 +27,14 @@ namespace Client
             InitializeComponent();
             GlobalDataStatic.Controller = this;
             //ФПС
-            System.Windows.Media.CompositionTarget.Rendering += RenderingFPS;
+            //System.Windows.Media.CompositionTarget.Rendering += RenderingFPS;
         }
 
         //ФПС
-        private void RenderingFPS(object sender, EventArgs e)
-        {
-            //cnvMain.InvalidateVisual();
-        }
+        //private void RenderingFPS(object sender, EventArgs e)
+        //{
+        //    //cnvMain.InvalidateVisual();
+        //}
 
         //двигаем танк
         private void MainWin_KeyDown(object sender, KeyEventArgs e)
@@ -116,7 +116,7 @@ namespace Client
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
             //GlobalDataStatic.Controller.cnvMain.Children.Add(CustomCanvas);
-
+            
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket = socket;
@@ -458,7 +458,14 @@ namespace Client
             Dispatcher.Invoke(action);
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            cnvMain.Visibility = Visibility.Hidden;
+        }
 
-
+        private void bbbb_Click(object sender, RoutedEventArgs e)
+        {
+            cnvMain.Visibility = Visibility.Visible;
+        }
     }
 }
