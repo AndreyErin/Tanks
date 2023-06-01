@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -11,6 +12,33 @@ namespace Client.Model
 {
     static class GlobalDataStatic
     {
+        static GlobalDataStatic()
+        {            
+            for (int i = 1; i <= 18; i++)
+            {
+                TransformedBitmap Tb90 = new TransformedBitmap();
+                Tb90.BeginInit();
+                Tb90.Source = SkinDictionary[(SkinsEnum)i];
+                Tb90.Transform = new RotateTransform(90);
+                Tb90.EndInit();
+                SkinDictionary90?.Add((SkinsEnum)i, Tb90);
+
+                TransformedBitmap Tb180 = new TransformedBitmap();
+                Tb180.BeginInit();
+                Tb180.Source = SkinDictionary[(SkinsEnum)i];
+                Tb180.Transform = new RotateTransform(180);
+                Tb180.EndInit();
+                SkinDictionary180?.Add((SkinsEnum)i, Tb180);
+
+                TransformedBitmap Tb270 = new TransformedBitmap();
+                Tb270.BeginInit();
+                Tb270.Source = SkinDictionary[(SkinsEnum)i];
+                Tb270.Transform = new RotateTransform(270);
+                Tb270.EndInit();
+                SkinDictionary270?.Add((SkinsEnum)i, Tb270);
+            }           
+        }
+
         public static MainWindow Controller { get; set; }        
 
         //музыка
@@ -25,6 +53,10 @@ namespace Client.Model
             [SoundsEnum.shotTargetSound] = new Uri(@"Model\Sounds\brue.mp3", UriKind.Relative)
         };
 
+        public static Dictionary<SkinsEnum, ImageSource> SkinDictionary90 = new Dictionary<SkinsEnum, ImageSource>();
+        public static Dictionary<SkinsEnum, ImageSource> SkinDictionary180 = new Dictionary<SkinsEnum, ImageSource>();
+        public static Dictionary<SkinsEnum, ImageSource> SkinDictionary270 = new Dictionary<SkinsEnum, ImageSource>();
+
         //скины
         public static Dictionary<SkinsEnum, BitmapImage> SkinDictionary = new Dictionary<SkinsEnum, BitmapImage>()
         {
@@ -38,11 +70,11 @@ namespace Client.Model
             [SkinsEnum.PictureBlockFerum3] = new BitmapImage(new Uri(@"Model\Pictures\ferum3.png", UriKind.Relative)),
             //деревья
             [SkinsEnum.PictureWood1] = new BitmapImage(new Uri(@"Model\Pictures\wood.png", UriKind.Relative)),
-            //танк-бот
+            //танк
             [SkinsEnum.PictureTank1] = new BitmapImage(new Uri(@"Model\Pictures\playertank.png", UriKind.Relative)),
             [SkinsEnum.PictureTank2] = new BitmapImage(new Uri(@"Model\Pictures\playertank2.png", UriKind.Relative)),
             [SkinsEnum.PictureTank3] = new BitmapImage(new Uri(@"Model\Pictures\playertank3.png", UriKind.Relative)),
-            [SkinsEnum.PictureTank4] = new BitmapImage(new Uri(@"Model\Pictures\playertank4.png", UriKind.Relative)),
+            //[SkinsEnum.PictureTank4] = new BitmapImage(new Uri(@"Model\Pictures\playertank4.png", UriKind.Relative)),
             [SkinsEnum.PictureTankSpeed] = new BitmapImage(new Uri(@"Model\Pictures\tankspeed.png", UriKind.Relative)),
             [SkinsEnum.PictureTankSpeed2] = new BitmapImage(new Uri(@"Model\Pictures\tankspeed2.png", UriKind.Relative)),
             //бункер
@@ -66,7 +98,7 @@ namespace Client.Model
             [SkinsEnum.PictureTankBot1] = new BitmapImage(new Uri(@"Model\Pictures\tankbot.png", UriKind.Relative)),
             [SkinsEnum.PictureTankBot2] = new BitmapImage(new Uri(@"Model\Pictures\tankbot2.png", UriKind.Relative)),
             [SkinsEnum.PictureTankBot3] = new BitmapImage(new Uri(@"Model\Pictures\tankbot3.png", UriKind.Relative)),
-            [SkinsEnum.PictureTankBot4] = new BitmapImage(new Uri(@"Model\Pictures\tankbot4.png", UriKind.Relative)),
+            //[SkinsEnum.PictureTankBot4] = new BitmapImage(new Uri(@"Model\Pictures\tankbot4.png", UriKind.Relative)),
             [SkinsEnum.PictureTankSpeedBot] = new BitmapImage(new Uri(@"Model\Pictures\tankspeedbot.png", UriKind.Relative)),
             [SkinsEnum.PictureTankSpeedBot2] = new BitmapImage(new Uri(@"Model\Pictures\tankspeedbot2.png", UriKind.Relative)),
             //стационарная пушка-бот

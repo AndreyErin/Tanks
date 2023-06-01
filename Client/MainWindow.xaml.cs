@@ -9,6 +9,10 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Drawing;
+using System.Windows.Shapes;
+using System.Windows.Media.Media3D;
+using System.Windows.Media.Imaging;
 
 namespace Client
 {
@@ -18,6 +22,11 @@ namespace Client
     {
         public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();
         DrawingCanvas drawingCanvas = new DrawingCanvas();
+        DrawingVisual myVisual = new DrawingVisual();
+        DrawingContext dc;
+        Rect rect;
+
+
 
 
         private static Socket _socket;
@@ -29,16 +38,18 @@ namespace Client
         {
             InitializeComponent();
             GlobalDataStatic.Controller = this;
+            
         }
 
         //загрузка программы
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
             _timerRender.Elapsed += RenderingFPS;
-            _timerRender.Interval = 100;
+            _timerRender.Interval = 20;
             Canvas.SetLeft(drawingCanvas, 0);
             Canvas.SetTop(drawingCanvas, 0);
             cnvMain.Children.Add(drawingCanvas);
+            drawingCanvas.Visual.Add(myVisual);
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket = socket;
@@ -58,66 +69,46 @@ namespace Client
         private void RenderingFPS(object sender, EventArgs e)
         {
             Action action = () =>
-            {
+            {                             
+                dc = myVisual.RenderOpen();
                 
-                DrawingVisual visual = new DrawingVisual();
-                DrawingContext dc = visual.RenderOpen();
-                double doubleVek = 0;
-
                 foreach (WorldElement worldElement in CollectionWorldElements)
                 {
+                    //подготавливаем квадрат
+                    rect.Width = worldElement.Width;
+                    rect.Height = worldElement.Height;
+                    rect.X = worldElement.ePos.Y;
+                    rect.Y = worldElement.ePos.X;
+
+                    //вынаем изображение с нужным разворотом
                     switch (worldElement.Vector)
                     {
+                        case VectorEnum.Top:
+                            dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                            break;
                         case VectorEnum.Down:
-                            doubleVek = 180;
+                            if ((int)worldElement.Skin >= 0 && (int)worldElement.Skin <= 18)                      
+                                dc.DrawImage(GlobalDataStatic.SkinDictionary180[worldElement.Skin], rect);
+                            else
+                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                             break;
                         case VectorEnum.Left:
-                            doubleVek = 270;
+                            if ((int)worldElement.Skin >= 0 && (int)worldElement.Skin <= 18)
+                                dc.DrawImage(GlobalDataStatic.SkinDictionary270[worldElement.Skin], rect);
+                            else
+                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                             break;
                         case VectorEnum.Right:
-                            doubleVek = 90;
+                            if ((int)worldElement.Skin >= 0 && (int)worldElement.Skin <= 18)
+                                dc.DrawImage(GlobalDataStatic.SkinDictionary90[worldElement.Skin], rect);
+                            else
+                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                             break;
-                    }
-
-
-                    //TransformGroup Tgroup = new TransformGroup()
-                    //{
-                    //    Children =
-                    //        {
-                    //            new RotateTransform(doubleVek, worldElement.Width/2, worldElement.Height/2),
-                    //            new TranslateTransform(worldElement.ePos.X, worldElement.ePos.Y)
-                    //        }
-                    //};
-
-                    Matrix matrix = new Matrix();
-                    matrix.M11 = 0;
-                    matrix.M12 = 1;
-                    matrix.M21 = 1;
-                    matrix.M22 = 0;
-                    matrix.OffsetX = worldElement.ePos.Y;
-                    matrix.OffsetY = worldElement.ePos.X;
-
-                    Rect rect = new Rect(0, 0, worldElement.Width, worldElement.Height);
-
-                    rect.Transform(matrix);
-
-                    dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
-                    
-
-
+                    }                 
                 }
-
                 dc.Close();
 
-                if (drawingCanvas.Visual.Count == 0)
-                    drawingCanvas.Visual.Add(visual);
-                else
-                {
-                    drawingCanvas.Visual.Clear();
-                    drawingCanvas.Visual.Add(visual);
-                }
-
-                };
+            };
             Dispatcher.Invoke(action);
         }
 
@@ -333,8 +324,9 @@ namespace Client
                     {
                         if (worldElement.ID == id)
                         {
-                            worldElement.ePos.X = x;
-                            worldElement.ePos.Y = y;
+
+                            worldElement.PosAndVectorElement(posX: x, posY: y );
+                            //worldElement.ePos.Y = y;
                             return;
                         }
                     }

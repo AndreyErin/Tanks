@@ -4,7 +4,7 @@ namespace Server.Model
 {
     public class TankOfDistroy : Block
     {
-        //public VectorEnum Vector { get; set; }
+        public VectorEnum Vector { get; set; }
 
         public TankOfDistroy(MyPoint pos, VectorEnum vector, int teer, double speed) :base(pos)
         {

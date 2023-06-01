@@ -27,11 +27,6 @@ namespace Client.Model
             Vector = vectorEnum;
             //размер перед скином
             SizeElement(skin);
-
-            //SkinElement(skin);
-
-            
-
             AddMe();
         }
 
@@ -60,8 +55,7 @@ namespace Client.Model
             //30
             case SkinsEnum.PictureTank1:
             case SkinsEnum.PictureTank2:
-            case SkinsEnum.PictureTank3:
-            case SkinsEnum.PictureTank4:
+            case SkinsEnum.PictureTank3:            
             case SkinsEnum.PictureTankSpeed:
             case SkinsEnum.PictureTankSpeed2:
             case SkinsEnum.PictureTankOfDestroy1:
@@ -73,8 +67,7 @@ namespace Client.Model
             case SkinsEnum.PictureLootSpeed:
             case SkinsEnum.PictureTankBot1:
             case SkinsEnum.PictureTankBot2:
-            case SkinsEnum.PictureTankBot3:
-            case SkinsEnum.PictureTankBot4:
+            case SkinsEnum.PictureTankBot3:            
             case SkinsEnum.PictureTankSpeedBot:
             case SkinsEnum.PictureTankSpeedBot2:
             case SkinsEnum.PictureLocationGun1:
@@ -94,30 +87,12 @@ namespace Client.Model
             }
         }
 
-        //скин
-        //public void SkinElement(SkinsEnum skin)
-        //{
-        //    DrawingContext dc = base.RenderOpen();
-        //    dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(0, 0, Width, Height));
-        //    dc.Close();
-
-        //    Tgroup = new TransformGroup()
-        //    {
-        //        Children =
-        //        {
-        //            new RotateTransform(vek, Width/2, Height/2),
-        //            new TranslateTransform(ePos.Y, ePos.X)
-        //        }
-        //    };
-        //    base.Transform = Tgroup;
-        //}
-
         //позиция и вектор
         public void PosAndVectorElement(double posX = -10, double posY = -10, VectorEnum vectorEnum = VectorEnum.Top) 
         {
             //позиция
             if (posX != -10)
-            {                
+            {
                 if (posX < ePos.X)
                     Vector = VectorEnum.Top;
                 else
@@ -135,7 +110,7 @@ namespace Client.Model
                 else
                     Vector = VectorEnum.Right;
 
-                
+
 
                 ePos.Y = posY;
             }
@@ -144,31 +119,6 @@ namespace Client.Model
             if (vectorEnum != VectorEnum.Top)           
                 Vector = vectorEnum;
 
-                //switch (Vector)
-                //{
-                //    case VectorEnum.Top:
-                //        vek = 0;
-                //        break;
-                //    case VectorEnum.Down:
-                //        vek = 180;
-                //        break;
-                //    case VectorEnum.Left:
-                //        vek = 270;
-                //        break;
-                //    case VectorEnum.Right:
-                //        vek = 90;
-                //        break;
-                //}
-            
-            //Tgroup = new TransformGroup()
-            //{
-            //    Children =
-            //    {
-            //        new RotateTransform(vek, Width/2, Height/2),
-            //        new TranslateTransform(ePos.Y, ePos.X)
-            //    }
-            //};
-            //Transform = Tgroup;
         }
 
         //удаление объекта

@@ -7,8 +7,10 @@ namespace Client
     {             
         public VisualCollection Visual { get; set; }
 
+
         public DrawingCanvas()
         {
+            
                Visual = new VisualCollection(this);
         }
 
