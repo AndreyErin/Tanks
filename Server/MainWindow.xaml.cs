@@ -19,7 +19,7 @@ namespace Server
     {
         public delegate void gEvent(GameEnum gameEvent);
         public event gEvent? GameEvent;
-        public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None);
+        public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top);
         public event eEvent? ElementEvent;
 
         public TankPlayer mainTank;
@@ -433,8 +433,9 @@ namespace Server
                     double X = ((WorldElement)sender).X;
                     double Y = ((WorldElement)sender).Y;
                     SkinsEnum skinEnum = ((WorldElement)sender).Skin;
+                    VectorEnum vector = ((WorldElement)sender).VectorElement;
 
-                    ElementEvent?.Invoke(ElementEventEnum.Add, ID, X, Y, skinEnum);
+                    ElementEvent?.Invoke(ElementEventEnum.Add, ID, X, Y, skinEnum, vector);
                     break;
 
                 case "REMOVE":

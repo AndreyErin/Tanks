@@ -8,30 +8,33 @@ namespace Client.Model
     {
         public int ID { get; set; }
         public MyPoint ePos { get; set; }
-        public VectorEnum vector { get; set; }
-        private double vek { get; set; } = 0;
+        public VectorEnum Vector { get; set; }
+        public SkinsEnum Skin { get; set; }
 
-        private double Width { get; set; }
-        private double Height { get; set; }
-        private TransformGroup Tgroup { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        
         
 
-        private WorldElement(){}
-
-        //конструктор
-        public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
-        {            
-            ID = id;
-            ePos = pos;           
-            //размер перед скином
-            SizeElement(skin);
-
-            SkinElement(skin);
-
-            vector = vectorEnum;
-
-            AddMe();
+        public WorldElement()
+        {
+            ID = 0;
+            ePos = null;
+            Skin = SkinsEnum.None;
+            Vector = VectorEnum.Top;
         }
+
+        ////конструктор-------
+        //public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
+        //{            
+        //    ID = id;
+        //    ePos = pos; 
+        //    Skin = skin;
+        //    Vector = vectorEnum;
+        //    //размер перед скином
+        //    //SizeElement(skin);
+        //    //AddMe();
+        //}
 
         //размер
         protected void SizeElement(SkinsEnum skin) 
@@ -58,8 +61,7 @@ namespace Client.Model
             //30
             case SkinsEnum.PictureTank1:
             case SkinsEnum.PictureTank2:
-            case SkinsEnum.PictureTank3:
-            case SkinsEnum.PictureTank4:
+            case SkinsEnum.PictureTank3:            
             case SkinsEnum.PictureTankSpeed:
             case SkinsEnum.PictureTankSpeed2:
             case SkinsEnum.PictureTankOfDestroy1:
@@ -71,8 +73,7 @@ namespace Client.Model
             case SkinsEnum.PictureLootSpeed:
             case SkinsEnum.PictureTankBot1:
             case SkinsEnum.PictureTankBot2:
-            case SkinsEnum.PictureTankBot3:
-            case SkinsEnum.PictureTankBot4:
+            case SkinsEnum.PictureTankBot3:            
             case SkinsEnum.PictureTankSpeedBot:
             case SkinsEnum.PictureTankSpeedBot2:
             case SkinsEnum.PictureLocationGun1:
@@ -92,34 +93,18 @@ namespace Client.Model
             }
         }
 
-        //скин
-        public void SkinElement(SkinsEnum skin)
-        {
-            DrawingContext dc = base.RenderOpen();
-            dc.DrawImage(GlobalDataStatic.SkinDictionary[skin], new Rect(0, 0, Width, Height));
-            dc.Close();
-
-            Tgroup = new TransformGroup()
-            {
-                Children =
-                {
-                    new RotateTransform(vek, Width/2, Height/2),
-                    new TranslateTransform(ePos.Y, ePos.X)
-                }
-            };
-            base.Transform = Tgroup;
-        }
-
         //позиция и вектор
         public void PosAndVectorElement(double posX = -10, double posY = -10, VectorEnum vectorEnum = VectorEnum.Top) 
         {
             //позиция
             if (posX != -10)
-            {                
+            {
                 if (posX < ePos.X)
-                    vector = VectorEnum.Top;
+                    Vector = VectorEnum.Top;
                 else
-                    vector = VectorEnum.Down;
+                    Vector = VectorEnum.Down;
+
+
 
                 ePos.X = posX;
             }
@@ -127,42 +112,19 @@ namespace Client.Model
             if (posY != -10)
             {
                 if (posY < ePos.Y)
-                vector = VectorEnum.Left;
+                    Vector = VectorEnum.Left;
                 else
-                vector = VectorEnum.Right;
+                    Vector = VectorEnum.Right;
+
+
 
                 ePos.Y = posY;
             }
 
             //вектор
             if (vectorEnum != VectorEnum.Top)           
-                vector = vectorEnum;
+                Vector = vectorEnum;
 
-                switch (vector)
-                {
-                    case VectorEnum.Top:
-                        vek = 0;
-                        break;
-                    case VectorEnum.Down:
-                        vek = 180;
-                        break;
-                    case VectorEnum.Left:
-                        vek = 270;
-                        break;
-                    case VectorEnum.Right:
-                        vek = 90;
-                        break;
-                }
-            
-            Tgroup = new TransformGroup()
-            {
-                Children =
-                {
-                    new RotateTransform(vek, Width/2, Height/2),
-                    new TranslateTransform(ePos.Y, ePos.X)
-                }
-            };
-            Transform = Tgroup;
         }
 
         //удаление объекта
@@ -170,9 +132,8 @@ namespace Client.Model
         {
             try
             {
-                GlobalDataStatic.Controller.cnvMain.DeleteElement(ID);
-                //bool result = GlobalDataStatic.Controller.SearchElement.TryRemove(ID, out WorldElement worldElement);
-                //if (!result) { MessageBox.Show("Удаление из словаря не прокатило"); }
+                GlobalDataStatic.Controller.CollectionWorldElements.Remove(this);
+                GlobalDataStatic.StackElements.Push(this);
             }
             catch (Exception ex)
             {
@@ -181,12 +142,14 @@ namespace Client.Model
             
         }
 
-        protected void AddMe() 
+        public void AddMe(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum) 
         {
-            GlobalDataStatic.Controller.cnvMain.AddElement(this);
-
-            //bool result = GlobalDataStatic.Controller.SearchElement.TryAdd(ID, this);
-            //if (!result) { MessageBox.Show("Добавление в словарь не прокатило"); }
+            ID = id;
+            ePos = pos;
+            Skin = skin;
+            Vector = vectorEnum;
+            SizeElement(Skin);
+            GlobalDataStatic.Controller.CollectionWorldElements.Add(this);
         }
     }
 }

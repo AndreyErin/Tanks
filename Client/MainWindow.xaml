@@ -8,7 +8,7 @@
         Title="MainWindow" 
         WindowState="Maximized" 
         BorderBrush="Brown" BorderThickness="2" Loaded="MainWin_Loaded" KeyDown="MainWin_KeyDown" KeyUp="MainWin_KeyUp" 
-        PreviewKeyDown="MainWin_PreviewKeyDown" Background="Beige" Unloaded="MainWin_Unloaded"  >
+        PreviewKeyDown="MainWin_PreviewKeyDown" Background="Brown" Unloaded="MainWin_Unloaded"  >
     <!-- полноэкранный режим - WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized" -->
     <Grid>
         <Grid.RowDefinitions>
@@ -27,6 +27,8 @@
             <Label x:Name="lblElementInCanvasCount" Content="0" Foreground="Beige" Width="50"/>
             <Label Content="Элементов в словаре" Foreground="Beige"/>
             <Label x:Name="lblElementInDictionaryCount" Content="0" Foreground="Beige" Width="50"/>
+            <Button Content="hige" Click="Button_Click"/>
+            <Button Content="visible" Name="bbbb" Click="bbbb_Click" />
         </StackPanel>
 
 
@@ -34,7 +36,7 @@
 
 
         <!-- основное поле -->
-        <local:DrawingCanvas Grid.Row="1" Width="1320" Height="720" x:Name="cnvMain"  />
+        <Canvas Grid.Row="1" Width="1320" Height="720" x:Name="cnvMain" Background="Beige" />
         <!--  меню  -->
 
         <Grid x:Name="gridMenu" Grid.Row="1" Width="1000" Height="auto">

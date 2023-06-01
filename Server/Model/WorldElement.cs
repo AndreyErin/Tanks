@@ -14,6 +14,8 @@ namespace Server.Model
         //наблюдаем за изменением свойств позиции и скина
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public VectorEnum VectorElement { get; set; } = VectorEnum.Top;
+
         public int ID { get; set; }
 
         protected double _height { get; set; }
@@ -60,6 +62,7 @@ namespace Server.Model
                 }
             }
         }
+
 
 
         //добавление себя на поле боя

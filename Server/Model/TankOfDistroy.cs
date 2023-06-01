@@ -4,7 +4,7 @@ namespace Server.Model
 {
     public class TankOfDistroy : Block
     {
-        //public VectorEnum Vector { get; set; }
+        
 
         public TankOfDistroy(MyPoint pos, VectorEnum vector, int teer, double speed) :base(pos)
         {
@@ -12,18 +12,7 @@ namespace Server.Model
             _height = 30;
             _width = 30;
 
-            switch (vector)
-            {
-                case VectorEnum.Top:
-                    /////////////////////дописать
-                    break;
-                case VectorEnum.Down:
-                    break;
-                case VectorEnum.Left:
-                    break;
-                case VectorEnum.Right:
-                    break;
-            }
+            VectorElement = vector;
 
             switch (teer)
             {
