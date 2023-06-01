@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
+
 
 namespace Client.Model
 {
@@ -39,7 +35,10 @@ namespace Client.Model
             }           
         }
 
-        public static MainWindow Controller { get; set; }        
+        public static MainWindow Controller { get; set; }
+
+        //все доступные элементы мира
+        public static Stack<WorldElement> StackElements = new Stack<WorldElement>();
 
         //музыка
         public static Dictionary<SoundsEnum, Uri> SoundDictionary = new Dictionary<SoundsEnum, Uri>() 

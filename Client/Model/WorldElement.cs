@@ -16,19 +16,25 @@ namespace Client.Model
         
         
 
-        private WorldElement(){}
-
-        //конструктор-------
-        public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
-        {            
-            ID = id;
-            ePos = pos; 
-            Skin = skin;
-            Vector = vectorEnum;
-            //размер перед скином
-            SizeElement(skin);
-            AddMe();
+        public WorldElement()
+        {
+            ID = 0;
+            ePos = null;
+            Skin = SkinsEnum.None;
+            Vector = VectorEnum.Top;
         }
+
+        ////конструктор-------
+        //public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
+        //{            
+        //    ID = id;
+        //    ePos = pos; 
+        //    Skin = skin;
+        //    Vector = vectorEnum;
+        //    //размер перед скином
+        //    //SizeElement(skin);
+        //    //AddMe();
+        //}
 
         //размер
         protected void SizeElement(SkinsEnum skin) 
@@ -127,7 +133,7 @@ namespace Client.Model
             try
             {
                 GlobalDataStatic.Controller.CollectionWorldElements.Remove(this);
-
+                GlobalDataStatic.StackElements.Push(this);
             }
             catch (Exception ex)
             {
@@ -136,8 +142,13 @@ namespace Client.Model
             
         }
 
-        protected void AddMe() 
+        public void AddMe(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum) 
         {
+            ID = id;
+            ePos = pos;
+            Skin = skin;
+            Vector = vectorEnum;
+            SizeElement(Skin);
             GlobalDataStatic.Controller.CollectionWorldElements.Add(this);
         }
     }

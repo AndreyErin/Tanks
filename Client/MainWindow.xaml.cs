@@ -9,10 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
-using System.Drawing;
-using System.Windows.Shapes;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.Imaging;
+
 
 namespace Client
 {
@@ -25,13 +22,14 @@ namespace Client
         DrawingVisual myVisual = new DrawingVisual();
         DrawingContext dc;
         Rect rect;
-
+        
 
 
 
         private static Socket _socket;
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
+        private string keyCommand = "";
         private System.Timers.Timer _timerRender = new System.Timers.Timer();
 
         public MainWindow()
@@ -51,6 +49,16 @@ namespace Client
             cnvMain.Children.Add(drawingCanvas);
             drawingCanvas.Visual.Add(myVisual);
 
+            for (int i = 0; i < 100; i++)
+            {
+                GlobalDataStatic.StackElements.Push(new WorldElement());
+                
+            }
+
+            //MessageBox.Show(GlobalDataStatic.StackElements.Count.ToString());
+            //WorldElement worldElement =  GlobalDataStatic.StackElements.Pop();
+            //MessageBox.Show(GlobalDataStatic.StackElements.Count.ToString() + "\n" + worldElement.Vector);
+
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket = socket;
 
@@ -68,7 +76,7 @@ namespace Client
         //рендер
         private void RenderingFPS(object sender, EventArgs e)
         {
-            Action action = () =>
+            Dispatcher.Invoke(() =>
             {                             
                 dc = myVisual.RenderOpen();
                 
@@ -80,71 +88,68 @@ namespace Client
                     rect.X = worldElement.ePos.Y;
                     rect.Y = worldElement.ePos.X;
 
-                    //вынаем изображение с нужным разворотом
-                    switch (worldElement.Vector)
+
+                    if (/*(worldElement.Skin == SkinsEnum.None) ||*/ ((int)worldElement.Skin > 18))
                     {
-                        case VectorEnum.Top:
-                            dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
-                            break;
-                        case VectorEnum.Down:
-                            if ((int)worldElement.Skin >= 0 && (int)worldElement.Skin <= 18)                      
+                        dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                    }
+                    else
+                    {
+                        //вынаем изображение с нужным разворотом
+                        switch (worldElement.Vector)
+                        {
+                            case VectorEnum.Top:
+                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                                break;
+
+                            case VectorEnum.Down:
                                 dc.DrawImage(GlobalDataStatic.SkinDictionary180[worldElement.Skin], rect);
-                            else
-                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
-                            break;
-                        case VectorEnum.Left:
-                            if ((int)worldElement.Skin >= 0 && (int)worldElement.Skin <= 18)
+                                break;
+                            case VectorEnum.Left:
                                 dc.DrawImage(GlobalDataStatic.SkinDictionary270[worldElement.Skin], rect);
-                            else
-                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
-                            break;
-                        case VectorEnum.Right:
-                            if ((int)worldElement.Skin >= 0 && (int)worldElement.Skin <= 18)
+                                break;
+                            case VectorEnum.Right:
                                 dc.DrawImage(GlobalDataStatic.SkinDictionary90[worldElement.Skin], rect);
-                            else
-                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
-                            break;
+                                break;
+                        }
                     }                 
                 }
                 dc.Close();
-
-            };
-            Dispatcher.Invoke(action);
+            });
+            
         }
 
         //двигаем танк
         private void MainWin_KeyDown(object sender, KeyEventArgs e)
         {
-            byte[] data;
-            string command = "";
-
+            //byte[] data;          
             switch (e.Key)
             {
             case Key.W:
             case Key.Up:
                 //сообщение серверу
-                command = "MOVEUP^";
+                keyCommand = "MOVEUP^";
                 _moveKey = e.Key;                   
                 break;
             case Key.S:
             case Key.Down:
-                command = "MOVEDOWN^";
+                keyCommand = "MOVEDOWN^";
                 _moveKey = e.Key;
                 break;
             case Key.A:
             case Key.Left:
-                command = "MOVELEFT^";
+                keyCommand = "MOVELEFT^";
                 _moveKey = e.Key;
                 break;
             case Key.D:
             case Key.Right:
-                command = "MOVERIGHT^";
+                keyCommand = "MOVERIGHT^";
                 _moveKey = e.Key;
                 break;
             case Key.Space: //стрельба
                 if (cD == false)
                 {
-                    command = "FIRE^";
+                    keyCommand = "FIRE^";
                     Task.Factory.StartNew(CooldownFire);//запускаем откат в отдельном потоке
                 }
                 else
@@ -153,20 +158,17 @@ namespace Client
                 }
                 break;
             }
-            data = Encoding.UTF8.GetBytes(command);
-            SetDataOfServer(data);
+            //data = Encoding.UTF8.GetBytes(command);
+            SetDataOfServer(Encoding.UTF8.GetBytes(keyCommand));
         }
         
         private void MainWin_KeyUp(object sender, KeyEventArgs e)
-        {
-            byte[] data;
-            
+        {                      
             if (e.Key == _moveKey)//если кнопка движения была поднята то останавливаем танк
             {               
-                data = Encoding.UTF8.GetBytes("STOP^");
-                SetDataOfServer(data);
+                //data = 
+                SetDataOfServer(Encoding.UTF8.GetBytes("STOP^"));
             }
-
             _lastKey = Key.None;
         }
         
@@ -188,8 +190,6 @@ namespace Client
             cD = false;
         }
 
-
-
         //завершение программы
         private void MainWin_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -200,27 +200,25 @@ namespace Client
         //выход - отключение от сервера
         private void btnOut_Click(object sender, RoutedEventArgs e)
         {
-            byte[] data = Encoding.UTF8.GetBytes("OUT^");
-            SetDataOfServer(data);
+            //byte[] data = ;
+            SetDataOfServer(Encoding.UTF8.GetBytes("OUT^"));
             MainWin.Close();
         }
 
         //новая игра - сообщение
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-            byte[] data = Encoding.UTF8.GetBytes("NEWGAME^");
-            SetDataOfServer(data);
+            //yte[] data = 
+            SetDataOfServer(Encoding.UTF8.GetBytes("NEWGAME^"));
         }
         //новый раунд  - сообщение
         private void btnRaundWin_Click(object sender, RoutedEventArgs e)
         {
             try
-            {
-                //SearchElement = new Dictionary<int, WorldElement>();
-                //SearchElement.Clear();
+            {               
                 CollectionWorldElements.Clear();//очищаем канвас
-                byte[] data = Encoding.UTF8.GetBytes("NEWRAUND^");
-                SetDataOfServer(data);
+                //byte[] data = 
+                SetDataOfServer(Encoding.UTF8.GetBytes("NEWRAUND^"));
             }
             catch (Exception ex)
             {
@@ -235,37 +233,34 @@ namespace Client
         {
             
             CollectionWorldElements.Clear();//очищаем канвас
-            byte[] data = Encoding.UTF8.GetBytes("REPLAY^");
-            SetDataOfServer(data);
+            //byte[] data = 
+            SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
         }
 
         //готовность 2го игрока///////////не задействованно
         private void btnReady_Click(object sender, RoutedEventArgs e)
         {
-            byte[] data = Encoding.UTF8.GetBytes("READY^");
-            SetDataOfServer(data);
+           // byte[] data = 
+            SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
         }
 
         //добавление объекта на поле боя
         public void AddElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vector) 
         {
-            Action action = () =>
+            Dispatcher.Invoke(() =>
             {
                 try
                 {
-                    WorldElement we = new WorldElement(id, pos, skin, vector);
-                    
-                    
-                    lblElementInCanvasCount.Content = CollectionWorldElements.Count;
-                    
+                    GlobalDataStatic.StackElements.Pop().AddMe( id, pos, skin, vector);
+                    lblElementInCanvasCount.Content = CollectionWorldElements.Count;                    
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("добавление элемента .клиент-программа\n" + ex.Message);
                     
                 }
-            };
-            Dispatcher.Invoke(action);
+            });
+            
 
 
         }
@@ -273,26 +268,24 @@ namespace Client
         //удаление объекта с поля боя
         public void RemoveElement(int id) 
         {
-            Action action = () =>
+            Dispatcher.Invoke(() =>
             {
                 foreach (WorldElement worldElement in CollectionWorldElements) 
                 {
                     if (worldElement.ID == id) 
                     {
-                        CollectionWorldElements.Remove(worldElement);
+                        worldElement.DeleteMe();
                         return;
                     }
                 }
-            };
-            Dispatcher.Invoke(action);
+            });           
         }
 
         //изменение скина
         public void SkinUploadeElement(int id ,SkinsEnum skin)
         {
-            Action action = () =>
-            {
-                
+            Dispatcher.Invoke(() =>
+            {               
                 try
                 {
                     foreach (WorldElement worldElement in CollectionWorldElements)
@@ -308,14 +301,14 @@ namespace Client
                 {
                     MessageBox.Show("смена скина .клиент-программа\n" + ex.Message);                   
                 }
-            };
-            Dispatcher.Invoke(action);                      
+            });
+                                  
         }
 
         //изменение положения
         public void PosElement(int id, double x = -10, double y = -10)
         {
-            Action action = () =>
+            Dispatcher.Invoke(() =>
             {
                 
                 try
@@ -324,7 +317,6 @@ namespace Client
                     {
                         if (worldElement.ID == id)
                         {
-
                             worldElement.PosAndVectorElement(posX: x, posY: y );
                             //worldElement.ePos.Y = y;
                             return;
@@ -335,8 +327,8 @@ namespace Client
                 {
                     MessageBox.Show("движение .клиент-программа\n" + ex.Message);                   
                 }
-            };
-            Dispatcher.Invoke(action);
+            });
+            
 
             
         }
@@ -345,11 +337,11 @@ namespace Client
         private async Task SetDataOfServer(byte[] data)
         {
 
-            Action action = () =>
+            Dispatcher.Invoke(() =>
             {
                 GlobalDataStatic.Controller.lblSetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblSetPocketCount.Content.ToString()) + 1;
-            };
-            GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+            });
+            
 
             
             try
@@ -371,32 +363,37 @@ namespace Client
 
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
+            int haveData = 0;
+            string resultString = "";
+            bool isCommand = false;
+            string[] command;
+            bool serverEvent = false;
 
             while (true)
             {
                 //считываем весь пакет
                 while (true)
                 {
-                    var haveData = await _socket.ReceiveAsync(character, SocketFlags.None);
+                    haveData = await _socket.ReceiveAsync(character, SocketFlags.None);
                     // ^ - символ означающий конец  пакета
                     if (haveData == 0 || character[0] == '^') break;//если считаны все данные
                     data.Add(character[0]);                  
                 }
 
-                var resultString = Encoding.UTF8.GetString(data.ToArray());
+                resultString = Encoding.UTF8.GetString(data.ToArray());
                 
-                bool isCommand = resultString.Contains('@');
+                isCommand = resultString.Contains('@');
                 ///////////////////////////////////////////////////
-                Action action = () =>
+                Dispatcher.Invoke(() =>
                 {
                     GlobalDataStatic.Controller.lblGetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblGetPocketCount.Content.ToString()) + 1;
-                };
-                Dispatcher.Invoke(action);
+                });
+                
 
 
                     if (isCommand) //команда
                     {
-                        var command = resultString.Split('@');
+                        command = resultString.Split('@');
 
                         switch (command[0])
                         {
@@ -427,7 +424,7 @@ namespace Client
                     else 
                     {
                         //отклик от сервера. событие произошедшее на сервере
-                        bool serverEvent = int.TryParse(resultString, out var number);
+                        serverEvent = int.TryParse(resultString, out var number);
                         if (serverEvent)
                         {
                             ServerGameEvent((GameEnum)number);
