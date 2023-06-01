@@ -247,13 +247,13 @@ namespace Client
         }
 
         //добавление объекта на поле боя
-        public void AddElement(int id, MyPoint pos, SkinsEnum skin) 
+        public void AddElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vector) 
         {
             Action action = () =>
             {
                 try
                 {
-                    WorldElement we = new WorldElement(id, pos, skin);
+                    WorldElement we = new WorldElement(id, pos, skin, vector);
                     
                     
                     lblElementInCanvasCount.Content = CollectionWorldElements.Count;
@@ -403,7 +403,7 @@ namespace Client
 
                         case "ADD":
                             MyPoint pos = new MyPoint(double.Parse(command[2]), double.Parse(command[3]));
-                            AddElement(int.Parse(command[1]), pos, (SkinsEnum)(int.Parse(command[4])));
+                            AddElement(int.Parse(command[1]), pos, (SkinsEnum)int.Parse(command[4]), (VectorEnum)int.Parse(command[5]));
                             break;
 
                         case "REMOVE":

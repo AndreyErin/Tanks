@@ -166,13 +166,13 @@ namespace Server.Model
             Task.Run(() => SetDataAsynk(data));
         } 
         
-        protected void EventOfElement(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None) 
+        protected void EventOfElement(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top) 
         {
             string commandString = "";
             switch (elementEvent)
             {
                 case ElementEventEnum.Add:
-                    commandString = $"ADD@{id}@{x}@{y}@{(int)skin}^";
+                    commandString = $"ADD@{id}@{x}@{y}@{(int)skin}@{(int)vector}^";
                     break;
                 case ElementEventEnum.Remove:
                     commandString = $"REMOVE@{id}^";
