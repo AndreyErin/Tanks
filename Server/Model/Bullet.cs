@@ -47,10 +47,10 @@ namespace Server.Model
                     break;
             }
 
-            //настройка таймера выстрела
-            tTimerToFire.Interval = 10;
-            tTimerToFire.Elapsed += tTimerToFire_Elapsed;
-            tTimerToFire.EndInit();
+            ////настройка таймера выстрела
+            //tTimerToFire.Interval = 10;
+            //tTimerToFire.Elapsed += tTimerToFire_Elapsed;
+            //tTimerToFire.EndInit();
 
             //отрисовка снаряда            
             _width = 10;
@@ -74,7 +74,8 @@ namespace Server.Model
 
             AddMe();
 
-            tTimerToFire.Start();
+            //tTimerToFire.Start();
+            GlobalDataStatic.Controller.GlobalTimerMove.Elapsed += tTimerToFire_Elapsed;
 
         }
         //таймер
@@ -96,7 +97,7 @@ namespace Server.Model
                     haveHit = HaveShot(pt, pt2);
 
                     if ((X >= 1.5) && (haveHit == false))
-                        X -= 5;
+                        X -= 7;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -108,7 +109,7 @@ namespace Server.Model
                     pt2 = new MyPoint(X + this._height - 1, Y + this._width - 1);
                     haveHit = HaveShot(pt, pt2);
                     if ((X <= 720 - 11.5) && (haveHit == false))
-                        X += 5;
+                        X += 7;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -120,7 +121,7 @@ namespace Server.Model
                     pt2 = new MyPoint(X + this._height -1  , Y);
                     haveHit = HaveShot(pt, pt2); 
                     if ((Y >= 1.5) && (haveHit == false))
-                        Y -= 5;
+                        Y -= 7;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -132,7 +133,7 @@ namespace Server.Model
                     pt2 = new MyPoint(X + this._height - 1, Y +   this._width - 1);
                     haveHit = HaveShot(pt, pt2);
                     if ((Y <= 1320 - 11.5) && (haveHit == false))
-                        Y += 5;
+                        Y += 7;
                     else
                     {
                         Task.Factory.StartNew(DistroyMy);
@@ -189,7 +190,9 @@ namespace Server.Model
         //уничтожение пули при попадание
         protected void DistroyMy()
         {
-            tTimerToFire.Stop();            
+            //tTimerToFire.Stop();
+            //
+            GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerToFire_Elapsed;
             SoundEvent = null;
             RemoveMe();                                   
         }

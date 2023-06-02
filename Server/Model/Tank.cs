@@ -7,6 +7,8 @@ namespace Server.Model
 {
     public abstract class Tank : HPElement, ISoundsObjects
     {
+        protected bool timerON = false;
+
         //интерфейс
         public SoundsEnum sound { get; set; }
         public event ISoundsObjects.SoundDeleg? SoundEvent;
@@ -16,11 +18,13 @@ namespace Server.Model
         //дамаг танка
         protected int damageTank = 1;
         //скорость танка
+        
         protected double speedTank = 1.5;
+        
         //НЕ уперлись в край карты
         protected bool noEndMap = false;
-        //таймер передвижения танка
-        protected System.Timers.Timer tTimerMove = new System.Timers.Timer();
+        ////таймер передвижения танка
+        //protected System.Timers.Timer tTimerMove = new System.Timers.Timer();
         //направление
         protected VectorEnum tVec { get; set; } = VectorEnum.Top;       
         //флаг того можно ли двигаться(нет препятствий)
@@ -37,11 +41,13 @@ namespace Server.Model
             Y = tPos.Y;
             _height = 30;
             _width = 30;
-            
-            //настройка таймера движения
-            tTimerMove.Interval = 10;
-            tTimerMove.Elapsed += tTimerMove_Elapsed;
-            tTimerMove.EndInit();
+
+            ////настройка таймера движения
+            //tTimerMove.Interval = 10;
+            //tTimerMove.Elapsed += tTimerMove_Elapsed;
+            //tTimerMove.EndInit();
+
+
         }
         
         //функция таймера для движения танка
@@ -113,7 +119,14 @@ namespace Server.Model
             //{
                 //направление движения
                 tVec = vector;
-                tTimerMove.Start();
+            //подрубаемся к общиму таймеру
+            if (timerON == false)
+            {
+                GlobalDataStatic.Controller.GlobalTimerMove.Elapsed += tTimerMove_Elapsed;
+                timerON = true;
+            }
+            
+            //tTimerMove.Start();
             //}
         }
         
@@ -121,7 +134,14 @@ namespace Server.Model
         public void Stop()
         {
             //останавливаем движение танка
-            tTimerMove.Stop();
+            //tTimerMove.Stop();
+
+            //отключаемся от общего таймера
+            if (timerON)
+            {
+                GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
+                timerON = false;
+            }
         }
         
         
@@ -187,7 +207,9 @@ namespace Server.Model
         //уничтожение объекта
         protected override void DistroyMy()
         {
-            tTimerMove.Stop();
+            //отключаемся от общего таймера
+            GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
+            //tTimerMove.Stop();
             base.DistroyMy();            
             TankOfDistroy tankOfDistroy = new TankOfDistroy(new MyPoint(X, Y), tVec, lvlTank, speedTank);
         }

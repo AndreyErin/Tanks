@@ -17,6 +17,9 @@ namespace Server
 {
     public partial class MainWindow : Window
     {
+        //общий таймер для все движущихся объектов
+        public System.Timers.Timer GlobalTimerMove = new System.Timers.Timer(15);
+
         public delegate void gEvent(GameEnum gameEvent);
         public event gEvent? GameEvent;
         public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top);
@@ -42,6 +45,8 @@ namespace Server
         //загрузка программы
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
+            GlobalTimerMove.Start();
+
             //загружаем все имена карт из папки Maps
             mapPool = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Maps", "*.json");
 
@@ -307,8 +312,6 @@ namespace Server
             tTimer_RespawnBotTank.Start();
         }
 
-
-
         //уничтожение танков-ботов
         private void DistroyEnemyTank(TankBot tankBot)
         {
@@ -429,13 +432,18 @@ namespace Server
                     break;
 
                 case "ADD":
-                    int ID = ((WorldElement)sender).ID;
-                    double X = ((WorldElement)sender).X;
-                    double Y = ((WorldElement)sender).Y;
-                    SkinsEnum skinEnum = ((WorldElement)sender).Skin;
-                    VectorEnum vector = ((WorldElement)sender).VectorElement;
+                    //int ID = ((WorldElement)sender).ID;
+                    //double X = ((WorldElement)sender).X;
+                    //double Y = ((WorldElement)sender).Y;
+                    //SkinsEnum skinEnum = ((WorldElement)sender).Skin;
+                    //VectorEnum vector = ((WorldElement)sender).VectorElement;
 
-                    ElementEvent?.Invoke(ElementEventEnum.Add, ID, X, Y, skinEnum, vector);
+                    ElementEvent?.Invoke(ElementEventEnum.Add,
+                        ((WorldElement)sender).ID,
+                        ((WorldElement)sender).X,
+                        ((WorldElement)sender).Y,
+                        ((WorldElement)sender).Skin,
+                        ((WorldElement)sender).VectorElement);
                     break;
 
                 case "REMOVE":

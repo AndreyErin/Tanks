@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace Client.Model
 {
-    public class WorldElement : DrawingVisual
+    public class WorldElement
     {
         public int ID { get; set; }
         public MyPoint ePos { get; set; }

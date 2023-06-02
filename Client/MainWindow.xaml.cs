@@ -43,7 +43,7 @@ namespace Client
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
             _timerRender.Elapsed += RenderingFPS;
-            _timerRender.Interval = 20;
+            _timerRender.Interval = 50;
             Canvas.SetLeft(drawingCanvas, 0);
             Canvas.SetTop(drawingCanvas, 0);
             cnvMain.Children.Add(drawingCanvas);

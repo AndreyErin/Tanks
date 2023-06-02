@@ -18,11 +18,17 @@ namespace Server.Model
         {
             Skin = SkinsEnum.PictureTankBot1; 
 
-            tAutoMove.Interval = 1000;
+            tAutoMove.Interval = 500;
             tAutoMove.Elapsed += AutoMove;
-            tAutoMove.EndInit();
+            //tAutoMove.EndInit();
             tAutoMove.Start();
             AddMe();
+
+            if (timerON == false)
+            {
+                GlobalDataStatic.Controller.GlobalTimerMove.Elapsed += tTimerMove_Elapsed;
+                timerON = true;
+            }
         }
         //таймер для автоматического передвижения
         protected void AutoMove(object sender, System.Timers.ElapsedEventArgs e) 
