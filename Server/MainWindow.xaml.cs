@@ -2,14 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System;
 using System.Windows;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading.Tasks;
-using System.Collections.Specialized;
-using System.Text;
+
 using System.ComponentModel;
 
 
@@ -17,6 +15,8 @@ namespace Server
 {
     public partial class MainWindow : Window
     {
+        //таймер очищения очереди
+        public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(20);
         //общий таймер для все движущихся объектов
         public System.Timers.Timer GlobalTimerMove = new System.Timers.Timer(15);
 
@@ -46,6 +46,7 @@ namespace Server
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
             GlobalTimerMove.Start();
+            TimerQueueCler.Start();
 
             //загружаем все имена карт из папки Maps
             mapPool = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Maps", "*.json");
@@ -56,12 +57,7 @@ namespace Server
             tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
             tTimer_RespawnBotTank.EndInit();
 
-            //TankPlayer tank1 = new TankPlayer(new MyPoint(0, 0));
-            //tank1.PropertyChanged += ChangedElement;
-            //GlobalDataStatic.PartyTanksOfPlayers.Add(tank1);
-            //TankPlayer tank2 = new TankPlayer(new MyPoint(0, 0));
-            //tank2.PropertyChanged += ChangedElement;
-            //GlobalDataStatic.PartyTanksOfPlayers.Add(tank2);
+            TimerQueueCler.Elapsed += TimerQueueCler_Elapsed;
 
             //запускаем функцию прослушивания в отдельном потоке
             Task.Factory.StartNew(() => StartListen());  
@@ -418,26 +414,22 @@ namespace Server
             
         //отлавливаем изменения в конкретных элементах
         public void ChangedElement(object? sender, PropertyChangedEventArgs e)
-        {            
+        {
+            //добавили объект в очередь
+            GlobalDataStatic.MessageQueue.Enqueue((WorldElement)sender);
+
             switch (e.PropertyName?.ToUpper())
             {
-                case "SKIN":
-                    ElementEvent?.Invoke(ElementEventEnum.Skin, ((WorldElement)sender).ID, skin: ((WorldElement)sender).Skin);
-                    break;
-                case "X":
-                    ElementEvent?.Invoke(ElementEventEnum.X, ((WorldElement)sender).ID, x: ((WorldElement)sender).X);
-                    break;
-                case "Y":
-                    ElementEvent?.Invoke(ElementEventEnum.Y, ((WorldElement)sender).ID, y: ((WorldElement)sender).Y);
+                case "CHANGE":
+                    ElementEvent?.Invoke(ElementEventEnum.Change,
+                        ((WorldElement)sender).ID,
+                        ((WorldElement)sender).X,
+                        ((WorldElement)sender).Y,
+                        ((WorldElement)sender).Skin,
+                        ((WorldElement)sender).VectorElement);
                     break;
 
-                case "ADD":
-                    //int ID = ((WorldElement)sender).ID;
-                    //double X = ((WorldElement)sender).X;
-                    //double Y = ((WorldElement)sender).Y;
-                    //SkinsEnum skinEnum = ((WorldElement)sender).Skin;
-                    //VectorEnum vector = ((WorldElement)sender).VectorElement;
-
+                case "ADD":                
                     ElementEvent?.Invoke(ElementEventEnum.Add,
                         ((WorldElement)sender).ID,
                         ((WorldElement)sender).X,
@@ -451,6 +443,14 @@ namespace Server
 
                     ElementEvent?.Invoke(ElementEventEnum.Remove, IdOld);
                     break;
+            }
+        }
+
+        private void TimerQueueCler_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {                               
+            while (GlobalDataStatic.MessageQueue.TryDequeue(out WorldElement we)) 
+            {
+                we.MessageSetON = false;
             }
         }
     }

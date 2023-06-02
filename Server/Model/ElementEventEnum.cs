@@ -5,8 +5,6 @@ namespace Server.Model
     {
         Add,
         Remove,
-        Skin,
-        X,
-        Y
+        Change
     }
 }

@@ -5,17 +5,20 @@ namespace Server.Model
 {
     public abstract class WorldElement : INotifyPropertyChanged
     {
+
+        public bool MessageSetON = false;
+
+
         public WorldElement()
         {
             ID = GlobalDataStatic.IdNumberElement++;
         }
+        
 
         //интерфейс INotifyPropertyChanged
         //наблюдаем за изменением свойств позиции и скина
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        public VectorEnum VectorElement { get; set; } = VectorEnum.Top;
-
+        
         public int ID { get; set; }
 
         protected double _height { get; set; }
@@ -30,8 +33,8 @@ namespace Server.Model
             {
                 if (_skin != value) 
                 { 
-                    _skin = value; 
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Skin)));
+                    _skin = value;
+                    ChangeElement();
                 }
             }
         }
@@ -44,7 +47,7 @@ namespace Server.Model
                 if (_x != value) 
                 {
                     _x = value;
-                    PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(nameof(X)));
+                    ChangeElement();                
                 }
             }
         }
@@ -58,17 +61,39 @@ namespace Server.Model
                 if (_y != value)
                 {
                     _y = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Y)));
+                    ChangeElement();               
                 }
             }
         }
 
+        private VectorEnum _vectorElement;
+        public VectorEnum VectorElement
+    {
+            get => _vectorElement;
 
+            set
+            {
+                if (_vectorElement != value)
+                {
+                    _vectorElement = value;
+                    ChangeElement();
+                }
+            }
+        }
+
+        //произошли изменения в элементе
+        private void ChangeElement() 
+        {
+            if (MessageSetON == false)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CHANGE"));
+                MessageSetON = true;
+            }
+        }
 
         //добавление себя на поле боя
         protected void AddMe() 
         { 
-
             try
             {
                 GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this));
@@ -92,7 +117,6 @@ namespace Server.Model
             {
                 MessageBox.Show("Удаление объекта" + ex.Message);
             }
-
         }
 
     }

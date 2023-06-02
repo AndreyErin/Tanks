@@ -245,12 +245,13 @@ namespace Client
         }
 
         //добавление объекта на поле боя
-        public void AddElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vector) 
+        public void AddElement(int id, double x, double y, SkinsEnum skin, VectorEnum vector) 
         {
             Dispatcher.Invoke(() =>
             {
                 try
                 {
+                    MyPoint pos = new MyPoint(x, y);
                     GlobalDataStatic.StackElements.Pop().AddMe( id, pos, skin, vector);
                     lblElementInCanvasCount.Content = CollectionWorldElements.Count;                    
                 }
@@ -282,7 +283,7 @@ namespace Client
         }
 
         //изменение скина
-        public void SkinUploadeElement(int id ,SkinsEnum skin)
+        public void ChangeElement(int id, double x, double y, SkinsEnum skin, VectorEnum vector)
         {
             Dispatcher.Invoke(() =>
             {               
@@ -293,44 +294,19 @@ namespace Client
                         if (worldElement.ID == id)
                         {
                             worldElement.Skin = skin;
+                            worldElement.Vector = vector;
+                            worldElement.ePos.X = x;
+                            worldElement.ePos.Y = y;
                             return;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("смена скина .клиент-программа\n" + ex.Message);                   
+                    MessageBox.Show("изменение в элементе .клиент-программа\n" + ex.Message);                   
                 }
             });
                                   
-        }
-
-        //изменение положения
-        public void PosElement(int id, double x = -10, double y = -10)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                
-                try
-                {
-                    foreach (WorldElement worldElement in CollectionWorldElements)
-                    {
-                        if (worldElement.ID == id)
-                        {
-                            worldElement.PosAndVectorElement(posX: x, posY: y );
-                            //worldElement.ePos.Y = y;
-                            return;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("движение .клиент-программа\n" + ex.Message);                   
-                }
-            });
-            
-
-            
         }
 
         //отправить данные
@@ -399,25 +375,25 @@ namespace Client
                         {
 
                         case "ADD":
-                            MyPoint pos = new MyPoint(double.Parse(command[2]), double.Parse(command[3]));
-                            AddElement(int.Parse(command[1]), pos, (SkinsEnum)int.Parse(command[4]), (VectorEnum)int.Parse(command[5]));
+                            AddElement(int.Parse(command[1]),
+                                double.Parse(command[2]),
+                                double.Parse(command[3]),
+                                (SkinsEnum)int.Parse(command[4]),
+                                (VectorEnum)int.Parse(command[5]));
                             break;
 
                         case "REMOVE":
                             RemoveElement(int.Parse(command[1]));
                             break;
 
-                        case "SKIN":
-                            SkinUploadeElement(int.Parse(command[1]), (SkinsEnum)(int.Parse(command[2])));                               
+                        case "CHANGE":
+                            ChangeElement(int.Parse(command[1]),
+                                double.Parse(command[2]),
+                                double.Parse(command[3]),
+                                (SkinsEnum)int.Parse(command[4]),
+                                (VectorEnum)int.Parse(command[5]));
                             break;
 
-                        case "X":
-                            PosElement(int.Parse(command[1]), x: double.Parse(command[2]));                               
-                            break;
-
-                        case "Y":
-                            PosElement(int.Parse(command[1]), y: double.Parse(command[2]));
-                            break;
                         }
 
                     }

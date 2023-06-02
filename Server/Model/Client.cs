@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -11,7 +12,9 @@ using System.Threading.Tasks;
 namespace Server.Model
 {
     public class Client
-    {       
+    {   
+        
+        
         private Socket client;
 
         public bool isFirstClient = false;
@@ -178,16 +181,11 @@ namespace Server.Model
                 case ElementEventEnum.Remove:
                     commandString = $"REMOVE@{id}^";
                     break;
-                case ElementEventEnum.Skin:
-                    commandString = $"SKIN@{id}@{(int)skin}^";
+                case ElementEventEnum.Change:
+                    commandString = $"CHANGE@{id}@{x}@{y}@{(int)skin}@{(int)vector}^";
                     break;
-                case ElementEventEnum.X:
-                    commandString = $"X@{id}@{x}^";
-                    break;
-                case ElementEventEnum.Y:
-                    commandString = $"Y@{id}@{y}^";
-                    break;
-            }
+                
+            }            
             byte[] data = Encoding.UTF8.GetBytes(commandString);
             Task.Run(()=> SetDataAsynk(data));
         }

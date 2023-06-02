@@ -44,7 +44,7 @@ namespace Server.Model
             MyPoint pt;
             MyPoint pt2;
             bool enemy = false;
-            switch (tVec)
+            switch (VectorElement)
             {
                 //ВЕРХ
                 case VectorEnum.Top:
@@ -177,19 +177,19 @@ namespace Server.Model
                 Random random = new Random();
                 if (cMove == false || noEndMap == false)
                 {
-                    switch (tVec)
+                    switch (VectorElement)
                     {
                         case VectorEnum.Top:
                             switch (random.Next(0, 3))
                             {
                                 case 0:
-                                    tVec = VectorEnum.Left;
+                                    VectorElement = VectorEnum.Left;
                                     break;
                                 case 1:
-                                    tVec = VectorEnum.Right;
+                                    VectorElement = VectorEnum.Right;
                                     break;
                                 case 2:
-                                    tVec = VectorEnum.Down;
+                                    VectorElement = VectorEnum.Down;
                                     break;
                                 default:
                                     break;
@@ -200,13 +200,13 @@ namespace Server.Model
                             switch (random.Next(0, 3))
                             {
                                 case 0:
-                                    tVec = VectorEnum.Left;
+                                    VectorElement = VectorEnum.Left;
                                     break;
                                 case 1:
-                                    tVec = VectorEnum.Right;
+                                    VectorElement = VectorEnum.Right;
                                     break;
                                 case 2:
-                                    tVec = VectorEnum.Top;
+                                    VectorElement = VectorEnum.Top;
                                     break;
                                 default:
                                     break;
@@ -217,13 +217,13 @@ namespace Server.Model
                             switch (random.Next(0, 3))
                             {
                                 case 0:
-                                    tVec = VectorEnum.Top;
+                                    VectorElement = VectorEnum.Top;
                                     break;
                                 case 1:
-                                    tVec = VectorEnum.Right;
+                                    VectorElement = VectorEnum.Right;
                                     break;
                                 case 2:
-                                    tVec = VectorEnum.Down;
+                                    VectorElement = VectorEnum.Down;
                                     break;
                                 default:
                                     break;
@@ -234,20 +234,20 @@ namespace Server.Model
                             switch (random.Next(0, 3))
                             {
                                 case 0:
-                                    tVec = VectorEnum.Left;
+                                    VectorElement = VectorEnum.Left;
                                     break;
                                 case 1:
-                                    tVec = VectorEnum.Top;
+                                    VectorElement = VectorEnum.Top;
                                     break;
                                 case 2:
-                                    tVec = VectorEnum.Down;
+                                    VectorElement = VectorEnum.Down;
                                     break;
                                 default:
                                     break;
                             }
                             break;
                     }
-                    Move(tVec);
+                    Move(VectorElement);
 
                 }
             }

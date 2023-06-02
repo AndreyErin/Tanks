@@ -26,7 +26,7 @@ namespace Server.Model
         ////таймер передвижения танка
         //protected System.Timers.Timer tTimerMove = new System.Timers.Timer();
         //направление
-        protected VectorEnum tVec { get; set; } = VectorEnum.Top;       
+       // protected VectorEnum tVec { get; set; } = VectorEnum.Top;       
         //флаг того можно ли двигаться(нет препятствий)
         protected bool cMove = false;
 
@@ -41,7 +41,7 @@ namespace Server.Model
             Y = tPos.Y;
             _height = 30;
             _width = 30;
-
+             //= tVec;
             ////настройка таймера движения
             //tTimerMove.Interval = 10;
             //tTimerMove.Elapsed += tTimerMove_Elapsed;
@@ -59,7 +59,7 @@ namespace Server.Model
             MyPoint pt;//точки-ледары
                 MyPoint pt2;
 
-                switch (tVec)
+                switch (VectorElement)
                 {
                     //ВЕРХ
                     case VectorEnum.Top:
@@ -117,8 +117,8 @@ namespace Server.Model
             ////если танк не уничтожен, то едем
             //if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
             //{
-                //направление движения
-                tVec = vector;
+            //направление движения
+            VectorElement = vector;
             //подрубаемся к общиму таймеру
             if (timerON == false)
             {
@@ -152,7 +152,7 @@ namespace Server.Model
              if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
              {
                  //огонь. пуля стреляет сразу при создание объекта
-                 Bullet bullet = new Bullet(tVec, new MyPoint(X, Y), damageTank);
+                 Bullet bullet = new Bullet(VectorElement, new MyPoint(X, Y), damageTank);
                  sound = SoundsEnum.shotSoung;
              }
         }
@@ -211,7 +211,7 @@ namespace Server.Model
             GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
             //tTimerMove.Stop();
             base.DistroyMy();            
-            TankOfDistroy tankOfDistroy = new TankOfDistroy(new MyPoint(X, Y), tVec, lvlTank, speedTank);
+            TankOfDistroy tankOfDistroy = new TankOfDistroy(new MyPoint(X, Y), VectorElement, lvlTank, speedTank);
         }
 
         //обработка получения лута
