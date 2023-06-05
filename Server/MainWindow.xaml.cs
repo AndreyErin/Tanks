@@ -7,7 +7,6 @@ using System.Windows;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading.Tasks;
-
 using System.ComponentModel;
 
 
@@ -16,7 +15,7 @@ namespace Server
     public partial class MainWindow : Window
     {
         //таймер очищения очереди
-        public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(20);
+        public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(10);
         //общий таймер для все движущихся объектов
         public System.Timers.Timer GlobalTimerMove = new System.Timers.Timer(15);
 
@@ -24,6 +23,8 @@ namespace Server
         public event gEvent? GameEvent;
         public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top);
         public event eEvent? ElementEvent;
+        public delegate void cdMessage();
+        public event Action CooldownMessage;
 
         public TankPlayer mainTank;
         public Map? map;
@@ -57,7 +58,7 @@ namespace Server
             tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
             tTimer_RespawnBotTank.EndInit();
 
-            TimerQueueCler.Elapsed += TimerQueueCler_Elapsed;
+            TimerQueueCler.Elapsed += TimerCooldownMessage_Elapsed;
 
             //запускаем функцию прослушивания в отдельном потоке
             Task.Factory.StartNew(() => StartListen());  
@@ -212,13 +213,6 @@ namespace Server
                     BunkerEnamy b = new BunkerEnamy(map.BunkerEnamyPos);
                     b.BunkerDestroy += DestroyBunkerEnamy;
                 }
-
-                //mainTank.Skin = SkinsEnum.PictureTank3;
-                //mainTank.PropertyChanged += ChangedElement;
-                //GlobalDataStatic.PartyTanksOfPlayers[1] = new TankPlayer(map.respawnTankPlayer[1]);
-               
-                //GlobalDataStatic.BattleGroundCollection.Add(GlobalDataStatic.PartyTanksOfPlayers[1]);//добавляемся на поле боя
-
                 
             }
             catch (Exception ex)
@@ -415,9 +409,6 @@ namespace Server
         //отлавливаем изменения в конкретных элементах
         public void ChangedElement(object? sender, PropertyChangedEventArgs e)
         {
-            //добавили объект в очередь
-            GlobalDataStatic.MessageQueue.Enqueue((WorldElement)sender);
-
             switch (e.PropertyName?.ToUpper())
             {
                 case "CHANGE":
@@ -427,6 +418,7 @@ namespace Server
                         ((WorldElement)sender).Y,
                         ((WorldElement)sender).Skin,
                         ((WorldElement)sender).VectorElement);
+                    //((WorldElement)sender).MessageSetON = false;
                     break;
 
                 case "ADD":                
@@ -446,12 +438,11 @@ namespace Server
             }
         }
 
-        private void TimerQueueCler_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {                               
-            while (GlobalDataStatic.MessageQueue.TryDequeue(out WorldElement we)) 
-            {
-                we.MessageSetON = false;
-            }
+        //ограничение на отправку сообщений элементом
+        private void TimerCooldownMessage_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            CooldownMessage?.Invoke();
+
         }
     }
 }

@@ -12,6 +12,9 @@ namespace Server.Model
         public WorldElement()
         {
             ID = GlobalDataStatic.IdNumberElement++;
+            //подписываемся на кулдаун для сообщений
+            GlobalDataStatic.Controller!.CooldownMessage += CooldownMessage;
+
         }
         
 
@@ -90,6 +93,9 @@ namespace Server.Model
                 MessageSetON = true;
             }
         }
+
+        //откат для сообщений
+        private void CooldownMessage() { MessageSetON = false; }
 
         //добавление себя на поле боя
         protected void AddMe() 

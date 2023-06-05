@@ -19,7 +19,6 @@ namespace Server.Model
         public static bool readyCheck { get; set; } = true; //-----------изменить при добавление 2го игрока
         public static int IdNumberElement { get; set; } = 0;
 
-        public static ConcurrentQueue<WorldElement> MessageQueue = new ConcurrentQueue<WorldElement>();
-
+        
     }
 }
