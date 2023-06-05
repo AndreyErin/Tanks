@@ -103,6 +103,7 @@ namespace Server.Model
             try
             {
                 GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this));
+                //GlobalDataStatic.Controller!.CooldownMessage += CooldownMessage;
                 PropertyChanged += GlobalDataStatic.Controller.ChangedElement;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ADD"));
             }
@@ -118,6 +119,7 @@ namespace Server.Model
                 GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryRemove(ID, out var element));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
                 PropertyChanged = null;
+                GlobalDataStatic.Controller!.CooldownMessage -= CooldownMessage;
             }
             catch (System.Exception ex)
             {

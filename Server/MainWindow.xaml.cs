@@ -15,7 +15,7 @@ namespace Server
     public partial class MainWindow : Window
     {
         //таймер очищения очереди
-        public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(10);
+        public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(50);
         //общий таймер для все движущихся объектов
         public System.Timers.Timer GlobalTimerMove = new System.Timers.Timer(15);
 

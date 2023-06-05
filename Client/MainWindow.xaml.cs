@@ -43,7 +43,7 @@ namespace Client
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
             _timerRender.Elapsed += RenderingFPS;
-            _timerRender.Interval = 50;
+            _timerRender.Interval = 30;
             Canvas.SetLeft(drawingCanvas, 0);
             Canvas.SetTop(drawingCanvas, 0);
             cnvMain.Children.Add(drawingCanvas);
@@ -64,7 +64,7 @@ namespace Client
 
             try
             {
-                await _socket.ConnectAsync("127.0.0.1", 7071);
+                await _socket.ConnectAsync("192.168.0.34", 7071);
                 Task.Factory.StartNew(() => GetDataOfServer());
             }
             catch (Exception ex)
@@ -89,6 +89,8 @@ namespace Client
                     rect.Y = worldElement.ePos.X;
 
 
+
+                    //dc.DrawRectangle(null , new Pen(Brushes.Brown, 3), rect);
                     if (/*(worldElement.Skin == SkinsEnum.None) ||*/ ((int)worldElement.Skin > 18))
                     {
                         dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
@@ -112,7 +114,7 @@ namespace Client
                                 dc.DrawImage(GlobalDataStatic.SkinDictionary90[worldElement.Skin], rect);
                                 break;
                         }
-                    }                 
+                    }
                 }
                 dc.Close();
             });
@@ -363,6 +365,7 @@ namespace Client
                 Dispatcher.Invoke(() =>
                 {
                     GlobalDataStatic.Controller.lblGetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblGetPocketCount.Content.ToString()) + 1;
+                    GlobalDataStatic.Controller.lblElementInDictionaryCount.Content = GlobalDataStatic.StackElements.Count;
                 });
                 
 
