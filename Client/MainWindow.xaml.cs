@@ -18,7 +18,7 @@ namespace Client
     public partial class MainWindow : Window
     {
         public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();
-        DrawingCanvas drawingCanvas = new DrawingCanvas();
+        //DrawingCanvas drawingCanvas = new DrawingCanvas();
         DrawingVisual myVisual = new DrawingVisual();
         DrawingContext dc;
         Rect rect;
@@ -44,12 +44,12 @@ namespace Client
         {
             _timerRender.Elapsed += RenderingFPS;
             _timerRender.Interval = 30;
-            Canvas.SetLeft(drawingCanvas, 0);
-            Canvas.SetTop(drawingCanvas, 0);
-            cnvMain.Children.Add(drawingCanvas);
-            drawingCanvas.Visual.Add(myVisual);
+            //Canvas.SetLeft(drawingCanvas, 0);
+            //Canvas.SetTop(drawingCanvas, 0);
+            //cnvMain.Children.Add(drawingCanvas);
+            cnvMain.Visual.Add(myVisual);
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 200; i++)
             {
                 GlobalDataStatic.StackElements.Push(new WorldElement());
                 
@@ -476,6 +476,7 @@ namespace Client
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
                         _timerRender.Start();
+                       
                     break;
                 case GameEnum.NewRound:
                     btnRaundWin.Visibility = Visibility.Hidden;

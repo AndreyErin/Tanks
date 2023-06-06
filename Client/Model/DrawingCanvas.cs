@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace Client
 {
-    public class DrawingCanvas : UIElement
+    public class DrawingCanvas : FrameworkElement
     {             
         public VisualCollection Visual { get; set; }
 
