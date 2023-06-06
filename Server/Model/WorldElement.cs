@@ -87,15 +87,20 @@ namespace Server.Model
         //произошли изменения в элементе
         private void ChangeElement() 
         {
-            if (MessageSetON == false)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CHANGE"));
-                MessageSetON = true;
-            }
+            //if (MessageSetON == false)
+            //{
+            //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CHANGE"));
+               // MessageSetON = true;
+            //}
+            //else 
+            //{
+            //    GlobalDataStatic.BigMessage.Append($"{ID}@{X}@{Y}@{(int)Skin}@{(int)VectorElement}*");
+
+            //}
         }
 
         //откат для сообщений
-        private void CooldownMessage() { MessageSetON = false; }
+        private void CooldownMessage() { /*MessageSetON = false;*/ }
 
         //добавление себя на поле боя
         protected void AddMe() 

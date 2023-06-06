@@ -1,8 +1,8 @@
 ﻿
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Threading;
+using System.Text;
+
 
 //ред
 namespace Server.Model
@@ -19,6 +19,6 @@ namespace Server.Model
         public static bool readyCheck { get; set; } = true; //-----------изменить при добавление 2го игрока
         public static int IdNumberElement { get; set; } = 0;
 
-        
+        public static StringBuilder BigMessage = new StringBuilder();
     }
 }

@@ -182,7 +182,9 @@ namespace Server.Model
                     commandString = $"REMOVE@{id}^";
                     break;
                 case ElementEventEnum.Change:
-                    commandString = $"CHANGE@{id}@{x}@{y}@{(int)skin}@{(int)vector}^";
+                    //commandString = $"CHANGE@{id}@{x}@{y}@{(int)skin}@{(int)vector}^";
+                    commandString = $"CHANGE@{GlobalDataStatic.BigMessage}^";
+                    GlobalDataStatic.BigMessage.Clear();
                     break;
                 
             }            

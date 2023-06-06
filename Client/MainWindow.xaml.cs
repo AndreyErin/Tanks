@@ -346,6 +346,7 @@ namespace Client
             bool isCommand = false;
             string[] command;
             bool serverEvent = false;
+            string[] bigMessage;
 
             while (true)
             {
@@ -390,11 +391,37 @@ namespace Client
                             break;
 
                         case "CHANGE":
-                            ChangeElement(int.Parse(command[1]),
-                                double.Parse(command[2]),
-                                double.Parse(command[3]),
-                                (SkinsEnum)int.Parse(command[4]),
-                                (VectorEnum)int.Parse(command[5]));
+
+                            bigMessage = resultString.Split('*');
+                            
+
+                            foreach (string s in bigMessage) 
+                            {
+                                if (s.Length == 0) break;
+
+                                command = s.Split('@');
+                                if (s.Contains("CHANGE"))
+                                {
+                                    ChangeElement(int.Parse(command[1]),
+                                    double.Parse(command[2]),
+                                    double.Parse(command[3]),
+                                    (SkinsEnum)int.Parse(command[4]),
+                                    (VectorEnum)int.Parse(command[5]));
+                                }
+                                else 
+                                {
+                                    ChangeElement(int.Parse(command[0]),
+                                    double.Parse(command[1]),
+                                    double.Parse(command[2]),
+                                    (SkinsEnum)int.Parse(command[3]),
+                                    (VectorEnum)int.Parse(command[4]));
+                                }
+                            }
+                            //ChangeElement(int.Parse(command[1]),
+                            //    double.Parse(command[2]),
+                            //    double.Parse(command[3]),
+                            //    (SkinsEnum)int.Parse(command[4]),
+                            //    (VectorEnum)int.Parse(command[5]));
                             break;
 
                         }

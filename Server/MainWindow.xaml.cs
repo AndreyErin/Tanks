@@ -8,14 +8,15 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading.Tasks;
 using System.ComponentModel;
-
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 namespace Server
 {
     public partial class MainWindow : Window
     {
         //таймер очищения очереди
-        public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(50);
+        public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(25);
         //общий таймер для все движущихся объектов
         public System.Timers.Timer GlobalTimerMove = new System.Timers.Timer(15);
 
@@ -25,6 +26,7 @@ namespace Server
         public event eEvent? ElementEvent;
         public delegate void cdMessage();
         public event Action CooldownMessage;
+        private List<int> ChangeElements = new List<int>();
 
         public TankPlayer mainTank;
         public Map? map;
@@ -47,7 +49,8 @@ namespace Server
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
             GlobalTimerMove.Start();
-            TimerQueueCler.Start();
+            //TimerQueueCler.Start();
+
 
             //загружаем все имена карт из папки Maps
             mapPool = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Maps", "*.json");
@@ -224,7 +227,7 @@ namespace Server
 
         //начальное меню - новая игра
         public void NewGame()
-        {
+        {            
             try
             {
                 GameEvent?.Invoke(GameEnum.NewGame);
@@ -249,15 +252,16 @@ namespace Server
             {
                 MessageBox.Show("Новая игра" + ex.Message);
             }
-
-
+            //передача состояния объектов
+            TimerQueueCler.Start();
         }
 
         //следующий раунд
         public void NewRaund()
         {
+            //TimerQueueCler.Start();
 
-                GameEvent?.Invoke(GameEnum.NewRound);
+            GameEvent?.Invoke(GameEnum.NewRound);
 
                 //заполняем карту элементами мира следующего уровня
                 CreateWorldElements(mapPool[lvlMap]);
@@ -277,7 +281,8 @@ namespace Server
 
                 //запускаем респавн  ботов-танков
                 tTimer_RespawnBotTank.Start();
-
+            //передача состояния объектов
+            TimerQueueCler.Start();
         }
 
         //повторяем раунд при проигрыше 
@@ -300,6 +305,8 @@ namespace Server
 
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
+            //передача состояния объектов
+            TimerQueueCler.Start();
         }
 
         //уничтожение танков-ботов
@@ -323,7 +330,9 @@ namespace Server
                 RemoteAllElement();//////////////////////////////////////////////////////////////////
                 GlobalDataStatic.BattleGroundCollection.Clear();
 
-                
+                //передача состояния объектов
+                TimerQueueCler.Stop();
+
                 if (mapPool.Length > (++lvlMap))
                 {
                     GameEvent?.Invoke(GameEnum.DistroyEnemyTank);
@@ -349,6 +358,8 @@ namespace Server
                 //очищаем поле
                 RemoteAllElement();//////////////////////////////////////////////////////////////////
                 GlobalDataStatic.BattleGroundCollection.Clear();
+                //передача состояния объектов
+                TimerQueueCler.Stop();
             }
         }
 
@@ -367,12 +378,13 @@ namespace Server
             //очищаем поле
             RemoteAllElement();//////////////////////////////////////////////////////////////////            
             GlobalDataStatic.BattleGroundCollection.Clear();
+            //передача состояния объектов
+            TimerQueueCler.Stop();
         }
 
         //уничтожен вражеский бункер
         private void DestroyBunkerEnamy()
-        {
-            
+        {            
             tTimer_RespawnBotTank.Stop();
             GlobalDataStatic.IdNumberElement = 0;
             //отписываемся
@@ -393,6 +405,8 @@ namespace Server
             {
                 GameEvent?.Invoke(GameEnum.Win);
             }
+            //передача состояния объектов
+            TimerQueueCler.Stop();
         }
 
         //удаляем оставшиеся на карте элементы
@@ -412,13 +426,14 @@ namespace Server
             switch (e.PropertyName?.ToUpper())
             {
                 case "CHANGE":
-                    ElementEvent?.Invoke(ElementEventEnum.Change,
-                        ((WorldElement)sender).ID,
-                        ((WorldElement)sender).X,
-                        ((WorldElement)sender).Y,
-                        ((WorldElement)sender).Skin,
-                        ((WorldElement)sender).VectorElement);
+                    //ElementEvent?.Invoke(ElementEventEnum.Change,
+                    //    ((WorldElement)sender).ID,
+                    //    ((WorldElement)sender).X,
+                    //    ((WorldElement)sender).Y,
+                    //    ((WorldElement)sender).Skin,
+                    //    ((WorldElement)sender).VectorElement);
                     //((WorldElement)sender).MessageSetON = false;
+                    //ChangeElements.Add(((WorldElement)sender).ID);
                     break;
 
                 case "ADD":                
@@ -441,7 +456,27 @@ namespace Server
         //ограничение на отправку сообщений элементом
         private void TimerCooldownMessage_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            CooldownMessage?.Invoke();
+            
+
+        //    if (ChangeElements.Count == 0) { return; }
+
+             //все изменненые элементы добавляем в сообщение
+            foreach (var worldElement in GlobalDataStatic.BattleGroundCollection)
+            {
+                //var worldElement = GlobalDataStatic.BattleGroundCollection[el];
+
+                //отправляем только элементы с изменениями
+               // if (((WorldElement)worldElement.Value).MessageSetON == true)
+                //{                    
+                    GlobalDataStatic.BigMessage.Append($"{worldElement.Key}@{worldElement.Value.X}@{worldElement.Value.Y}@{(int)worldElement.Value.Skin}@{(int)worldElement.Value.VectorElement}*");
+                    //((WorldElement)worldElement.Value).MessageSetON = false;
+                //}
+            }
+            ElementEvent?.Invoke(ElementEventEnum.Change, 0);
+
+            //очищаем список измененных элементов
+            //ChangeElements.Clear();
+            //CooldownMessage?.Invoke();
 
         }
     }
