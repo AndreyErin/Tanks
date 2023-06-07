@@ -4,7 +4,7 @@ namespace Server.Model
     public class Block : HPElement
     {               
         protected Block() { }
-        public Block(MyPoint Pos)
+        public void InitElementBase(MyPoint Pos)
         {
             HP = 3;
             _width = 40;

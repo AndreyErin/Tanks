@@ -13,7 +13,7 @@ namespace Server.Model
         {
             ID = GlobalDataStatic.IdNumberElement++;
             //подписываемся на кулдаун для сообщений
-            GlobalDataStatic.Controller!.CooldownMessage += CooldownMessage;
+            //GlobalDataStatic.Controller!.CooldownMessage += CooldownMessage;
 
         }
         
@@ -99,8 +99,7 @@ namespace Server.Model
             //}
         }
 
-        //откат для сообщений
-        private void CooldownMessage() { /*MessageSetON = false;*/ }
+       
 
         //добавление себя на поле боя
         protected void AddMe() 
@@ -108,7 +107,6 @@ namespace Server.Model
             try
             {
                 GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this));
-                //GlobalDataStatic.Controller!.CooldownMessage += CooldownMessage;
                 PropertyChanged += GlobalDataStatic.Controller.ChangedElement;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ADD"));
             }
@@ -122,9 +120,39 @@ namespace Server.Model
             try
             {
                 GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryRemove(ID, out var element));
+                
+                
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
                 PropertyChanged = null;
-                GlobalDataStatic.Controller!.CooldownMessage -= CooldownMessage;
+
+                //возвращаем ненужный элемент в стак
+                switch (this)
+                {
+                    case BlockFerum:
+                        GlobalDataStatic.StackBlocksFerum.Push((BlockFerum)this);
+                        break;
+                    case BlockRock:
+                        GlobalDataStatic.StackBlocksRock.Push((BlockRock)this);
+                        break;
+                    case Bullet:
+                        GlobalDataStatic.StackBullet.Push((Bullet)this);
+                        break;
+                    case LocationGun:
+                        GlobalDataStatic.StackLocationGun.Push((LocationGun)this);
+                        break;
+                    case Loot:
+                        GlobalDataStatic.StackLoot.Push((Loot)this);
+                        break;
+                    case TankBot:
+                        GlobalDataStatic.StackTankBot.Push((TankBot)this);
+                        break;
+                    case TankOfDistroy:
+                        GlobalDataStatic.StackTankOfDistroy.Push((TankOfDistroy)this);
+                        break;
+                    case Tree:
+                        GlobalDataStatic.StackTree.Push((Tree)this);
+                        break;
+                }
             }
             catch (System.Exception ex)
             {

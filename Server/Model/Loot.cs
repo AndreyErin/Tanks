@@ -9,7 +9,12 @@ namespace Server.Model
     {
         public BonusEnum typeUpgrade;
 
-        public Loot(MyPoint pos)
+        public Loot()
+        {
+            //прописать добавление в стек
+        }
+
+        public void InitElement(MyPoint pos)
         {
             Random random = new Random();
             //случайный лут

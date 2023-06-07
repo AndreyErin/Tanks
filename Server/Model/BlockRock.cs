@@ -3,13 +3,20 @@
 
 namespace Server.Model
 {
-    public class BlockIron : Block
+    public class BlockRock : Block
     {
-        protected BlockIron() { }
-        public BlockIron(MyPoint pos):base(pos)
+        public BlockRock() 
         {
-            
+            //прописать добавление в стак
+        }
+
+        public void InitElement(MyPoint ePos , bool isfriend = false) 
+        {
+            InitElementBase(ePos);
+
             Skin = SkinsEnum.PictureBlock1;
+            IsPlayer = isfriend;
+
             AddMe();
         }
 
@@ -27,6 +34,7 @@ namespace Server.Model
 
                 case (<= 0): //если нет хп, то объект уничтожается
                     DistroyMy();
+                    
                     break;
             }
         }

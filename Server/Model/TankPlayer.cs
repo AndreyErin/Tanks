@@ -9,8 +9,9 @@ namespace Server.Model
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет
         public event Action<TankPlayer> DestroyPayerTank;
 
-        public TankPlayer(MyPoint tPos) : base(tPos)
+        public TankPlayer(MyPoint tPos)
         {
+            InitElementBase(tPos);
             IsPlayer = true;
             Skin = SkinsEnum.PictureTank1;
             AddMe();

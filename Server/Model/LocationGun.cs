@@ -15,7 +15,12 @@ namespace Server.Model
         protected int _damage;
         protected HPElement? target = null;
 
-        public LocationGun(MyPoint pos, int damage)
+        public LocationGun()
+        {
+            //добавлен в стек
+        }
+
+        public void InitElement(MyPoint pos, int damage)
         {
             X = pos.X;
             Y = pos.Y;
@@ -140,9 +145,11 @@ namespace Server.Model
         protected void ToFire()
         {
             //огонь. пуля стреляет сразу при создание объекта
-            Bullet bullet = new Bullet(Vec, new MyPoint(X, Y), _damage);
+             GlobalDataStatic.StackBullet.Pop().InitElement(Vec, new MyPoint(X, Y), _damage);
+             
+
             sound = SoundsEnum.shotSoung;
-            if (SoundEvent != null) SoundEvent(sound);
+            SoundEvent?.Invoke(sound);
 
         }
               
@@ -211,6 +218,7 @@ namespace Server.Model
         {
             timerRotation.Stop();
             base.DistroyMy();
+            
         }
     }
 }

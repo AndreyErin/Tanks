@@ -8,7 +8,7 @@
         Title="MainWindow" 
         WindowState="Maximized" 
         BorderBrush="Brown" BorderThickness="2" Loaded="MainWin_Loaded" KeyDown="MainWin_KeyDown" KeyUp="MainWin_KeyUp" 
-        PreviewKeyDown="MainWin_PreviewKeyDown" Background="#FF310309" Unloaded="MainWin_Unloaded"  >
+        PreviewKeyDown="MainWin_PreviewKeyDown" Background="#FF310309" Unloaded="MainWin_Unloaded" MouseMove="MainWin_MouseMove" PreviewMouseMove="MainWin_PreviewMouseMove"  >
     <!-- полноэкранный режим - WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized" -->
     <Grid>
         <Grid.RowDefinitions>

@@ -13,9 +13,14 @@ namespace Server.Model
 
         protected HPElement? target = null;
 
-        protected TankBot() { }
-        public TankBot(MyPoint tPos) : base(tPos)
+        public TankBot() 
         {
+            //добавлен в стек
+        }
+        public void InitElement(MyPoint tPos)
+        {
+            InitElementBase(tPos);
+
             Skin = SkinsEnum.PictureTankBot1; 
 
             tAutoMove.Interval = 500;

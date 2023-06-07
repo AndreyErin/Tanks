@@ -25,8 +25,8 @@ namespace Server
         public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top);
         public event eEvent? ElementEvent;
         public delegate void cdMessage();
-        public event Action CooldownMessage;
-        private List<int> ChangeElements = new List<int>();
+        
+        
 
         public TankPlayer mainTank;
         public Map? map;
@@ -48,8 +48,18 @@ namespace Server
         //загрузка программы
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
-            GlobalTimerMove.Start();
-            //TimerQueueCler.Start();
+            //заполняем подготовленные объекты
+            for (int i = 0; i < 200; i++)
+            {
+                GlobalDataStatic.StackBlocksFerum.Push(new BlockFerum());
+                GlobalDataStatic.StackLoot.Push(new Loot());
+                GlobalDataStatic.StackBlocksRock.Push(new BlockRock());
+                GlobalDataStatic.StackTankBot.Push(new TankBot());
+                GlobalDataStatic.StackTree.Push(new Tree());
+                GlobalDataStatic.StackLocationGun.Push(new LocationGun());
+                GlobalDataStatic.StackBullet.Push(new Bullet());
+                GlobalDataStatic.StackTankOfDistroy.Push(new TankOfDistroy());
+            }
 
 
             //загружаем все имена карт из папки Maps
@@ -148,7 +158,8 @@ namespace Server
                 //загрузка танков-ботов
                 foreach (MyPoint point in map.respawnTankBots)
                 {
-                    TankBot tankBot = new TankBot(point);
+                    TankBot tankBot = GlobalDataStatic.StackTankBot.Pop();
+                    tankBot.InitElement(point);
                     tankBot.DistroyEvent += DistroyEnemyTank;
                     GlobalDataStatic.PartyTankBots.Add(tankBot);
                 }
@@ -182,27 +193,27 @@ namespace Server
                 //каменные блоки
                 foreach (MyPoint pos in map.rockBlocs)
                 {
-                    BlockIron b = new BlockIron(pos);
+                    GlobalDataStatic.StackBlocksRock.Pop().InitElement(pos);
                 }
                 //железные блоки
                 foreach (MyPoint pos in map.ironBlocs)
                 {
-                    BlockFerum b = new BlockFerum(pos);
+                    GlobalDataStatic.StackBlocksFerum.Pop().InitElement(pos);
                 }
                 //деревья
                 foreach (MyPoint pos in map.woodBlocs)
                 {
-                    Tree b = new Tree(pos);
+                    GlobalDataStatic.StackTree.Pop().InitElement(pos);
                 }
                 //дружеские каменные блоки
                 foreach (MyPoint pos in map.friendlyRockBlocs)
                 {
-                    BlockIron b = new BlockIron(pos) { IsPlayer = true };
+                    GlobalDataStatic.StackBlocksRock.Pop().InitElement(pos, true);                   
                 }
                 //локальные пушки
                 foreach (MyPoint pos in map.LocationGun)
                 {
-                    LocationGun b = new LocationGun(pos, 3);
+                    GlobalDataStatic.StackLocationGun.Pop().InitElement(pos, 3);
                 }
                 //бункер игрока
                 if (map.BunkerON == true)
@@ -254,6 +265,7 @@ namespace Server
             }
             //передача состояния объектов
             TimerQueueCler.Start();
+            GlobalTimerMove.Start();
         }
 
         //следующий раунд
@@ -283,6 +295,7 @@ namespace Server
                 tTimer_RespawnBotTank.Start();
             //передача состояния объектов
             TimerQueueCler.Start();
+            GlobalTimerMove.Start();
         }
 
         //повторяем раунд при проигрыше 
@@ -307,6 +320,7 @@ namespace Server
             tTimer_RespawnBotTank.Start();
             //передача состояния объектов
             TimerQueueCler.Start();
+            GlobalTimerMove.Start();
         }
 
         //уничтожение танков-ботов
@@ -332,6 +346,7 @@ namespace Server
 
                 //передача состояния объектов
                 TimerQueueCler.Stop();
+                GlobalTimerMove.Stop();
 
                 if (mapPool.Length > (++lvlMap))
                 {
@@ -360,6 +375,7 @@ namespace Server
                 GlobalDataStatic.BattleGroundCollection.Clear();
                 //передача состояния объектов
                 TimerQueueCler.Stop();
+                GlobalTimerMove.Stop();
             }
         }
 
@@ -380,6 +396,7 @@ namespace Server
             GlobalDataStatic.BattleGroundCollection.Clear();
             //передача состояния объектов
             TimerQueueCler.Stop();
+            GlobalTimerMove.Stop();
         }
 
         //уничтожен вражеский бункер
@@ -407,6 +424,7 @@ namespace Server
             }
             //передача состояния объектов
             TimerQueueCler.Stop();
+            GlobalTimerMove.Stop();
         }
 
         //удаляем оставшиеся на карте элементы
@@ -426,14 +444,7 @@ namespace Server
             switch (e.PropertyName?.ToUpper())
             {
                 case "CHANGE":
-                    //ElementEvent?.Invoke(ElementEventEnum.Change,
-                    //    ((WorldElement)sender).ID,
-                    //    ((WorldElement)sender).X,
-                    //    ((WorldElement)sender).Y,
-                    //    ((WorldElement)sender).Skin,
-                    //    ((WorldElement)sender).VectorElement);
-                    //((WorldElement)sender).MessageSetON = false;
-                    //ChangeElements.Add(((WorldElement)sender).ID);
+                    ///////
                     break;
 
                 case "ADD":                
@@ -456,28 +467,12 @@ namespace Server
         //ограничение на отправку сообщений элементом
         private void TimerCooldownMessage_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            
-
-        //    if (ChangeElements.Count == 0) { return; }
-
              //все изменненые элементы добавляем в сообщение
             foreach (var worldElement in GlobalDataStatic.BattleGroundCollection)
-            {
-                //var worldElement = GlobalDataStatic.BattleGroundCollection[el];
-
-                //отправляем только элементы с изменениями
-               // if (((WorldElement)worldElement.Value).MessageSetON == true)
-                //{                    
-                    GlobalDataStatic.BigMessage.Append($"{worldElement.Key}@{worldElement.Value.X}@{worldElement.Value.Y}@{(int)worldElement.Value.Skin}@{(int)worldElement.Value.VectorElement}*");
-                    //((WorldElement)worldElement.Value).MessageSetON = false;
-                //}
+            {                 
+                GlobalDataStatic.BigMessage.Append($"{worldElement.Key}@{worldElement.Value.X}@{worldElement.Value.Y}@{(int)worldElement.Value.Skin}@{(int)worldElement.Value.VectorElement}*");
             }
             ElementEvent?.Invoke(ElementEventEnum.Change, 0);
-
-            //очищаем список измененных элементов
-            //ChangeElements.Clear();
-            //CooldownMessage?.Invoke();
-
         }
     }
 }

@@ -4,8 +4,11 @@ namespace Server.Model
 {
     public class Tree : WorldElement
     {
-        protected Tree() { }
-        public Tree(MyPoint pos)
+        public Tree() 
+        {
+            //добавлен в стек
+        }
+        public void InitElement(MyPoint pos)
         {
             X = pos.X;
             Y = pos.Y;

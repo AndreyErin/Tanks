@@ -17,9 +17,12 @@ namespace Server.Model
         protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();             
 
 
-        protected Bullet() { }
+        public Bullet() 
+        {
+            //добавлен в стек
+        }
         //конструктор
-        public Bullet(VectorEnum vector, MyPoint tpos, int damage)
+        public void InitElement(VectorEnum vector, MyPoint tpos, int damage)
         {    
             _damage = damage;
             _vector = vector;
@@ -194,7 +197,8 @@ namespace Server.Model
             //
             GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerToFire_Elapsed;
             SoundEvent = null;
-            RemoveMe();                                   
+            RemoveMe();
+            
         }
     }
 }

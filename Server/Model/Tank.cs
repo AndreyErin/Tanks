@@ -35,19 +35,12 @@ namespace Server.Model
         protected Tank() { }
         
         //конструктор
-        public Tank(MyPoint tPos)
+        public void InitElementBase(MyPoint tPos)
         {            
             X = tPos.X;
             Y = tPos.Y;
             _height = 30;
             _width = 30;
-             //= tVec;
-            ////настройка таймера движения
-            //tTimerMove.Interval = 10;
-            //tTimerMove.Elapsed += tTimerMove_Elapsed;
-            //tTimerMove.EndInit();
-
-
         }
         
         //функция таймера для движения танка
@@ -152,7 +145,7 @@ namespace Server.Model
              if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
              {
                  //огонь. пуля стреляет сразу при создание объекта
-                 Bullet bullet = new Bullet(VectorElement, new MyPoint(X, Y), damageTank);
+                 GlobalDataStatic.StackBullet.Pop().InitElement(VectorElement, new MyPoint(X, Y), damageTank);
                  sound = SoundsEnum.shotSoung;
              }
         }
@@ -211,7 +204,7 @@ namespace Server.Model
             GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
             //tTimerMove.Stop();
             base.DistroyMy();            
-            TankOfDistroy tankOfDistroy = new TankOfDistroy(new MyPoint(X, Y), VectorElement, lvlTank, speedTank);
+            GlobalDataStatic.StackTankOfDistroy.Pop().InitElement(new MyPoint(X, Y), VectorElement, lvlTank, speedTank);
         }
 
         //обработка получения лута

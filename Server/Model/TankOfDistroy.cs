@@ -1,13 +1,16 @@
-﻿using System.Windows.Media;
-
+﻿
 namespace Server.Model
 {
     public class TankOfDistroy : Block
     {
-        
-
-        public TankOfDistroy(MyPoint pos, VectorEnum vector, int teer, double speed) :base(pos)
+        public TankOfDistroy()
         {
+            //добавлен в стек
+        }
+
+        public void InitElement(MyPoint pos, VectorEnum vector, int teer, double speed)
+        {
+            InitElementBase(pos);
             
             _height = 30;
             _width = 30;
@@ -54,7 +57,7 @@ namespace Server.Model
         protected override void DistroyMy()
         {
             
-            Loot loot = new Loot(new MyPoint(X, Y));
+            GlobalDataStatic.StackLoot.Pop().InitElement(new MyPoint(X, Y));
             base.DistroyMy();
         }
     }
