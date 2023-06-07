@@ -552,5 +552,15 @@ namespace Client
         {
             cnvMain.Visibility = Visibility.Visible;
         }
+
+        private void MainWin_MouseMove(object sender, MouseEventArgs e)
+        {
+            //e.Handled = true;
+        }
+
+        private void MainWin_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            //e.Handled = true;
+        }
     }
 }
