@@ -106,9 +106,12 @@ namespace Server.Model
         { 
             try
             {
-                GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this));
+                //GlobalDataStatic.Controller.Dispatcher.Invoke(() => { 
+                    GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this);
+                //});
                 PropertyChanged += GlobalDataStatic.Controller.ChangedElement;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ADD"));
+                
             }
             catch (System.Exception ex)
             {
@@ -119,14 +122,13 @@ namespace Server.Model
         {
             try
             {
-                GlobalDataStatic.Controller.Dispatcher.Invoke(() => GlobalDataStatic.BattleGroundCollection.TryRemove(ID, out var element));
-                
-                
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
-                PropertyChanged = null;
+                GlobalDataStatic.Controller.Dispatcher.Invoke(() => {
+
+
+                GlobalDataStatic.BattleGroundCollection.TryRemove(ID, out var element);
 
                 //возвращаем ненужный элемент в стак
-                switch (this)
+                switch (element)
                 {
                     case BlockFerum:
                         GlobalDataStatic.StackBlocksFerum.Push((BlockFerum)this);
@@ -153,6 +155,11 @@ namespace Server.Model
                         GlobalDataStatic.StackTree.Push((Tree)this);
                         break;
                 }
+
+                });
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
+                PropertyChanged = null;
             }
             catch (System.Exception ex)
             {

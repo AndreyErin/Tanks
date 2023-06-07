@@ -49,7 +49,7 @@ namespace Client
             //cnvMain.Children.Add(drawingCanvas);
             cnvMain.Visual.Add(myVisual);
 
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 300; i++)
             {
                 GlobalDataStatic.StackElements.Push(new WorldElement());
                 

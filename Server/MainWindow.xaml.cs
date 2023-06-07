@@ -150,7 +150,7 @@ namespace Server
         private void TTimer_RespawnBotTank_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //ограничение по числу танков на поле одновременно
-            if(GlobalDataStatic.PartyTankBots.Count >= 50) { return; }
+            if(GlobalDataStatic.PartyTankBots.Count >= 200) { return; }
 
             tTimer_RespawnBotTank.Interval = 5000;
             GlobalDataStatic.RespawnBotON = true;
@@ -174,6 +174,8 @@ namespace Server
         //загрузка элементов окружения 
         private void CreateWorldElements(string fileMapName)
         {
+            GlobalDataStatic.BattleGroundCollection.Clear();
+
             tTimer_RespawnBotTank.Interval = 1;          
             countTimerRespawn = 0;
 
@@ -435,6 +437,7 @@ namespace Server
                 //останавливаем отсылку сообщений в объекте и удаляем его из коллекции
                 worldElement.Value.RemoveMe();
             }
+            //GlobalDataStatic.BattleGroundCollection.Clear();
         }
 
             

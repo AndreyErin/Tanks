@@ -9,22 +9,25 @@ namespace Server.Model
         //нужен для того, чтобы определять уничтоженна ли группировка танков-ботов или нет
         public event Action<TankBot> DistroyEvent;
         //таймер автопилота
-        protected System.Timers.Timer tAutoMove = new System.Timers.Timer();
+        protected System.Timers.Timer tAutoMove = new System.Timers.Timer(500);
 
         protected HPElement? target = null;
 
         public TankBot() 
         {
             //добавлен в стек
+            
         }
         public void InitElement(MyPoint tPos)
         {
             InitElementBase(tPos);
 
-            Skin = SkinsEnum.PictureTankBot1; 
+            Skin = SkinsEnum.PictureTankBot1;
 
-            tAutoMove.Interval = 500;
-            tAutoMove.Elapsed += AutoMove;
+            //tAutoMove.Interval = 500;
+
+
+
             //tAutoMove.EndInit();
             tAutoMove.Start();
             AddMe();
@@ -32,8 +35,10 @@ namespace Server.Model
             if (timerON == false)
             {
                 GlobalDataStatic.Controller.GlobalTimerMove.Elapsed += tTimerMove_Elapsed;
+                tAutoMove.Elapsed += AutoMove;
                 timerON = true;
             }
+
         }
         //таймер для автоматического передвижения
         protected void AutoMove(object sender, System.Timers.ElapsedEventArgs e) 
@@ -42,6 +47,7 @@ namespace Server.Model
             if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
             {
                 tAutoMove.Stop();
+                return;
             }
 
 
@@ -310,7 +316,9 @@ namespace Server.Model
         //уничтожение объекта
         protected override void DistroyMy()
         {
-            tAutoMove.Stop();                        
+            tAutoMove.Stop();
+            tAutoMove.Elapsed -= AutoMove;
+            //GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
             DistroyEvent?.Invoke(this); //передаем информацию о разрущшение танка
             base.DistroyMy();
         }

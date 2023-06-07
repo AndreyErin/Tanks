@@ -46,8 +46,10 @@ namespace Server.Model
         //функция таймера для движения танка
         protected void tTimerMove_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            //tTimerMove.Interval = 100000;
-            Action action = () =>
+            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) return;
+
+                //tTimerMove.Interval = 100000;
+                Action action = () =>
             {
             MyPoint pt;//точки-ледары
                 MyPoint pt2;
@@ -108,7 +110,7 @@ namespace Server.Model
         public void Move(VectorEnum vector)
         {
             ////если танк не уничтожен, то едем
-            //if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
+            
             //{
             //направление движения
             VectorElement = vector;
@@ -202,7 +204,7 @@ namespace Server.Model
         {
             //отключаемся от общего таймера
             GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
-            //tTimerMove.Stop();
+            timerON = false;
             base.DistroyMy();            
             GlobalDataStatic.StackTankOfDistroy.Pop().InitElement(new MyPoint(X, Y), VectorElement, lvlTank, speedTank);
         }

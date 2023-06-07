@@ -14,7 +14,7 @@ namespace Server.Model
         
         protected VectorEnum _vector;
         protected int _damage;       
-        protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();             
+        //protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();             
 
 
         public Bullet() 
@@ -84,7 +84,8 @@ namespace Server.Model
         //таймер
         protected void tTimerToFire_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) tTimerToFire.Stop();
+            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) return;
+                //GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerToFire_Elapsed;
 
             //пуля
             MyPoint pt;//точки-ледары
@@ -103,7 +104,8 @@ namespace Server.Model
                         X -= 7;
                     else
                     {
-                        Task.Factory.StartNew(DistroyMy);
+                        //Task.Factory.StartNew(DistroyMy);
+                        DistroyMy();
                     }
                     break;
                 //НИЗ
@@ -115,7 +117,8 @@ namespace Server.Model
                         X += 7;
                     else
                     {
-                        Task.Factory.StartNew(DistroyMy);
+                        //Task.Factory.StartNew(DistroyMy);
+                        DistroyMy();
                     }
                     break;
                 //ЛЕВО
@@ -127,7 +130,8 @@ namespace Server.Model
                         Y -= 7;
                     else
                     {
-                        Task.Factory.StartNew(DistroyMy);
+                        //Task.Factory.StartNew(DistroyMy);
+                        DistroyMy();
                     }
                     break;
                 //ПРАВО
@@ -139,7 +143,8 @@ namespace Server.Model
                         Y += 7;
                     else
                     {
-                        Task.Factory.StartNew(DistroyMy);
+                        //Task.Factory.StartNew(DistroyMy);
+                        DistroyMy();
                     }
                     break;
             }                
