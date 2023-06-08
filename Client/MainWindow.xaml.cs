@@ -9,8 +9,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
-
-
 namespace Client
 {
     
@@ -38,6 +36,8 @@ namespace Client
         //загрузка программы
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
+
+            
 
             cnvMain.Visibility = Visibility.Hidden;
 
@@ -110,7 +110,7 @@ namespace Client
         //рендер
         private void RenderingFPS(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(() =>
+           Action action = () =>
             {                             
                 dc = myVisual.RenderOpen();
                 
@@ -150,8 +150,11 @@ namespace Client
                     //dc.DrawImage(GlobalDataStatic.SkinDictionary[SkinsEnum.PictureBlock1], rect);
                 }
                 dc.Close();
-            });
+            };
+            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Send ,action);
             
+
+
         }
 
         //двигаем танк
