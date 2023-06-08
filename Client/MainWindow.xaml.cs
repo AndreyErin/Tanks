@@ -38,6 +38,10 @@ namespace Client
         //загрузка программы
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
+
+            cnvMain.Visibility = Visibility.Hidden;
+
+
             _timerRender.Elapsed += RenderingFPS;
             _timerRender.Interval = 30;
             
@@ -49,6 +53,45 @@ namespace Client
             }
             //подготовка буфера для элементов
             CollectionWorldElements.Capacity = 500;
+
+
+
+            //подгрузка изображений
+                dc = myVisual.RenderOpen();
+                //подготавливаем квадрат
+                rect.Width = 40;
+                rect.Height = 40;
+                rect.X = 0;
+                rect.Y = 0;
+
+                foreach (var item in GlobalDataStatic.SkinDictionary)
+                {                                       
+                        dc.DrawImage(item.Value, rect);                  
+                }
+
+                foreach (var item in GlobalDataStatic.SkinDictionary90)
+                {
+                    dc.DrawImage(item.Value, rect);
+                }
+
+                foreach (var item in GlobalDataStatic.SkinDictionary180)
+                {
+                    dc.DrawImage(item.Value, rect);
+                }
+
+                foreach (var item in GlobalDataStatic.SkinDictionary270)
+                {
+                    dc.DrawImage(item.Value, rect);
+                }
+            dc.DrawImage(GlobalDataStatic.SkinDictionary[SkinsEnum.PictureBlock1], rect);
+
+            dc.Close();
+            //
+            
+
+            cnvMain.Visibility = Visibility.Visible;
+
+
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket = socket;
@@ -78,7 +121,7 @@ namespace Client
                     rect.Height = worldElement.Height;
                     rect.X = worldElement.ePos.Y;
                     rect.Y = worldElement.ePos.X;
-                    
+
                     if ((int)worldElement.Skin > 18)
                     {
                         dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
@@ -103,6 +146,8 @@ namespace Client
                                 break;
                         }
                     }
+
+                    //dc.DrawImage(GlobalDataStatic.SkinDictionary[SkinsEnum.PictureBlock1], rect);
                 }
                 dc.Close();
             });

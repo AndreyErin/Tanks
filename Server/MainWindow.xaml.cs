@@ -153,8 +153,12 @@ namespace Server
         //таймер респавна танков-ботов
         private void TTimer_RespawnBotTank_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            Action action = () =>
+            {
+            
+
             //ограничение по числу танков на поле одновременно
-            if(GlobalDataStatic.PartyTankBots.Count >= 200) { return; }
+            if (GlobalDataStatic.PartyTankBots.Count >= 200) { return; }
 
             tTimer_RespawnBotTank.Interval = 5000;
             GlobalDataStatic.RespawnBotON = true;
@@ -173,6 +177,8 @@ namespace Server
                 tTimer_RespawnBotTank.Stop();
                 GlobalDataStatic.RespawnBotON = false;
             }
+            };
+            GlobalDataStatic.Controller?.Dispatcher.Invoke(action);
         }
 
         //загрузка элементов окружения 

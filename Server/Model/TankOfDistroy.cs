@@ -56,8 +56,11 @@ namespace Server.Model
 
         protected override void DistroyMy()
         {
-            
-            GlobalDataStatic.StackLoot.Pop().InitElement(new MyPoint(X, Y));
+            GlobalDataStatic.Controller.Dispatcher.Invoke(() =>
+            {
+                GlobalDataStatic.StackLoot.Pop().InitElement(new MyPoint(X, Y));
+            });
+
             base.DistroyMy();
         }
     }

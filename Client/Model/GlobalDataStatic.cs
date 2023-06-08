@@ -6,8 +6,8 @@ using System.Windows.Media.Imaging;
 
 namespace Client.Model
 {
-    static class GlobalDataStatic
-    {
+    public static class GlobalDataStatic
+    {        
         static GlobalDataStatic()
         {            
             for (int i = 1; i <= 18; i++)

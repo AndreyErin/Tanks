@@ -160,8 +160,9 @@ namespace Server.Model
 
                         if (result)
                         {
-                            GetLoot((Loot)s.Value);
+                            GetLoot((Loot)s.Value);                           
                             ((Loot)s.Value).RemoveMe();
+                                                       
                             return true;
                         }
                         break;
@@ -220,7 +221,7 @@ namespace Server.Model
                     break;
             }
             sound = SoundsEnum.bonusSound;
-            if (SoundEvent != null) SoundEvent(sound);
+            SoundEvent?.Invoke(sound);
         }
         
         //поднимаем уровень танка
