@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 
 namespace Server.Model
 {
@@ -25,21 +24,21 @@ namespace Server.Model
 
         protected override void GetDamageView()
         {
-                switch (HP)
-                {
-                    case 2:
-                        Skin = SkinsEnum.PictureBunker2;
-                        break;
+            switch (HP)
+            {
+                case 2:
+                    Skin = SkinsEnum.PictureBunker2;
+                    break;
 
-                    case 1:
-                        Skin = SkinsEnum.PictureBunker3;
-                        break;
+                case 1:
+                    Skin = SkinsEnum.PictureBunker3;
+                    break;
 
-                    case (<= 0): //если нет хп, то объект уничтожается
-                        DistroyMy();
-                        BunkerDestroy?.Invoke();//сообщает в Main о своем разрушение
-                        break;
-                }
+                case (<= 0): //если нет хп, то объект уничтожается
+                    DistroyMy();
+                    BunkerDestroy?.Invoke();//сообщает в Main о своем разрушение
+                    break;
+            }
 
         }
 

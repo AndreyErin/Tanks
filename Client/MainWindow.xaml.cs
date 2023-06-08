@@ -17,15 +17,11 @@ namespace Client
 
     public partial class MainWindow : Window
     {
-        public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();
-        //DrawingCanvas drawingCanvas = new DrawingCanvas();
-        DrawingVisual myVisual = new DrawingVisual();
-        DrawingContext dc;
-        Rect rect;
+        public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();       
+        private DrawingVisual myVisual = new DrawingVisual();
+        private DrawingContext dc;
+        private Rect rect;
         
-
-
-
         private static Socket _socket;
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
@@ -44,20 +40,15 @@ namespace Client
         {
             _timerRender.Elapsed += RenderingFPS;
             _timerRender.Interval = 30;
-            //Canvas.SetLeft(drawingCanvas, 0);
-            //Canvas.SetTop(drawingCanvas, 0);
-            //cnvMain.Children.Add(drawingCanvas);
+            
             cnvMain.Visual.Add(myVisual);
 
             for (int i = 0; i < 300; i++)
             {
                 GlobalDataStatic.StackElements.Push(new WorldElement());
-                
             }
-
-            //MessageBox.Show(GlobalDataStatic.StackElements.Count.ToString());
-            //WorldElement worldElement =  GlobalDataStatic.StackElements.Pop();
-            //MessageBox.Show(GlobalDataStatic.StackElements.Count.ToString() + "\n" + worldElement.Vector);
+            //подготовка буфера для элементов
+            CollectionWorldElements.Capacity = 500;
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket = socket;
@@ -87,11 +78,8 @@ namespace Client
                     rect.Height = worldElement.Height;
                     rect.X = worldElement.ePos.Y;
                     rect.Y = worldElement.ePos.X;
-
-
-
-                    //dc.DrawRectangle(null , new Pen(Brushes.Brown, 3), rect);
-                    if (/*(worldElement.Skin == SkinsEnum.None) ||*/ ((int)worldElement.Skin > 18))
+                    
+                    if ((int)worldElement.Skin > 18)
                     {
                         dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                     }
@@ -160,15 +148,13 @@ namespace Client
                 }
                 break;
             }
-            //data = Encoding.UTF8.GetBytes(command);
             SetDataOfServer(Encoding.UTF8.GetBytes(keyCommand));
         }
         
         private void MainWin_KeyUp(object sender, KeyEventArgs e)
         {                      
             if (e.Key == _moveKey)//если кнопка движения была поднята то останавливаем танк
-            {               
-                //data = 
+            {                              
                 SetDataOfServer(Encoding.UTF8.GetBytes("STOP^"));
             }
             _lastKey = Key.None;
@@ -202,48 +188,42 @@ namespace Client
         //выход - отключение от сервера
         private void btnOut_Click(object sender, RoutedEventArgs e)
         {
-            //byte[] data = ;
             SetDataOfServer(Encoding.UTF8.GetBytes("OUT^"));
             MainWin.Close();
         }
 
-        //новая игра - сообщение
-        private void btnNewGame_Click(object sender, RoutedEventArgs e)
+        //Кнопки меню - сообщение
+        private void btnGameMenu_Click(object sender, RoutedEventArgs e)
         {
-            //yte[] data = 
-            SetDataOfServer(Encoding.UTF8.GetBytes("NEWGAME^"));
-        }
-        //новый раунд  - сообщение
-        private void btnRaundWin_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {               
-                CollectionWorldElements.Clear();//очищаем канвас
-                //byte[] data = 
-                SetDataOfServer(Encoding.UTF8.GetBytes("NEWRAUND^"));
-            }
-            catch (Exception ex)
+            switch (((Button)sender).Name)
             {
-                MessageBox.Show(ex.Message);
+                case "btnStartGame":
+                    SetDataOfServer(Encoding.UTF8.GetBytes("NEWGAME^"));
+                    break;
+                case "btnRaundWin":
+                    CollectionWorldElements.Clear();//очищаем канвас
+                    SetDataOfServer(Encoding.UTF8.GetBytes("NEWRAUND^"));
+                    break;
+                case "btnRaundReplay":
+                    CollectionWorldElements.Clear();//очищаем канвас
+                    SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
+                    break;
+                case "btnMultiPlayer":
+                    //////////////////////
+                    break;
+                case "btnOut2":
+                    SetDataOfServer(Encoding.UTF8.GetBytes("OUT^"));
+                    MainWin.Close();
+                    break;
+                //готовность 2го игрока///////////не задействованно
+                case "btnReady":
+                    SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
+                    break;
             }
 
 
 
-        }
-        //переигровка раунда - сообщение
-        private void btnRaundReplay_Click(object sender, RoutedEventArgs e)
-        {
             
-            CollectionWorldElements.Clear();//очищаем канвас
-            //byte[] data = 
-            SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
-        }
-
-        //готовность 2го игрока///////////не задействованно
-        private void btnReady_Click(object sender, RoutedEventArgs e)
-        {
-           // byte[] data = 
-            SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
         }
 
         //добавление объекта на поле боя
@@ -251,21 +231,10 @@ namespace Client
         {
             Dispatcher.Invoke(() =>
             {
-                try
-                {
                     MyPoint pos = new MyPoint(x, y);
                     GlobalDataStatic.StackElements.Pop().AddMe( id, pos, skin, vector);
                     lblElementInCanvasCount.Content = CollectionWorldElements.Count;                    
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("добавление элемента .клиент-программа\n" + ex.Message);
-                    
-                }
-            });
-            
-
-
+            });          
         }
 
         //удаление объекта с поля боя
@@ -289,26 +258,18 @@ namespace Client
         {
             Dispatcher.Invoke(() =>
             {               
-                try
+                foreach (WorldElement worldElement in CollectionWorldElements)
                 {
-                    foreach (WorldElement worldElement in CollectionWorldElements)
+                    if (worldElement.ID == id)
                     {
-                        if (worldElement.ID == id)
-                        {
-                            worldElement.Skin = skin;
-                            worldElement.Vector = vector;
-                            worldElement.ePos.X = x;
-                            worldElement.ePos.Y = y;
-                            return;
-                        }
+                        worldElement.Skin = skin;
+                        worldElement.Vector = vector;
+                        worldElement.ePos.X = x;
+                        worldElement.ePos.Y = y;
+                        return;
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("изменение в элементе .клиент-программа\n" + ex.Message);                   
-                }
-            });
-                                  
+            });                                 
         }
 
         //отправить данные
@@ -319,9 +280,7 @@ namespace Client
             {
                 GlobalDataStatic.Controller.lblSetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblSetPocketCount.Content.ToString()) + 1;
             });
-            
-
-            
+                       
             try
             {
                 await _socket.SendAsync(data, SocketFlags.None);
@@ -470,13 +429,13 @@ namespace Client
             {
                 //отклик от сервера. событие произошедшее на сервере
                 switch (gameEnum)
-            {
+                {
                 case GameEnum.NewGame:
                     btnStartGame.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
-                        _timerRender.Start();
-                       
+                    btnMultiPlayer.Visibility = Visibility.Hidden;
+                        _timerRender.Start();                       
                     break;
                 case GameEnum.NewRound:
                     btnRaundWin.Visibility = Visibility.Hidden;
@@ -500,7 +459,7 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                        _timerRender.Stop();
+                        _timerRender.Stop();                        
                     break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
@@ -537,30 +496,10 @@ namespace Client
                     btnOut2.Visibility = Visibility.Visible;
                         _timerRender.Stop();
                     break;
-            }
-
+                }
             };
             Dispatcher.Invoke(action);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            cnvMain.Visibility = Visibility.Hidden;
-        }
-
-        private void bbbb_Click(object sender, RoutedEventArgs e)
-        {
-            cnvMain.Visibility = Visibility.Visible;
-        }
-
-        private void MainWin_MouseMove(object sender, MouseEventArgs e)
-        {
-            //e.Handled = true;
-        }
-
-        private void MainWin_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            //e.Handled = true;
-        }
     }
 }

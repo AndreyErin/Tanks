@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +8,7 @@ using System.Threading.Tasks;
 namespace Server.Model
 {
     public class Client
-    {   
-        
-        
+    {                  
         private Socket client;
 
         public bool isFirstClient = false;
@@ -181,8 +175,7 @@ namespace Server.Model
                 case ElementEventEnum.Remove:
                     commandString = $"REMOVE@{id}^";
                     break;
-                case ElementEventEnum.Change:
-                    //commandString = $"CHANGE@{id}@{x}@{y}@{(int)skin}@{(int)vector}^";
+                case ElementEventEnum.Change:                   
                     commandString = $"CHANGE@{GlobalDataStatic.BigMessage}^";
                     GlobalDataStatic.BigMessage.Clear();
                     break;

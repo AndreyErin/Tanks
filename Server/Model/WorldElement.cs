@@ -1,170 +1,75 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 
 namespace Server.Model
 {
     public abstract class WorldElement : INotifyPropertyChanged
     {
-
+        protected double _height { get; set; }
+        protected double _width { get; set; }
+        public int ID { get; set; }
+        public SkinsEnum Skin { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public VectorEnum VectorElement { get; set; }
         public bool MessageSetON = false;
-
 
         public WorldElement()
         {
             ID = GlobalDataStatic.IdNumberElement++;
-            //подписываемся на кулдаун для сообщений
-            //GlobalDataStatic.Controller!.CooldownMessage += CooldownMessage;
-
         }
         
-
         //интерфейс INotifyPropertyChanged
         //наблюдаем за изменением свойств позиции и скина
         public event PropertyChangedEventHandler? PropertyChanged;
-        
-        public int ID { get; set; }
-
-        protected double _height { get; set; }
-        protected double _width { get; set; }
-
-        //свойства вызывающие события при изменении
-        private SkinsEnum _skin;
-        public SkinsEnum Skin {
-            get => _skin;
-
-            set
-            {
-                if (_skin != value) 
-                { 
-                    _skin = value;
-                    ChangeElement();
-                }
-            }
-        }
-
-        private double _x;
-        public double X {
-            get { return _x; }
-            set 
-            { 
-                if (_x != value) 
-                {
-                    _x = value;
-                    ChangeElement();                
-                }
-            }
-        }
-
-        private double _y;
-        public double Y
-        {
-            get { return _y; }
-            set
-            {
-                if (_y != value)
-                {
-                    _y = value;
-                    ChangeElement();               
-                }
-            }
-        }
-
-        private VectorEnum _vectorElement;
-        public VectorEnum VectorElement
-    {
-            get => _vectorElement;
-
-            set
-            {
-                if (_vectorElement != value)
-                {
-                    _vectorElement = value;
-                    ChangeElement();
-                }
-            }
-        }
-
-        //произошли изменения в элементе
-        private void ChangeElement() 
-        {
-            //if (MessageSetON == false)
-            //{
-            //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CHANGE"));
-               // MessageSetON = true;
-            //}
-            //else 
-            //{
-            //    GlobalDataStatic.BigMessage.Append($"{ID}@{X}@{Y}@{(int)Skin}@{(int)VectorElement}*");
-
-            //}
-        }
-
-       
 
         //добавление себя на поле боя
         protected void AddMe() 
-        { 
-            try
-            {
-                //GlobalDataStatic.Controller.Dispatcher.Invoke(() => { 
-                    GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this);
-                //});
-                PropertyChanged += GlobalDataStatic.Controller.ChangedElement;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ADD"));
-                
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Добавление объекта" + ex.Message);
-            }
+        {                                 
+            GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this);
+            
+            PropertyChanged += GlobalDataStatic.Controller.ChangedElement;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ADD"));                
         }
+
         public void RemoveMe()
-        {
-            try
+        {           
+            GlobalDataStatic.Controller.Dispatcher.Invoke(() => {
+
+            GlobalDataStatic.BattleGroundCollection.TryRemove(ID, out var element);
+
+            //возвращаем ненужный элемент в стак
+            switch (element)
             {
-                GlobalDataStatic.Controller.Dispatcher.Invoke(() => {
-
-
-                GlobalDataStatic.BattleGroundCollection.TryRemove(ID, out var element);
-
-                //возвращаем ненужный элемент в стак
-                switch (element)
-                {
-                    case BlockFerum:
-                        GlobalDataStatic.StackBlocksFerum.Push((BlockFerum)this);
-                        break;
-                    case BlockRock:
-                        GlobalDataStatic.StackBlocksRock.Push((BlockRock)this);
-                        break;
-                    case Bullet:
-                        GlobalDataStatic.StackBullet.Push((Bullet)this);
-                        break;
-                    case LocationGun:
-                        GlobalDataStatic.StackLocationGun.Push((LocationGun)this);
-                        break;
-                    case Loot:
-                        GlobalDataStatic.StackLoot.Push((Loot)this);
-                        break;
-                    case TankBot:
-                        GlobalDataStatic.StackTankBot.Push((TankBot)this);
-                        break;
-                    case TankOfDistroy:
-                        GlobalDataStatic.StackTankOfDistroy.Push((TankOfDistroy)this);
-                        break;
-                    case Tree:
-                        GlobalDataStatic.StackTree.Push((Tree)this);
-                        break;
-                }
-
-                });
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
-                PropertyChanged = null;
+                case BlockFerum:
+                    GlobalDataStatic.StackBlocksFerum.Push((BlockFerum)this);
+                    break;
+                case BlockRock:
+                    GlobalDataStatic.StackBlocksRock.Push((BlockRock)this);
+                    break;
+                case Bullet:
+                    GlobalDataStatic.StackBullet.Push((Bullet)this);
+                    break;
+                case LocationGun:
+                    GlobalDataStatic.StackLocationGun.Push((LocationGun)this);
+                    break;
+                case Loot:
+                    GlobalDataStatic.StackLoot.Push((Loot)this);
+                    break;
+                case TankBot:
+                    GlobalDataStatic.StackTankBot.Push((TankBot)this);
+                    break;
+                case TankOfDistroy:
+                    GlobalDataStatic.StackTankOfDistroy.Push((TankOfDistroy)this);
+                    break;
+                case Tree:
+                    GlobalDataStatic.StackTree.Push((Tree)this);
+                    break;
             }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Удаление объекта" + ex.Message);
-            }
+
+            });
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
+            PropertyChanged = null;
         }
 
     }

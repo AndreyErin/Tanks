@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
-using System.Windows.Threading;
 
 namespace Server.Model
 {
@@ -23,15 +21,10 @@ namespace Server.Model
         
         //НЕ уперлись в край карты
         protected bool noEndMap = false;
-        ////таймер передвижения танка
-        //protected System.Timers.Timer tTimerMove = new System.Timers.Timer();
-        //направление
-       // protected VectorEnum tVec { get; set; } = VectorEnum.Top;       
+  
         //флаг того можно ли двигаться(нет препятствий)
         protected bool cMove = false;
-
         
-
         protected Tank() { }
         
         //конструктор
@@ -41,6 +34,9 @@ namespace Server.Model
             Y = tPos.Y;
             _height = 30;
             _width = 30;
+            lvlTank = 1;
+            damageTank = 1;
+            speedTank = 1.5;
         }
         
         //функция таймера для движения танка
@@ -120,17 +116,12 @@ namespace Server.Model
                 GlobalDataStatic.Controller.GlobalTimerMove.Elapsed += tTimerMove_Elapsed;
                 timerON = true;
             }
-            
-            //tTimerMove.Start();
-            //}
+
         }
         
         //остановыть движение(остановить таймер)
         public void Stop()
         {
-            //останавливаем движение танка
-            //tTimerMove.Stop();
-
             //отключаемся от общего таймера
             if (timerON)
             {
@@ -138,8 +129,7 @@ namespace Server.Model
                 timerON = false;
             }
         }
-        
-        
+                
         //выстрел
         public void ToFire()
         {

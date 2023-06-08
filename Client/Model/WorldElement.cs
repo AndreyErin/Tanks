@@ -13,9 +13,7 @@ namespace Client.Model
 
         public double Width { get; set; }
         public double Height { get; set; }
-        
-        
-
+                
         public WorldElement()
         {
             ID = 0;
@@ -23,18 +21,6 @@ namespace Client.Model
             Skin = SkinsEnum.None;
             Vector = VectorEnum.Top;
         }
-
-        ////конструктор-------
-        //public WorldElement(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum = VectorEnum.Top)
-        //{            
-        //    ID = id;
-        //    ePos = pos; 
-        //    Skin = skin;
-        //    Vector = vectorEnum;
-        //    //размер перед скином
-        //    //SizeElement(skin);
-        //    //AddMe();
-        //}
 
         //размер
         protected void SizeElement(SkinsEnum skin) 
@@ -104,8 +90,6 @@ namespace Client.Model
                 else
                     Vector = VectorEnum.Down;
 
-
-
                 ePos.X = posX;
             }
 
@@ -116,15 +100,12 @@ namespace Client.Model
                 else
                     Vector = VectorEnum.Right;
 
-
-
                 ePos.Y = posY;
             }
 
             //вектор
             if (vectorEnum != VectorEnum.Top)           
                 Vector = vectorEnum;
-
         }
 
         //удаление объекта
@@ -139,7 +120,7 @@ namespace Client.Model
             {
                 MessageBox.Show("Удаление элемента. Класс WorldElement - клиент\n" + ex.Message);
             }
-            
+           
         }
 
         public void AddMe(int id, MyPoint pos, SkinsEnum skin, VectorEnum vectorEnum) 

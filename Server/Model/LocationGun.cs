@@ -11,7 +11,7 @@ namespace Server.Model
         public event ISoundsObjects.SoundDeleg? SoundEvent;
 
         protected VectorEnum Vec = VectorEnum.Top;
-        protected System.Timers.Timer timerRotation = new System.Timers.Timer();
+        protected System.Timers.Timer timerRotation = new System.Timers.Timer(500);
         protected int _damage;
         protected HPElement? target = null;
 
@@ -28,10 +28,8 @@ namespace Server.Model
             _height = 30;
             _damage = damage;
             Skin = SkinsEnum.PictureLocationGun1;
-
-            timerRotation.Interval = 500;
-            timerRotation.Elapsed += GunAutoRotation;
-            timerRotation.EndInit();
+            
+            timerRotation.Elapsed += GunAutoRotation;           
             timerRotation.Start();
             AddMe();
         }
@@ -217,6 +215,7 @@ namespace Server.Model
         protected override void DistroyMy()
         {
             timerRotation.Stop();
+            timerRotation.Elapsed -= GunAutoRotation;
             base.DistroyMy();
             
         }

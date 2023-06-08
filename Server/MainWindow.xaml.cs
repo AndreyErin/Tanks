@@ -8,8 +8,6 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Windows.Documents;
 
 namespace Server
 {
@@ -40,25 +38,31 @@ namespace Server
 
         public MainWindow()
         {
-            InitializeComponent();
-
-            GlobalDataStatic.Controller = this;           
+            InitializeComponent();         
         }
 
         //загрузка программы
         private void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
+
+            GlobalDataStatic.Controller = this;
+
             //заполняем подготовленные объекты
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 300; i++)
             {
                 GlobalDataStatic.StackBlocksFerum.Push(new BlockFerum());
-                GlobalDataStatic.StackLoot.Push(new Loot());
+                
                 GlobalDataStatic.StackBlocksRock.Push(new BlockRock());
                 GlobalDataStatic.StackTankBot.Push(new TankBot());
-                GlobalDataStatic.StackTree.Push(new Tree());
-                GlobalDataStatic.StackLocationGun.Push(new LocationGun());
-                GlobalDataStatic.StackBullet.Push(new Bullet());
+                GlobalDataStatic.StackTree.Push(new Tree());                                               
+            }
+           
+            for (int i = 0; i < 50; i++)
+            {
+                GlobalDataStatic.StackLoot.Push(new Loot());
                 GlobalDataStatic.StackTankOfDistroy.Push(new TankOfDistroy());
+                GlobalDataStatic.StackBullet.Push(new Bullet());
+                GlobalDataStatic.StackLocationGun.Push(new LocationGun());
             }
 
 
@@ -92,8 +96,8 @@ namespace Server
                 while (true)
                 {
                     var newClient = await listenSocket.AcceptAsync();
-                    //Task.Run(() => 
-                    new Client(newClient, ++clientNumber);//); //создаем класс клиента
+                    
+                    new Client(newClient, ++clientNumber); //создаем класс клиента
                 }
             }
             catch (Exception ex)
@@ -155,14 +159,14 @@ namespace Server
             tTimer_RespawnBotTank.Interval = 5000;
             GlobalDataStatic.RespawnBotON = true;
 
-                //загрузка танков-ботов
-                foreach (MyPoint point in map.respawnTankBots)
-                {
-                    TankBot tankBot = GlobalDataStatic.StackTankBot.Pop();
-                    tankBot.InitElement(point);
-                    tankBot.DistroyEvent += DistroyEnemyTank;
-                    GlobalDataStatic.PartyTankBots.Add(tankBot);
-                }
+            //загрузка танков-ботов
+            foreach (MyPoint point in map.respawnTankBots)
+            {
+                TankBot tankBot = GlobalDataStatic.StackTankBot.Pop();
+                tankBot.InitElement(point);
+                tankBot.DistroyEvent += DistroyEnemyTank;
+                GlobalDataStatic.PartyTankBots.Add(tankBot);
+            }
 
             if (++countTimerRespawn >= map.RespawnEnamyCount)
             {
@@ -256,10 +260,7 @@ namespace Server
                 foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
                 {
                     tank.DestroyPayerTank += DistroyFriendlyTank;
-                }
-
-                //запускаем респавн  ботов-танков
-                //tTimer_RespawnBotTank.Start();
+                }               
             }
             catch (Exception ex)
             {
@@ -277,24 +278,24 @@ namespace Server
 
             GameEvent?.Invoke(GameEnum.NewRound);
 
-                //заполняем карту элементами мира следующего уровня
-                CreateWorldElements(mapPool[lvlMap]);
+            //заполняем карту элементами мира следующего уровня
+            CreateWorldElements(mapPool[lvlMap]);
 
-                //mainTank.ID = GlobalDataStatic.IdNumberElement++;
-                //GlobalDataStatic.BattleGroundCollection.Add(mainTank);
+            //mainTank.ID = GlobalDataStatic.IdNumberElement++;
+            //GlobalDataStatic.BattleGroundCollection.Add(mainTank);
 
-                mainTank = new TankPlayer(map.respawnTankPlayer[0]);
-                GlobalDataStatic.PartyTanksOfPlayers.Clear();
-                GlobalDataStatic.PartyTanksOfPlayers.Add(mainTank);
+            mainTank = new TankPlayer(map.respawnTankPlayer[0]);
+            GlobalDataStatic.PartyTanksOfPlayers.Clear();
+            GlobalDataStatic.PartyTanksOfPlayers.Add(mainTank);
 
-                //подписываемся
-                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
-                {
-                    tank.DestroyPayerTank += DistroyFriendlyTank;
-                }
+            //подписываемся
+            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tank.DestroyPayerTank += DistroyFriendlyTank;
+            }
 
-                //запускаем респавн  ботов-танков
-                tTimer_RespawnBotTank.Start();
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
             //передача состояния объектов
             TimerQueueCler.Start();
             GlobalTimerMove.Start();
@@ -436,8 +437,7 @@ namespace Server
             {
                 //останавливаем отсылку сообщений в объекте и удаляем его из коллекции
                 worldElement.Value.RemoveMe();
-            }
-            //GlobalDataStatic.BattleGroundCollection.Clear();
+            }            
         }
 
             
@@ -467,7 +467,7 @@ namespace Server
             }
         }
 
-        //ограничение на отправку сообщений элементом
+        //таймер отправки сообщений клиенту
         private void TimerCooldownMessage_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
              //все изменненые элементы добавляем в сообщение

@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
-using Server.Model;
 
 //ред
 namespace Server.Model
@@ -10,13 +8,10 @@ namespace Server.Model
         //интерфейс ISoundsObjects
         public SoundsEnum sound { get; set; }
         public event ISoundsObjects.SoundDeleg? SoundEvent;
-
         
         protected VectorEnum _vector;
         protected int _damage;       
-        //protected System.Timers.Timer tTimerToFire = new System.Timers.Timer();             
-
-
+          
         public Bullet() 
         {
             //добавлен в стек
@@ -50,11 +45,6 @@ namespace Server.Model
                     break;
             }
 
-            ////настройка таймера выстрела
-            //tTimerToFire.Interval = 10;
-            //tTimerToFire.Elapsed += tTimerToFire_Elapsed;
-            //tTimerToFire.EndInit();
-
             //отрисовка снаряда            
             _width = 10;
             _height = 10;
@@ -74,7 +64,6 @@ namespace Server.Model
                     Skin = SkinsEnum.PictureBullet4;                   
                     break;
             }
-
             AddMe();
 
             //tTimerToFire.Start();
@@ -84,8 +73,12 @@ namespace Server.Model
         //таймер
         protected void tTimerToFire_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) return;
-                //GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerToFire_Elapsed;
+            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) 
+            {
+                GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerToFire_Elapsed;
+                return;
+            } 
+                
 
             //пуля
             MyPoint pt;//точки-ледары
@@ -104,7 +97,6 @@ namespace Server.Model
                         X -= 7;
                     else
                     {
-                        //Task.Factory.StartNew(DistroyMy);
                         DistroyMy();
                     }
                     break;
@@ -116,8 +108,7 @@ namespace Server.Model
                     if ((X <= 720 - 11.5) && (haveHit == false))
                         X += 7;
                     else
-                    {
-                        //Task.Factory.StartNew(DistroyMy);
+                    {                        
                         DistroyMy();
                     }
                     break;
@@ -130,7 +121,6 @@ namespace Server.Model
                         Y -= 7;
                     else
                     {
-                        //Task.Factory.StartNew(DistroyMy);
                         DistroyMy();
                     }
                     break;
@@ -143,7 +133,6 @@ namespace Server.Model
                         Y += 7;
                     else
                     {
-                        //Task.Factory.StartNew(DistroyMy);
                         DistroyMy();
                     }
                     break;
@@ -153,57 +142,50 @@ namespace Server.Model
         //если пуля попала в объект, то сообщаем етому обьекту что в него попали
         public bool HaveShot(MyPoint posLedarL, MyPoint posLedarR)
         {
-                var subset = from s in GlobalDataStatic.BattleGroundCollection
-                             where (s.Value as HPElement) != null
-                             select s;
+            var subset = from s in GlobalDataStatic.BattleGroundCollection
+                         where (s.Value as HPElement) != null
+                         select s;
 
-                //если есть попадние, то двигаться нельзя
-                foreach (var s in subset)
-                {
-                    bool result = ((HPElement)s.Value).HaveHit(posLedarL, posLedarR);
+            //если есть попадние, то двигаться нельзя
+            foreach (var s in subset)
+            {
+                bool result = ((HPElement)s.Value).HaveHit(posLedarL, posLedarR);
 
-                    if (result)
-                    {                
-                            ((HPElement)s.Value).GetDamage(_damage);
-                            switch (s.Value)
-                            {
-                                case Tank:
-                                if (((HPElement)s.Value).HP <= 0)
+                if (result)
+                {                
+                    ((HPElement)s.Value).GetDamage(_damage);
+                    switch (s.Value)
+                    {
+                        case Tank:
+                        if (((HPElement)s.Value).HP <= 0)
 
-                                    sound = SoundsEnum.shotTargetSound;
-                                    break;
-                                case LocationGun:
-                                    sound = SoundsEnum.shotTargetSound;
-                                break;
+                            sound = SoundsEnum.shotTargetSound;
+                            break;
+                        case LocationGun:
+                            sound = SoundsEnum.shotTargetSound;
+                        break;
     
-                                case BlockFerum:                                
-                                case TankOfDistroy:
-                                    sound = SoundsEnum.ferumSoung;                                    
-                                    break;
+                        case BlockFerum:                                
+                        case TankOfDistroy:
+                            sound = SoundsEnum.ferumSoung;                                    
+                            break;
     
-                                 case Block:
-                                    sound = SoundsEnum.rockSound;                                   
-                                    break;
-                            }
-
-                        SoundEvent?.Invoke(sound);//играть звук
-
-                        return true;
-//                                       
+                         case Block:
+                            sound = SoundsEnum.rockSound;                                   
+                            break;
                     }
+                    SoundEvent?.Invoke(sound);//играть звук
+                    return true;                                       
                 }
-                return false;            
+            }
+            return false;            
         }
 
         //уничтожение пули при попадание
         protected void DistroyMy()
-        {
-            //tTimerToFire.Stop();
-            //
-            GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerToFire_Elapsed;
+        {           
             SoundEvent = null;
-            RemoveMe();
-            
+            RemoveMe();           
         }
     }
 }

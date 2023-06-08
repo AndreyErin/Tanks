@@ -7,11 +7,9 @@ namespace Client
     {             
         public VisualCollection Visual { get; set; }
 
-
         public DrawingCanvas()
-        {
-            
-               Visual = new VisualCollection(this);
+        {           
+            Visual = new VisualCollection(this);
         }
 
         protected override int VisualChildrenCount

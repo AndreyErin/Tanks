@@ -24,11 +24,6 @@ namespace Server.Model
 
             Skin = SkinsEnum.PictureTankBot1;
 
-            //tAutoMove.Interval = 500;
-
-
-
-            //tAutoMove.EndInit();
             tAutoMove.Start();
             AddMe();
 
