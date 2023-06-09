@@ -245,7 +245,7 @@ namespace Client
         {
             switch (((Button)sender).Name)
             {
-                case "btnStartGame":
+                case "btnNewGameSolo":
                     SetDataOfServer(Encoding.UTF8.GetBytes("NEWGAME^"));
                     break;
                 case "btnRaundWin":
@@ -256,16 +256,57 @@ namespace Client
                     CollectionWorldElements.Clear();//очищаем канвас
                     SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
                     break;
-                case "btnMultiPlayer":
-                    //////////////////////
-                    break;
                 case "btnOut2":
                     SetDataOfServer(Encoding.UTF8.GetBytes("OUT^"));
                     MainWin.Close();
                     break;
-                //готовность 2го игрока///////////не задействованно
+                case "btnMultiPlayer":
+                    stkResdyCheck.Visibility = Visibility.Visible;
+                    lblMultuPlayerStatus.Visibility = Visibility.Visible;
+                    btnNewGameSolo.Visibility = Visibility.Hidden;
+                    lblResultOfBattleText.Visibility = Visibility.Hidden;
+                    btnOut2.Visibility = Visibility.Hidden;
+                    btnMultiPlayer.Visibility = Visibility.Hidden;
+
+                    btnReady.Visibility = Visibility.Visible;
+                    btnOutInMenu.Visibility = Visibility.Visible;
+                    break;
+
+                case "btnOutInMenu":
+                    stkResdyCheck.Visibility = Visibility.Hidden;
+                    lblMultuPlayerStatus.Visibility = Visibility.Hidden;
+
+                    btnReady.Visibility = Visibility.Hidden;
+                    btnOutInMenu.Visibility = Visibility.Hidden;
+
+
+                    btnNewGameSolo.Visibility = Visibility.Visible;
+                    lblResultOfBattleText.Visibility = Visibility.Visible;
+                    btnOut2.Visibility = Visibility.Visible;
+                    btnMultiPlayer.Visibility = Visibility.Visible;
+                    break;
+
+                //готовность игрока///////////
                 case "btnReady":
-                    SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
+                    
+
+                    switch (((Button)sender).Content)
+                    {
+                        case "Готов":
+                            SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
+                            ((Button)sender).Content = "Отменить";
+                            btnOutInMenu.Visibility = Visibility.Hidden;
+                            lblThisPlayer.Background = Brushes.GreenYellow;
+                            break;
+                        case "Отменить":
+                            SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
+                            ((Button)sender).Content = "Готов";
+                            btnOutInMenu.Visibility = Visibility.Visible;
+                            lblThisPlayer.Background = Brushes.Gray;
+                            break;
+                    }
+
+                    
                     break;
             }
 
@@ -478,8 +519,16 @@ namespace Client
                 //отклик от сервера. событие произошедшее на сервере
                 switch (gameEnum)
                 {
-                case GameEnum.NewGame:
-                    btnStartGame.Visibility = Visibility.Hidden;
+                    //все готовы и игра стартовала
+                    case GameEnum.NewGameMultiPlayer:
+                        btnOutInMenu.Visibility = Visibility.Hidden;
+                        btnReady.Visibility = Visibility.Hidden;
+
+                        _timerRender.Start();
+                        break;
+
+                    case GameEnum.NewGame:
+                    btnNewGameSolo.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
                     btnMultiPlayer.Visibility = Visibility.Hidden;
@@ -493,7 +542,7 @@ namespace Client
                         _timerRender.Start();
                     break;
                 case GameEnum.ReplayRound:
-                    btnStartGame.Visibility = Visibility.Hidden;
+                    btnNewGameSolo.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     lblWinText.Visibility = Visibility.Hidden;
                     btnRaundReplay.Visibility = Visibility.Hidden;

@@ -48,13 +48,27 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            <Label Grid.Row="0" x:Name="lblMultuPlayerStatus" Content="Проверка готовности отряда." FontSize="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF310309" Visibility="Hidden"/>
+
+            <StackPanel x:Name="stkResdyCheck" Margin="0,5,0,10" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Hidden">
+
+                <Label x:Name="lblThisPlayer" Content="Я" Background="Gray" Height="50" Width="100" IsHitTestVisible="False" Margin="5,0,5,0" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="2" BorderBrush="#FF310309"/>
+
+                <Label x:Name="lblFriendlyPlayer" Content="Товарищ" Background="Gray" Height="50" Width="100" IsHitTestVisible="False" Margin="5,0,5,0" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="2" BorderBrush="#FF310309"/>
+            </StackPanel>
+            
             <Label Grid.Row="0" x:Name="lblResultOfBattleText" Content="Танчики"  FontSize="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Foreground="#FF310309"/>
-            <Button Grid.Row="1" x:Name="btnMultiPlayer" Content="Играть в 2м" Click="btnGameMenu_Click" Background="#FF310309" Width="250" FontSize="35" Foreground="Beige" VerticalContentAlignment="Center" Margin="0,0,0,2"/>
-            <Button Grid.Row="2" x:Name="btnStartGame" Content="Играть одному"  Click="btnGameMenu_Click" Height="auto" Background="#FF310309" Width="250" FontSize="35" Foreground="Beige" VerticalContentAlignment="Center"/>
-            <Button Grid.Row="2" x:Name="btnRaundWin" Content="Продолжить" Visibility="Hidden" Click="btnGameMenu_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" VerticalContentAlignment="Center"/>
-            <Button Grid.Row="2" x:Name="btnRaundReplay" Content="Повторить" Visibility="Hidden" Click="btnGameMenu_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" VerticalContentAlignment="Center"/>
-            <Button Grid.Row="3" x:Name="btnOut2" Content="Выход из игры"  Click="btnGameMenu_Click" Height="auto" Width="250" FontSize="35" Background="#FF310309" VerticalAlignment="Center" Foreground="Beige" Margin="0,2,0,0" VerticalContentAlignment="Center"/>
+            <Button Grid.Row="1" x:Name="btnMultiPlayer" Content="Играть в 2м" Click="btnGameMenu_Click"  Margin="0,0,0,2"/>
+            <Button Grid.Row="2" x:Name="btnNewGameSolo" Content="Одиночная игра"  Click="btnGameMenu_Click"/>
+            <Button Grid.Row="2" x:Name="btnRaundWin" Content="Продолжить" Visibility="Hidden" Click="btnGameMenu_Click" />
+            <Button Grid.Row="2" x:Name="btnRaundReplay" Content="Повторить" Visibility="Hidden" Click="btnGameMenu_Click" />
+            <Button Grid.Row="3" x:Name="btnOut2" Content="Выход из игры"  Click="btnGameMenu_Click" Margin="0,2,0,0" />
             <Label Grid.Row="4" x:Name="lblWinText" Content="Игра пройдена! Маладес тебе!" FontSize="50" HorizontalContentAlignment="Center" Foreground="#FF310309" Visibility="Hidden"/>
+
+            <Button Grid.Row="2" Content="Готов" x:Name="btnReady" Click="btnGameMenu_Click" Visibility="Hidden" />
+
+            <Button Grid.Row="3" Content="Назад" x:Name="btnOutInMenu" Click="btnGameMenu_Click" Visibility="Hidden" />
+
         </Grid>
 
 

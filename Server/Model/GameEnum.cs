@@ -5,6 +5,7 @@ namespace Server.Model
     public enum GameEnum
     {
         NewGame,
+        NewGameMultiPlayer,
         NewRound,
         ReplayRound,
         DistroyEnemyTank,
