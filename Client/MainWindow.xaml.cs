@@ -15,6 +15,8 @@ namespace Client
 
     public partial class MainWindow : Window
     {
+        private int _numberPlayer = 0;
+
         public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();       
         private DrawingVisual myVisual = new DrawingVisual();
         private DrawingContext dc;
@@ -270,6 +272,8 @@ namespace Client
 
                     btnReady.Visibility = Visibility.Visible;
                     btnOutInMenu.Visibility = Visibility.Visible;
+                    //пустышка для проверки был ли игрок зашедший раньше готов
+                    SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
                     break;
 
                 case "btnOutInMenu":
@@ -296,13 +300,13 @@ namespace Client
                             SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
                             ((Button)sender).Content = "Отменить";
                             btnOutInMenu.Visibility = Visibility.Hidden;
-                            lblThisPlayer.Background = Brushes.GreenYellow;
+                            //lblThisPlayer.Background = Brushes.GreenYellow;
                             break;
                         case "Отменить":
                             SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
                             ((Button)sender).Content = "Готов";
                             btnOutInMenu.Visibility = Visibility.Visible;
-                            lblThisPlayer.Background = Brushes.Gray;
+                            //lblThisPlayer.Background = Brushes.Gray;
                             break;
                     }
 
@@ -384,8 +388,6 @@ namespace Client
         //получить данные
         private async Task GetDataOfServer()
         {
-            //try
-            //{
 
             List<byte> data = new List<byte>(); //весь пакет данных
             byte[] character = new byte[1];//один байт из данных
@@ -419,96 +421,88 @@ namespace Client
                 
 
 
-                    if (isCommand) //команда
+                if (isCommand) //команда
+                {
+                    command = resultString.Split('@');
+
+                    switch (command[0])
                     {
-                        command = resultString.Split('@');
 
-                        switch (command[0])
+                    case "ADD":
+                        AddElement(int.Parse(command[1]),
+                            double.Parse(command[2]),
+                            double.Parse(command[3]),
+                            (SkinsEnum)int.Parse(command[4]),
+                            (VectorEnum)int.Parse(command[5]));
+                        break;
+
+                    case "REMOVE":
+                        RemoveElement(int.Parse(command[1]));
+                        break;
+
+                    case "CHANGE":
+
+                        bigMessage = resultString.Split('*');
+                        
+
+                        foreach (string s in bigMessage) 
                         {
+                            if (s.Length == 0) break;
 
-                        case "ADD":
-                            AddElement(int.Parse(command[1]),
+                            command = s.Split('@');
+                            if (s.Contains("CHANGE"))
+                            {
+                                ChangeElement(int.Parse(command[1]),
                                 double.Parse(command[2]),
                                 double.Parse(command[3]),
                                 (SkinsEnum)int.Parse(command[4]),
                                 (VectorEnum)int.Parse(command[5]));
-                            break;
-
-                        case "REMOVE":
-                            RemoveElement(int.Parse(command[1]));
-                            break;
-
-                        case "CHANGE":
-
-                            bigMessage = resultString.Split('*');
-                            
-
-                            foreach (string s in bigMessage) 
-                            {
-                                if (s.Length == 0) break;
-
-                                command = s.Split('@');
-                                if (s.Contains("CHANGE"))
-                                {
-                                    ChangeElement(int.Parse(command[1]),
-                                    double.Parse(command[2]),
-                                    double.Parse(command[3]),
-                                    (SkinsEnum)int.Parse(command[4]),
-                                    (VectorEnum)int.Parse(command[5]));
-                                }
-                                else 
-                                {
-                                    ChangeElement(int.Parse(command[0]),
-                                    double.Parse(command[1]),
-                                    double.Parse(command[2]),
-                                    (SkinsEnum)int.Parse(command[3]),
-                                    (VectorEnum)int.Parse(command[4]));
-                                }
                             }
-                            //ChangeElement(int.Parse(command[1]),
-                            //    double.Parse(command[2]),
-                            //    double.Parse(command[3]),
-                            //    (SkinsEnum)int.Parse(command[4]),
-                            //    (VectorEnum)int.Parse(command[5]));
-                            break;
-
+                            else 
+                            {
+                                ChangeElement(int.Parse(command[0]),
+                                double.Parse(command[1]),
+                                double.Parse(command[2]),
+                                (SkinsEnum)int.Parse(command[3]),
+                                (VectorEnum)int.Parse(command[4]));
+                            }
                         }
+                        break;
 
+                    case "NUMBERPLAYEAR":
+                        //определяем номер этого клиента
+                        _numberPlayer = int.Parse(command[1]);
+                        break;
                     }
-                    else 
+                }
+                else 
+                {
+                    //отклик от сервера. событие произошедшее на сервере
+                    serverEvent = int.TryParse(resultString, out var number);
+                    if (serverEvent)
                     {
-                        //отклик от сервера. событие произошедшее на сервере
-                        serverEvent = int.TryParse(resultString, out var number);
-                        if (serverEvent)
-                        {
-                            ServerGameEvent((GameEnum)number);
-                        }
-
-                        //звук
-                        switch (resultString)
-                        {
-                        case "BONUSSOUND":
-                            break;
-                        case "FERUMSOUND":
-                            break;
-                        case "FOCKSOUND":
-                            break;
-                        case "SHOTSOUND":
-                            break;
-                        case "SHOTTARGETSSOUND":
-                            break;
-                        }
+                        ServerGameEvent((GameEnum)number);
                     }
+
+                    //звук
+                    switch (resultString)
+                    {
+                    case "BONUSSOUND":
+                        break;
+                    case "FERUMSOUND":
+                        break;
+                    case "FOCKSOUND":
+                        break;
+                    case "SHOTSOUND":
+                        break;
+                    case "SHOTTARGETSSOUND":
+                        break;
+                    }
+                }
 
                 
                 data.Clear();
             }
-            //}
-
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("получение данных клиент программа\n" + ex.Message);
-            //}
         }
 
         //события произошедшие на сервере
@@ -521,10 +515,13 @@ namespace Client
                 {
                     //все готовы и игра стартовала
                     case GameEnum.NewGameMultiPlayer:
+                        //скрываем менюшку и запускаем рендер
                         btnOutInMenu.Visibility = Visibility.Hidden;
                         btnReady.Visibility = Visibility.Hidden;
-
-                        _timerRender.Start();
+                        lblThisPlayer.Visibility = Visibility.Hidden;
+                        lblFriendlyPlayer.Visibility = Visibility.Hidden;
+                        lblMultuPlayerStatus.Visibility = Visibility.Hidden;
+                            _timerRender.Start();
                         break;
 
                     case GameEnum.NewGame:
@@ -593,6 +590,35 @@ namespace Client
                     btnOut2.Visibility = Visibility.Visible;
                         _timerRender.Stop();
                     break;
+
+                    case GameEnum.PlayerOneReady:
+                        if (_numberPlayer == 1)                        
+                            lblThisPlayer.Background = Brushes.GreenYellow;
+                        else
+                            lblFriendlyPlayer.Background = Brushes.GreenYellow;
+                        break;
+                    case GameEnum.PlayerOneNotReady:
+                        if (_numberPlayer == 1)
+                            lblThisPlayer.Background = Brushes.Gray;
+                        else
+                            lblFriendlyPlayer.Background = Brushes.Gray;
+                        break;
+                    case GameEnum.PlayerTwoReady:
+                        if (_numberPlayer == 2)
+                            lblThisPlayer.Background = Brushes.GreenYellow;
+                        else
+                            lblFriendlyPlayer.Background = Brushes.GreenYellow;
+                        break;
+                    case GameEnum.PlayerTwoNotReady:
+                        if (_numberPlayer == 2)
+                            lblThisPlayer.Background = Brushes.Gray;
+                        else
+                            lblFriendlyPlayer.Background = Brushes.Gray;
+                        break;
+
+
+
+
                 }
             };
             Dispatcher.Invoke(action);

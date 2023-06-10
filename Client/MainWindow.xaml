@@ -58,7 +58,7 @@
             </StackPanel>
             
             <Label Grid.Row="0" x:Name="lblResultOfBattleText" Content="Танчики"  FontSize="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Foreground="#FF310309"/>
-            <Button Grid.Row="1" x:Name="btnMultiPlayer" Content="Играть в 2м" Click="btnGameMenu_Click"  Margin="0,0,0,2"/>
+            <Button Grid.Row="1" x:Name="btnMultiPlayer" Content="Играть в 2 каски" Click="btnGameMenu_Click"  Margin="0,0,0,2"/>
             <Button Grid.Row="2" x:Name="btnNewGameSolo" Content="Одиночная игра"  Click="btnGameMenu_Click"/>
             <Button Grid.Row="2" x:Name="btnRaundWin" Content="Продолжить" Visibility="Hidden" Click="btnGameMenu_Click" />
             <Button Grid.Row="2" x:Name="btnRaundReplay" Content="Повторить" Visibility="Hidden" Click="btnGameMenu_Click" />

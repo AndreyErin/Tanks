@@ -30,9 +30,7 @@ namespace Server
         public Map? map;
         int lvlMap = 0;
         string[] mapPool;
-
-        public int clientNumber = 0;
-
+        
         private System.Timers.Timer tTimer_RespawnBotTank = new System.Timers.Timer();
         private int countTimerRespawn = 0;
 
@@ -94,10 +92,13 @@ namespace Server
                 listenSocket.Listen();
                
                 while (true)
-                {
+                {                    
                     var newClient = await listenSocket.AcceptAsync();
-                    
-                    new Client(newClient, ++clientNumber); //создаем класс клиента
+
+                    //если оба слота занято то игнорим новые подключения
+                    if (PartyPlayers.One != null && PartyPlayers.Two != null) break;
+
+                    new Client(newClient); //создаем класс клиента
                 }
             }
             catch (Exception ex)
@@ -112,22 +113,45 @@ namespace Server
             switch (comandEnum)
             {
                 case ComandEnum.NewGame:
-                    if(GlobalDataStatic.readyCheck)
+                    //if(GlobalDataStatic.readyCheck)
                         NewGame();
                     break;                    
                 case ComandEnum.NewRaund:
-                    if (GlobalDataStatic.readyCheck)
+                    //if (GlobalDataStatic.readyCheck)
                         NewRaund();
                     break;
                 case ComandEnum.Replay:
-                    if (GlobalDataStatic.readyCheck)
+                    //if (GlobalDataStatic.readyCheck)
                         ReplayRaund();
                     break;
                 case ComandEnum.Out:
                     MainWin.Close();    
                     break;
+                    //////////////////////////////////////////////////////////////
                 case ComandEnum.Ready:
-                    GlobalDataStatic.readyCheck = true;
+                    if (PartyPlayers.One.Ready)                    
+                        GameEvent?.Invoke(GameEnum.PlayerOneReady);
+                    else
+                        GameEvent?.Invoke(GameEnum.PlayerOneNotReady);
+
+                    //если второй игрок существует
+                    if (PartyPlayers.Two != null)
+                    {
+                        if (PartyPlayers.Two.Ready)
+                            GameEvent?.Invoke(GameEnum.PlayerTwoReady);
+                        else
+                            GameEvent?.Invoke(GameEnum.PlayerTwoNotReady);
+
+
+
+                        //если оба готовы то запускаем мультиплеерную игру
+                        if (PartyPlayers.One.Ready == true && PartyPlayers.Two.Ready == true)
+                        NewGameMultyPlayer();
+                    }
+
+                    
+                    ///////////////////////////////////////////////////////////////
+                    
                     break;
                 case ComandEnum.MoveUp:
                     mainTank.Move(VectorEnum.Top);
@@ -331,6 +355,41 @@ namespace Server
             TimerQueueCler.Start();
             GlobalTimerMove.Start();
         }
+
+
+        //начальное меню - новая игра
+        public void NewGameMultyPlayer()
+        {
+            //MessageBox.Show("мультиплеерная игра запущена");
+            //try
+            //{
+                GameEvent?.Invoke(GameEnum.NewGameMultiPlayer);
+
+            //    //создаем элементы окружения
+            //    CreateWorldElements(mapPool[lvlMap]);
+
+            //    GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
+            //    //потом убрать-------------------------------------
+            //    mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+
+            //    //подписываемся
+            //    foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            //    {
+            //        tank.DestroyPayerTank += DistroyFriendlyTank;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Новая игра" + ex.Message);
+            //}
+            ////передача состояния объектов
+            //TimerQueueCler.Start();
+            //GlobalTimerMove.Start();
+        }
+
+
+
+
 
         //уничтожение танков-ботов
         private void DistroyEnemyTank(TankBot tankBot)

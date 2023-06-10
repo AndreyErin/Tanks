@@ -10,22 +10,43 @@ namespace Server.Model
     public class Client
     {                  
         private Socket client;
-
-        public bool isFirstClient = false;
+        
+        public bool Ready { get; set; } = false;
 
         protected Client() { }
 
         //конструктор
-        public Client(Socket clientSocket, int clientNumber)
+        public Client(Socket clientSocket)
         {
-            //определяем клиента как основного(либо ведомого)
-            if (clientNumber == 1) isFirstClient = true;
+            //записываемся в пати как первый либо 2й игрок
+            if (PartyPlayers.One == null)
+            {
+                PartyPlayers.One = this;
+                //отправляем данные о том какй это по номеру игрок 1й или 2й
+                Task.Run(() => SetDataAsynk(Encoding.UTF8.GetBytes("NUMBERPLAYEAR@1^")));
+            }
+            else
+            {
+                PartyPlayers.Two = this;
+                //отправляем данные о том какй это по номеру игрок 1й или 2й
+                Task.Run(() => SetDataAsynk(Encoding.UTF8.GetBytes("NUMBERPLAYEAR@2^")));
+            }
+
+
+
+
+
+
 
             client = clientSocket;
 
             //подписываемся на события в игре
             GlobalDataStatic.Controller.GameEvent += EventOfGame;
             GlobalDataStatic.Controller.ElementEvent += EventOfElement;
+
+
+
+
             //получение данных в отдельном потоке
             Task.Factory.StartNew(()=> GetDataAsynk());
         }
@@ -75,7 +96,13 @@ namespace Server.Model
                         case "REPLAY":
                             GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Replay);
                             break;
+
                         case "READY":
+                            Ready = true;
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Ready);
+                            break;
+                        case "NOTREADY":
+                            Ready = false;
                             GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Ready);
                             break;
 

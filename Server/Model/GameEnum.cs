@@ -12,6 +12,10 @@ namespace Server.Model
         DistroyFriendlyTank,
         DestroyBunker,
         DestroyBunkerEnamy,
-        Win
+        Win,
+        PlayerOneReady,
+        PlayerOneNotReady,
+        PlayerTwoReady,
+        PlayerTwoNotReady
     }
 }
