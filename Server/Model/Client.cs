@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 namespace Server.Model
 {
     public class Client
-    {                  
+    {   
+        public TankPlayer tank;
+        
         private Socket client;
         
         public bool Ready { get; set; } = false;
@@ -21,6 +23,7 @@ namespace Server.Model
             //записываемся в пати как первый либо 2й игрок
             if (PartyPlayers.One == null)
             {
+                //tank = 
                 PartyPlayers.One = this;
                 //отправляем данные о том какй это по номеру игрок 1й или 2й
                 Task.Run(() => SetDataAsynk(Encoding.UTF8.GetBytes("NUMBERPLAYEAR@1^")));
@@ -85,16 +88,16 @@ namespace Server.Model
                     {
                         //Навигация по меню
                         case "NEWGAME":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.NewGame);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.NewGame, tank);
                             break;
                         case "NEWRAUND":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.NewRaund);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.NewRaund, tank);
                             break;
                         case "OUT":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Out);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Out, tank);
                             break;
                         case "REPLAY":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Replay);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Replay, tank);
                             break;
 
                         case "READY":
@@ -108,24 +111,24 @@ namespace Server.Model
 
                         //Движение
                         case "MOVEUP":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveUp);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveUp, tank);
                             break;
                         case "MOVEDOWN":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveDown);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveDown, tank);
                             break;
                         case "MOVELEFT":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveLeft);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveLeft, tank);
                             break;
                         case "MOVERIGHT":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveRight);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.MoveRight, tank);
                             break;
                         case "STOP":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Stop);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Stop, tank);
                             break;
 
                         //Стрельба
                         case "FIRE":
-                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Fire);
+                            GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.Fire, tank);
                             break;
                     }
                     
@@ -191,7 +194,7 @@ namespace Server.Model
             Task.Run(() => SetDataAsynk(data));
         } 
         
-        protected void EventOfElement(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top) 
+        protected void EventOfElement(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top, string bigStringMessage = "") 
         {
             string commandString = "";
             switch (elementEvent)
@@ -203,8 +206,8 @@ namespace Server.Model
                     commandString = $"REMOVE@{id}^";
                     break;
                 case ElementEventEnum.Change:                   
-                    commandString = $"CHANGE@{GlobalDataStatic.BigMessage}^";
-                    GlobalDataStatic.BigMessage.Clear();
+                    commandString = $"CHANGE@{bigStringMessage}^";
+                    
                     break;
                 
             }            

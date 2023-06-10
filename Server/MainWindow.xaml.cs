@@ -20,13 +20,13 @@ namespace Server
 
         public delegate void gEvent(GameEnum gameEvent);
         public event gEvent? GameEvent;
-        public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top);
+        public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top, string bigStringMessage = "");
         public event eEvent? ElementEvent;
         public delegate void cdMessage();
         
         
 
-        public TankPlayer mainTank;
+        //public TankPlayer mainTank;
         public Map? map;
         int lvlMap = 0;
         string[] mapPool;
@@ -108,26 +108,26 @@ namespace Server
         }
 
         //получаем команды от клиента
-        public void GetCommandsOfClient(ComandEnum comandEnum) 
+        public void GetCommandsOfClient(ComandEnum comandEnum, TankPlayer? tank = null ) 
         {
             switch (comandEnum)
             {
                 case ComandEnum.NewGame:
-                    //if(GlobalDataStatic.readyCheck)
+                    
                         NewGame();
                     break;                    
                 case ComandEnum.NewRaund:
-                    //if (GlobalDataStatic.readyCheck)
+                   
                         NewRaund();
                     break;
                 case ComandEnum.Replay:
-                    //if (GlobalDataStatic.readyCheck)
+                    
                         ReplayRaund();
                     break;
                 case ComandEnum.Out:
                     MainWin.Close();    
                     break;
-                    //////////////////////////////////////////////////////////////
+                    
                 case ComandEnum.Ready:
                     if (PartyPlayers.One.Ready)                    
                         GameEvent?.Invoke(GameEnum.PlayerOneReady);
@@ -142,8 +142,6 @@ namespace Server
                         else
                             GameEvent?.Invoke(GameEnum.PlayerTwoNotReady);
 
-
-
                         //если оба готовы то запускаем мультиплеерную игру
                         if (PartyPlayers.One.Ready == true && PartyPlayers.Two.Ready == true)
                         NewGameMultyPlayer();
@@ -154,22 +152,22 @@ namespace Server
                     
                     break;
                 case ComandEnum.MoveUp:
-                    mainTank.Move(VectorEnum.Top);
+                    tank.Move(VectorEnum.Top);
                     break;
                 case ComandEnum.MoveDown:
-                    mainTank.Move(VectorEnum.Down);
+                    tank.Move(VectorEnum.Down);
                     break;
                 case ComandEnum.MoveLeft:
-                    mainTank.Move(VectorEnum.Left);
+                    tank.Move(VectorEnum.Left);
                     break;
                 case ComandEnum.MoveRight:
-                    mainTank.Move(VectorEnum.Right);
+                    tank.Move(VectorEnum.Right);
                     break;
                 case ComandEnum.Stop:
-                    mainTank.Stop();
+                    tank.Stop();
                     break;
                 case ComandEnum.Fire:
-                    mainTank.ToFire();
+                    tank.ToFire();
                     break;
             }
         }
@@ -284,12 +282,12 @@ namespace Server
 
                 GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
                 //потом убрать-------------------------------------
-                mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+                PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
 
                 //подписываемся
-                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+                foreach (TankPlayer tanksPlayer in GlobalDataStatic.PartyTanksOfPlayers)
                 {
-                    tank.DestroyPayerTank += DistroyFriendlyTank;
+                    tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
                 }               
             }
             catch (Exception ex)
@@ -314,14 +312,14 @@ namespace Server
             //mainTank.ID = GlobalDataStatic.IdNumberElement++;
             //GlobalDataStatic.BattleGroundCollection.Add(mainTank);
 
-            mainTank = new TankPlayer(map.respawnTankPlayer[0]);
+            PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
             GlobalDataStatic.PartyTanksOfPlayers.Clear();
-            GlobalDataStatic.PartyTanksOfPlayers.Add(mainTank);
+            GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
 
             //подписываемся
-            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            foreach (TankPlayer tanksPlayer in GlobalDataStatic.PartyTanksOfPlayers)
             {
-                tank.DestroyPayerTank += DistroyFriendlyTank;
+                tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
             //запускаем респавн  ботов-танков
@@ -339,14 +337,14 @@ namespace Server
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);
 
-            mainTank = new TankPlayer(map.respawnTankPlayer[0]);
+            PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
             GlobalDataStatic.PartyTanksOfPlayers.Clear();
-            GlobalDataStatic.PartyTanksOfPlayers.Add(mainTank);
+            GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
 
             //подписываемся
-            foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+            foreach (TankPlayer tanksPlayer in GlobalDataStatic.PartyTanksOfPlayers)
             {
-                tank.DestroyPayerTank += DistroyFriendlyTank;
+                tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
             //запускаем респавн  ботов-танков
@@ -361,30 +359,33 @@ namespace Server
         public void NewGameMultyPlayer()
         {
             //MessageBox.Show("мультиплеерная игра запущена");
-            //try
-            //{
+            try
+            {
                 GameEvent?.Invoke(GameEnum.NewGameMultiPlayer);
 
-            //    //создаем элементы окружения
-            //    CreateWorldElements(mapPool[lvlMap]);
+                //создаем элементы окружения
+                CreateWorldElements(mapPool[lvlMap]);
 
-            //    GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
-            //    //потом убрать-------------------------------------
-            //    mainTank = GlobalDataStatic.PartyTanksOfPlayers[0];
+                GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
+                //должен быть 2й респавн на карте
+                GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[1]));
+                //присваеваем танки клиентам
+                PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
+                PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
 
-            //    //подписываемся
-            //    foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
-            //    {
-            //        tank.DestroyPayerTank += DistroyFriendlyTank;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Новая игра" + ex.Message);
-            //}
-            ////передача состояния объектов
-            //TimerQueueCler.Start();
-            //GlobalTimerMove.Start();
+                //подписываемся
+                foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
+                {
+                    tank.DestroyPayerTank += DistroyFriendlyTank;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Новая игра Мультиплеер" + ex.Message);
+            }
+            //передача состояния объектов
+            TimerQueueCler.Start();
+            GlobalTimerMove.Start();
         }
 
 
@@ -540,7 +541,10 @@ namespace Server
             {                 
                 GlobalDataStatic.BigMessage.Append($"{worldElement.Key}@{worldElement.Value.X}@{worldElement.Value.Y}@{(int)worldElement.Value.Skin}@{(int)worldElement.Value.VectorElement}*");
             }
-            ElementEvent?.Invoke(ElementEventEnum.Change, 0);
+
+            string bigString = GlobalDataStatic.BigMessage.ToString();
+            ElementEvent?.Invoke(ElementEventEnum.Change, 0, bigStringMessage: bigString);
+            GlobalDataStatic.BigMessage.Clear();
         }
     }
 }
