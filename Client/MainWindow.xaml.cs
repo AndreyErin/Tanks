@@ -20,7 +20,8 @@ namespace Client
 
         private int _numberPlayer = 0;
 
-        public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();       
+        public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();
+        public List<WorldElement> CollectionTree { get; set; } = new List<WorldElement>();
         private DrawingVisual myVisual = new DrawingVisual();
         private DrawingContext dc;
         private Rect rect;
@@ -163,7 +164,17 @@ namespace Client
 
                     //dc.DrawImage(GlobalDataStatic.SkinDictionary[SkinsEnum.PictureBlock1], rect);
                 }
-                dc.Close();
+                foreach (WorldElement worldElement in CollectionTree) 
+                {
+                    rect.Width = worldElement.Width;
+                    rect.Height = worldElement.Height;
+                    rect.X = worldElement.ePos.Y;
+                    rect.Y = worldElement.ePos.X;
+
+                    dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                }
+
+                    dc.Close();
             };
             Dispatcher.Invoke(action);
             

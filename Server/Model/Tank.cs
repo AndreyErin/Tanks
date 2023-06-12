@@ -247,7 +247,7 @@ namespace Server.Model
                     damageTank = 3;
                     break;
                 case 4:
-                    damageTank = 100;
+                    damageTank = 30;
                     break;      
             }
             UpgradeWiewTank(lvlTank);

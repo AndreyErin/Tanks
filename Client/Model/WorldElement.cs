@@ -113,7 +113,12 @@ namespace Client.Model
         {
             try
             {
-                GlobalDataStatic.Controller.CollectionWorldElements.Remove(this);
+                if (Skin == SkinsEnum.PictureWood1)
+                    GlobalDataStatic.Controller.CollectionTree.Remove(this);
+                else
+                    GlobalDataStatic.Controller.CollectionWorldElements.Remove(this);
+
+
                 GlobalDataStatic.StackElements.Push(this);
             }
             catch (Exception ex)
@@ -130,7 +135,11 @@ namespace Client.Model
             Skin = skin;
             Vector = vectorEnum;
             SizeElement(Skin);
-            GlobalDataStatic.Controller.CollectionWorldElements.Add(this);
+
+            if (Skin == SkinsEnum.PictureWood1)
+                GlobalDataStatic.Controller.CollectionTree.Add(this);
+            else
+                GlobalDataStatic.Controller.CollectionWorldElements.Add(this);
         }
     }
 }
