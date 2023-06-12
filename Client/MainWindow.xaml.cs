@@ -15,6 +15,9 @@ namespace Client
 
     public partial class MainWindow : Window
     {
+        //плеер для проигрывания музыки игры или меню
+        private MediaPlayer _playerForMusic = new MediaPlayer();
+
         private int _numberPlayer = 0;
 
         public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();       
@@ -92,7 +95,9 @@ namespace Client
             
 
             cnvMain.Visibility = Visibility.Visible;
-
+            _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
+            _playerForMusic.MediaEnded += _playerForMusic_MediaEnded;
+            _playerForMusic.Play();
 
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -107,6 +112,13 @@ namespace Client
             {
                 MessageBox.Show("Не удалось подключиться к серверу\n" + ex.Message);
             }
+        }
+
+        //зацикливаем музыку
+        private void _playerForMusic_MediaEnded(object? sender, EventArgs e)
+        {
+            _playerForMusic.Position = TimeSpan.Zero;
+            _playerForMusic.Play();
         }
 
         //рендер
@@ -153,7 +165,7 @@ namespace Client
                 }
                 dc.Close();
             };
-            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Send ,action);
+            Dispatcher.Invoke(action);
             
 
 
@@ -397,6 +409,7 @@ namespace Client
             string[] command;
             bool serverEvent = false;
             string[] bigMessage;
+            int playerIndex = 0;
 
             while (true)
             {
@@ -484,20 +497,37 @@ namespace Client
                         ServerGameEvent((GameEnum)number);
                     }
 
-                    //звук
-                    switch (resultString)
+                    //переключаем плеера
+                    playerIndex++;
+                    if(playerIndex > 4) playerIndex = 0;
+
+                    Action action = () =>
                     {
-                    case "BONUSSOUND":
-                        break;
-                    case "FERUMSOUND":
-                        break;
-                    case "FOCKSOUND":
-                        break;
-                    case "SHOTSOUND":
-                        break;
-                    case "SHOTTARGETSSOUND":
-                        break;
-                    }
+                        //звук
+                        switch (resultString)
+                        {
+                            case "BONUSSOUND":
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Open(GlobalDataStatic.SoundDictionary[SoundsEnum.bonusSound]);
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Play();
+                                break;
+                            case "FERUMSOUND":
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Open(GlobalDataStatic.SoundDictionary[SoundsEnum.ferumSoung]);
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Play();
+                                break;
+                            case "ROCKSOUND":
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Open(GlobalDataStatic.SoundDictionary[SoundsEnum.rockSound]);
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Play();
+                                break;
+                            case "SHOTSOUND":
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Open(GlobalDataStatic.SoundDictionary[SoundsEnum.shotSoung]);
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Play();
+                                break;
+                            case "SHOTTARGETSSOUND":
+                                //возможно лишнее
+                                break;
+                        }
+                    };
+                    Dispatcher.Invoke(action);
                 }
 
                 
@@ -522,6 +552,9 @@ namespace Client
                         lblFriendlyPlayer.Visibility = Visibility.Hidden;
                         lblMultuPlayerStatus.Visibility = Visibility.Hidden;
                             _timerRender.Start();
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);                      
+                        _playerForMusic.Play();
+
                         break;
 
                     case GameEnum.NewGame:
@@ -529,8 +562,10 @@ namespace Client
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
                     btnMultiPlayer.Visibility = Visibility.Hidden;
-                        _timerRender.Start();                       
-                    break;
+                        _timerRender.Start();
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
+                        _playerForMusic.Play();
+                        break;
                 case GameEnum.NewRoundMultiPlayer:
                 case GameEnum.NewRound:
                     btnRaundWin.Visibility = Visibility.Hidden;
@@ -538,7 +573,9 @@ namespace Client
                     lblWinText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
                         _timerRender.Start();
-                    break;
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
+                        _playerForMusic.Play();
+                        break;
                 case GameEnum.ReplayRoundMultiPlayer:
                 case GameEnum.ReplayRound:
                     btnNewGameSolo.Visibility = Visibility.Hidden;
@@ -547,7 +584,9 @@ namespace Client
                     btnRaundReplay.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
                         _timerRender.Start();
-                    break;
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
+                        _playerForMusic.Play();
+                        break;
                 case GameEnum.DistroyEnemyTank:
                     lblResultOfBattleText.Content = "Победа";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
@@ -555,8 +594,10 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
-                        _timerRender.Stop();                        
-                    break;
+                        _timerRender.Stop();
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
+                        _playerForMusic.Play();
+                        break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
@@ -565,7 +606,9 @@ namespace Client
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
                         _timerRender.Stop();
-                    break;
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
+                        _playerForMusic.Play();
+                        break;
                 case GameEnum.DestroyBunker:
                     lblResultOfBattleText.Content = "Поражение";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
@@ -574,7 +617,9 @@ namespace Client
                     btnRaundReplay.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
                         _timerRender.Stop();
-                    break;
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
+                        _playerForMusic.Play();
+                        break;
                 case GameEnum.DestroyBunkerEnamy:
                     lblResultOfBattleText.Content = "Победа";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
@@ -583,7 +628,9 @@ namespace Client
                     btnRaundWin.Visibility = Visibility.Visible;
                     btnOut2.Visibility = Visibility.Visible;
                         _timerRender.Stop();
-                    break;
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
+                        _playerForMusic.Play();
+                        break;
                 case GameEnum.Win:
                     lblResultOfBattleText.Content = "Игра пройдена";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
@@ -591,7 +638,9 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;                   
                     btnOut2.Visibility = Visibility.Visible;
                         _timerRender.Stop();
-                    break;
+                        _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
+                        _playerForMusic.Play();
+                        break;
 
                     case GameEnum.PlayerOneReady:
                         if (_numberPlayer == 1)                        

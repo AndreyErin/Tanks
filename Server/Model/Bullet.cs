@@ -15,10 +15,13 @@ namespace Server.Model
         public Bullet() 
         {
             //добавлен в стек
+            SoundEvent += GlobalDataStatic.Controller.SoundOfElement;
         }
         //конструктор
         public void InitElement(VectorEnum vector, MyPoint tpos, int damage)
-        {    
+        {
+            
+
             _damage = damage;
             _vector = vector;
             X = tpos.X;
@@ -184,7 +187,7 @@ namespace Server.Model
         //уничтожение пули при попадание
         protected void DistroyMy()
         {           
-            SoundEvent = null;
+            //SoundEvent = null;
             RemoveMe();           
         }
     }

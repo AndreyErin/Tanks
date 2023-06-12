@@ -25,7 +25,11 @@ namespace Server.Model
         //флаг того можно ли двигаться(нет препятствий)
         protected bool cMove = false;
         
-        protected Tank() { }
+        protected Tank() 
+        {
+            //подписываемся на отправку звуков
+            SoundEvent += GlobalDataStatic.Controller.SoundOfElement;
+        }
         
         //конструктор
         public void InitElementBase(MyPoint tPos)
@@ -139,6 +143,7 @@ namespace Server.Model
                  //огонь. пуля стреляет сразу при создание объекта
                  GlobalDataStatic.StackBullet.Pop().InitElement(VectorElement, new MyPoint(X, Y), damageTank);
                  sound = SoundsEnum.shotSoung;
+                 SoundEvent?.Invoke(sound);
              }
         }
         

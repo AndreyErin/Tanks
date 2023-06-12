@@ -52,6 +52,16 @@ namespace Client.Model
             [SoundsEnum.shotTargetSound] = new Uri(@"Model\Sounds\brue.mp3", UriKind.Relative)
         };
 
+        //проигрыватели для коротких звуков
+        public static List<MediaPlayer> MediaPlayerList = new List<MediaPlayer>()
+        {
+            new MediaPlayer(),
+            new MediaPlayer(),
+            new MediaPlayer(),
+            new MediaPlayer(),
+            new MediaPlayer()
+        };
+
         public static Dictionary<SkinsEnum, ImageSource> SkinDictionary90 = new Dictionary<SkinsEnum, ImageSource>();
         public static Dictionary<SkinsEnum, ImageSource> SkinDictionary180 = new Dictionary<SkinsEnum, ImageSource>();
         public static Dictionary<SkinsEnum, ImageSource> SkinDictionary270 = new Dictionary<SkinsEnum, ImageSource>();

@@ -46,7 +46,7 @@ namespace Server.Model
             //подписываемся на события в игре
             GlobalDataStatic.Controller.GameEvent += EventOfGame;
             GlobalDataStatic.Controller.ElementEvent += EventOfElement;
-
+            GlobalDataStatic.Controller.SoundEvent += Sounds;
 
 
 
@@ -146,7 +146,6 @@ namespace Server.Model
                 string commandString = "";
                 switch (sound)
                 {
-
                     case SoundsEnum.bonusSound:
                         commandString = "BONUSSOUND^";
                         break;
@@ -154,12 +153,13 @@ namespace Server.Model
                         commandString = "FERUMSOUND^";
                         break;
                     case SoundsEnum.rockSound:
-                        commandString = "FOCKSOUND^";
+                        commandString = "ROCKSOUND^";
                         break;
                     case SoundsEnum.shotSoung:
                         commandString = "SHOTSOUND^";
                         break;
                     case SoundsEnum.shotTargetSound:
+                    //ето походу лишняя
                         commandString = "SHOTTARGETSSOUND^";
                         break;
 

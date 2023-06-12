@@ -26,8 +26,8 @@ namespace Server
         public delegate void eEvent(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top, string bigStringMessage = "");
         public event eEvent? ElementEvent;
         public delegate void cdMessage();
-        
-        
+        public delegate void sEvent(SoundsEnum sound);
+        public event sEvent? SoundEvent;
 
         //public TankPlayer mainTank;
         public Map? map;
@@ -583,8 +583,14 @@ namespace Server
             }            
         }
 
-            
-        //отлавливаем изменения в конкретных элементах
+
+        //передача звуков клиенту
+        public void SoundOfElement(SoundsEnum sound) 
+        {
+            SoundEvent?.Invoke(sound);
+        }
+
+        //отлавливаем изменения в конкретных элементах        
         public void ChangedElement(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName?.ToUpper())
