@@ -91,6 +91,7 @@ namespace Server.Model
                             GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.NewGame, tank);
                             break;
                         case "NEWRAUND":
+
                             GlobalDataStatic.Controller?.GetCommandsOfClient(ComandEnum.NewRaund, tank);
                             break;
                         case "OUT":

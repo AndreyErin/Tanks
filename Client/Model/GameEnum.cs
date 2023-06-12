@@ -2,12 +2,15 @@
 
 namespace Client.Model
 {
+   
     public enum GameEnum
     {
         NewGame,
         NewGameMultiPlayer,
         NewRound,
+        NewRoundMultiPlayer,
         ReplayRound,
+        ReplayRoundMultiPlayer,
         DistroyEnemyTank,
         DistroyFriendlyTank,
         DestroyBunker,
@@ -19,3 +22,4 @@ namespace Client.Model
         PlayerTwoNotReady
     }
 }
+

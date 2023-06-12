@@ -106,7 +106,7 @@ namespace Server.Model
         public void Move(VectorEnum vector)
         {
             ////если танк не уничтожен, то едем
-            
+            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) return;
             //{
             //направление движения
             VectorElement = vector;

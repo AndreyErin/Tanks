@@ -13,6 +13,9 @@ namespace Server
 {
     public partial class MainWindow : Window
     {
+        //проверяем у нас мультиплеерная игра или нет
+        public bool IsMultiPlayer = false;
+
         //таймер очищения очереди
         public System.Timers.Timer TimerQueueCler = new System.Timers.Timer(25);
         //общий таймер для все движущихся объектов
@@ -117,11 +120,15 @@ namespace Server
                         NewGame();
                     break;                    
                 case ComandEnum.NewRaund:
-                   
+                    if (IsMultiPlayer)
+                        NewRaundMultyPlayer();
+                    else
                         NewRaund();
                     break;
                 case ComandEnum.Replay:
-                    
+                    if (IsMultiPlayer)
+                        ReplayRaundMultyPlayer();
+                    else
                         ReplayRaund();
                     break;
                 case ComandEnum.Out:
@@ -355,10 +362,16 @@ namespace Server
         }
 
 
-        //начальное меню - новая игра
+        //мультиплеер начальное меню - новая игра
         public void NewGameMultyPlayer()
         {
-            //MessageBox.Show("мультиплеерная игра запущена");
+            //делаем отметку, что игра наша мультиплеерная
+            IsMultiPlayer = true;
+
+            //сбрасываем флаги готовности
+            PartyPlayers.One.Ready = false;
+            PartyPlayers.Two.Ready = false;
+
             try
             {
                 GameEvent?.Invoke(GameEnum.NewGameMultiPlayer);
@@ -388,9 +401,73 @@ namespace Server
             GlobalTimerMove.Start();
         }
 
+        //мультиплеер следующий раунд
+        public void NewRaundMultyPlayer()
+        {
+            //сбрасываем флаги готовности
+            PartyPlayers.One.Ready = false;
+            PartyPlayers.Two.Ready = false;
 
+            GameEvent?.Invoke(GameEnum.NewRoundMultiPlayer);
 
+            //заполняем карту элементами мира следующего уровня
+            CreateWorldElements(mapPool[lvlMap]);
 
+            GlobalDataStatic.PartyTanksOfPlayers.Clear();
+
+            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
+            //должен быть 2й респавн на карте
+            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[1]));
+            //присваеваем танки клиентам
+            PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
+            PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
+
+            //подписываемся
+            foreach (TankPlayer tanksPlayer in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
+            }
+
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
+            //передача состояния объектов
+            TimerQueueCler.Start();
+            GlobalTimerMove.Start();
+        }
+
+        //повторяем раунд при проигрыше 
+        public void ReplayRaundMultyPlayer()
+        {
+            //сбрасываем флаги готовности
+            PartyPlayers.One.Ready = false;
+            PartyPlayers.Two.Ready = false;
+
+            GameEvent?.Invoke(GameEnum.ReplayRoundMultiPlayer);
+
+            //заполняем карту элементами мира следующего уровня
+            CreateWorldElements(mapPool[lvlMap]);
+
+            
+            GlobalDataStatic.PartyTanksOfPlayers.Clear();
+            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
+            //должен быть 2й респавн на карте
+            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[1]));
+            //присваеваем танки клиентам
+            PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
+            PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
+
+            //подписываемся
+            foreach (TankPlayer tanksPlayer in GlobalDataStatic.PartyTanksOfPlayers)
+            {
+                tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
+            }
+
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
+            //передача состояния объектов
+            TimerQueueCler.Start();
+            GlobalTimerMove.Start();
+        }
 
         //уничтожение танков-ботов
         private void DistroyEnemyTank(TankBot tankBot)

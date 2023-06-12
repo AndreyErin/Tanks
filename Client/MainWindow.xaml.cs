@@ -531,6 +531,7 @@ namespace Client
                     btnMultiPlayer.Visibility = Visibility.Hidden;
                         _timerRender.Start();                       
                     break;
+                case GameEnum.NewRoundMultiPlayer:
                 case GameEnum.NewRound:
                     btnRaundWin.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
@@ -538,6 +539,7 @@ namespace Client
                     btnOut2.Visibility = Visibility.Hidden;
                         _timerRender.Start();
                     break;
+                case GameEnum.ReplayRoundMultiPlayer:
                 case GameEnum.ReplayRound:
                     btnNewGameSolo.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
