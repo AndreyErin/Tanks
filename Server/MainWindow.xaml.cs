@@ -479,7 +479,7 @@ namespace Server
             GlobalDataStatic.PartyTankBots.Remove(tankBot);//удаляем танк из пачки вражеский танков
             //если вражеские танки уничтожены все и новых не будет, то -
             //ПОБЕДА
-            if ((GlobalDataStatic.PartyTankBots.Count == 0) && (countTimerRespawn == 0))
+            if ((GlobalDataStatic.PartyTankBots.Count == 0) && (GlobalDataStatic.RespawnBotON == false))
             {
                 
                 tTimer_RespawnBotTank.Stop();

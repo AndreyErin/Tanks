@@ -7,7 +7,7 @@ namespace Server.Model
     {
         //делегат сообщающий в Main, что танк был уничтожен
         //нужен для того, чтобы определять уничтоженна ли группировка танков-ботов или нет
-        public event Action<TankBot> DistroyEvent;
+        public event Action<TankBot>? DistroyEvent;
         //таймер автопилота
         protected System.Timers.Timer tAutoMove = new System.Timers.Timer(500);
 
@@ -20,6 +20,7 @@ namespace Server.Model
         }
         public void InitElement(MyPoint tPos)
         {
+            DistroyEvent = null;
             InitElementBase(tPos);
 
             Skin = SkinsEnum.PictureTankBot1;
