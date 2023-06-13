@@ -7,11 +7,19 @@ namespace Server.Model
         protected double _height { get; set; }
         protected double _width { get; set; }
         public int ID { get; set; }
-        public SkinsEnum Skin { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public VectorEnum VectorElement { get; set; }
-        public bool MessageSetON = false;
+
+        //флаг - был ли изменени элемент хоть раз
+        //если да то будем отсылать его позицию
+        public bool ElementIsChanget = false;
+        private SkinsEnum _skin;
+        public SkinsEnum Skin { get => _skin; set { _skin = value; ElementIsChanget = true; } }
+        private double _x;
+        public double X { get => _x; set { _x = value; ElementIsChanget = true; } }
+        private double _y;
+        public double Y { get => _y; set { _y = value ; ElementIsChanget = true; } }
+        private VectorEnum _vectorElement;
+        public VectorEnum VectorElement { get => _vectorElement; set { _vectorElement = value; ElementIsChanget = true; } }
+        
 
         public WorldElement()
         {
@@ -70,6 +78,7 @@ namespace Server.Model
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("REMOVE"));
             PropertyChanged = null;
+            ElementIsChanget = false; //сбрасываем флаг изменения
         }
 
     }

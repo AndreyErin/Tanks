@@ -619,9 +619,9 @@ namespace Server
         //таймер отправки сообщений клиенту
         private void TimerCooldownMessage_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-             //все изменненые элементы добавляем в сообщение
-            foreach (var worldElement in GlobalDataStatic.BattleGroundCollection)
-            {                 
+            //все изменненые элементы добавляем в сообщение
+            foreach (var worldElement in GlobalDataStatic.BattleGroundCollection.Where(w => w.Value.ElementIsChanget == true))
+            {
                 GlobalDataStatic.BigMessage.Append($"{worldElement.Key}@{worldElement.Value.X}@{worldElement.Value.Y}@{(int)worldElement.Value.Skin}@{(int)worldElement.Value.VectorElement}*");
             }
 
