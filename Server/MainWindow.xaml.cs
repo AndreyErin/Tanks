@@ -187,7 +187,7 @@ namespace Server
             
 
             //ограничение по числу танков на поле одновременно
-            if (GlobalDataStatic.PartyTankBots.Count >= 200) { return; }
+            if (GlobalDataStatic.PartyTankBots.Count >= 30) { return; }
 
             tTimer_RespawnBotTank.Interval = 5000;
             GlobalDataStatic.RespawnBotON = true;
@@ -304,6 +304,8 @@ namespace Server
             //передача состояния объектов
             TimerQueueCler.Start();
             GlobalTimerMove.Start();
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
         }
 
         //следующий раунд
@@ -399,6 +401,8 @@ namespace Server
             //передача состояния объектов
             TimerQueueCler.Start();
             GlobalTimerMove.Start();
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
         }
 
         //мультиплеер следующий раунд

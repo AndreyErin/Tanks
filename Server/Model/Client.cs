@@ -158,8 +158,7 @@ namespace Server.Model
                     case SoundsEnum.shotSoung:
                         commandString = "SHOTSOUND^";
                         break;
-                    case SoundsEnum.shotTargetSound:
-                    //ето походу лишняя
+                    case SoundsEnum.shotTargetSound:                   
                         commandString = "SHOTTARGETSSOUND^";
                         break;
 

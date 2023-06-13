@@ -534,7 +534,8 @@ namespace Client
                                 GlobalDataStatic.MediaPlayerList[playerIndex].Play();
                                 break;
                             case "SHOTTARGETSSOUND":
-                                //возможно лишнее
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Open(GlobalDataStatic.SoundDictionary[SoundsEnum.shotTargetSound]);
+                                GlobalDataStatic.MediaPlayerList[playerIndex].Play();
                                 break;
                         }
                     };
