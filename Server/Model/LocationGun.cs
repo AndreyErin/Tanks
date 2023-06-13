@@ -1,6 +1,6 @@
-﻿using System.Linq;
-
-
+﻿using System;
+using System.Linq;
+using System.Windows;
 
 namespace Server.Model
 {
@@ -10,7 +10,7 @@ namespace Server.Model
         public SoundsEnum sound { get; set; }
         public event ISoundsObjects.SoundDeleg? SoundEvent;
 
-        protected VectorEnum Vec = VectorEnum.Top;
+        
         protected System.Timers.Timer timerRotation = new System.Timers.Timer(500);
         protected int _damage;
         protected HPElement? target = null;
@@ -18,10 +18,15 @@ namespace Server.Model
         public LocationGun()
         {
             //добавлен в стек
+            timerRotation.Elapsed += GunAutoRotation;
+            SoundEvent += GlobalDataStatic.Controller.SoundOfElement;
+            
         }
 
         public void InitElement(MyPoint pos, int damage)
         {
+            HP = 3;
+            VectorElement = VectorEnum.Top;
             X = pos.X;
             Y = pos.Y;
             _width = 30;
@@ -29,7 +34,7 @@ namespace Server.Model
             _damage = damage;
             Skin = SkinsEnum.PictureLocationGun1;
             
-            timerRotation.Elapsed += GunAutoRotation;           
+                    
             timerRotation.Start();
             AddMe();
         }
@@ -37,113 +42,119 @@ namespace Server.Model
         //Таймер повороты - поиск врага
         protected void GunAutoRotation(object sender, System.Timers.ElapsedEventArgs e)
         {
-            //если объект удален с карты, то останавливаем таймер
-            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
-            {
-                timerRotation.Stop();
-            }
+            //Action action = () =>
+            //{
+
+                //если объект удален с карты, то останавливаем таймер
+                if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
+                {
+                    timerRotation.Stop();
+                    return;
+                }
 
                 //стрельба(ограничение видимости 120)
                 MyPoint pt;
                 MyPoint pt2;
                 bool enemy = false;
-            switch (Vec)
-            {
-                    //ВЕРХ
-                case VectorEnum.Top:
-                    pt = new MyPoint(X - 29, Y + 9);
-                    pt2 = new MyPoint(X - 29, Y + 19);
-
-                    //если нет попадания продолжаем перечислять
-                    while ((CanTarget(pt, pt2) == false) && (pt.X > 29) && (pt.X > (X - 120)))
-                    {
-                        pt.X -= 29;
-                        pt2.X -= 29;
-                    }
-
-                    //если враг есть
-                    enemy = CanTargetEnemy(pt, pt2);
-                    if (enemy)
-                        ToFire();
-                    break;
-                //НИЗ
-                case VectorEnum.Down:
-                    pt = new MyPoint(X + 58, Y + 9);
-                    pt2 = new MyPoint(X + 58, Y + 19);
-
-                    while ((CanTarget(pt, pt2) == false) && (pt.X < (720 - 29)) && (pt.X < (X + 120)))
-                    {
-                        pt.X += 29;
-                        pt2.X += 29;
-                    }
-
-                    //если враг есть
-                    enemy = CanTargetEnemy(pt, pt2);
-                    if (enemy)
-                        ToFire();
-                    break;
-                //ЛЕВО
-                case VectorEnum.Left:
-                    pt = new MyPoint(X + 9, Y - 29);
-                    pt2 = new MyPoint(X + 19, Y - 29);
-
-                    while ((CanTarget(pt, pt2) == false) && (pt.Y > 29) && (pt.Y > (Y - 120)))
-                    {
-                        pt.Y -= 29;
-                        pt2.Y -= 29;
-                    }
-
-                    //если враг есть
-                    enemy = CanTargetEnemy(pt, pt2);
-                    if (enemy)
-                        ToFire();
-                    break;
-                //ПРАВО
-                case VectorEnum.Right:
-                    pt = new MyPoint(X + 9, Y + 58);
-                    pt2 = new MyPoint(X + 19, Y + 58);
-
-                    while ((CanTarget(pt, pt2) == false) && (pt.Y < (1320 - 29)) && (pt.Y < (Y + 120)))
-                    {
-                        pt.Y += 29;
-                        pt2.Y += 29;
-                    }
-
-                    //если враг есть
-                    enemy = CanTargetEnemy(pt, pt2);
-                    if (enemy)
-                        ToFire();
-                        break;
-            }
-
-                //если врага нет, то вращаем пушку
-            if (enemy == false)
-            {                
-                //вращение пушки
-                switch (Vec)
+                switch (VectorElement)
                 {
+                    //ВЕРХ
                     case VectorEnum.Top:
-                        Vec = VectorEnum.Right;                            
+                        pt = new MyPoint(X - 29, Y + 9);
+                        pt2 = new MyPoint(X - 29, Y + 19);
+
+                        //если нет попадания продолжаем перечислять
+                        while ((CanTarget(pt, pt2) == false) && (pt.X > 29) && (pt.X > (X - 120)))
+                        {
+                            pt.X -= 29;
+                            pt2.X -= 29;
+                        }
+
+                        //если враг есть
+                        enemy = CanTargetEnemy(pt, pt2);
+                        if (enemy)
+                            ToFire();
                         break;
+                    //НИЗ
                     case VectorEnum.Down:
-                        Vec = VectorEnum.Left;                            
+                        pt = new MyPoint(X + 58, Y + 9);
+                        pt2 = new MyPoint(X + 58, Y + 19);
+
+                        while ((CanTarget(pt, pt2) == false) && (pt.X < (720 - 29)) && (pt.X < (X + 120)))
+                        {
+                            pt.X += 29;
+                            pt2.X += 29;
+                        }
+
+                        //если враг есть
+                        enemy = CanTargetEnemy(pt, pt2);
+                        if (enemy)
+                            ToFire();
                         break;
+                    //ЛЕВО
                     case VectorEnum.Left:
-                        Vec = VectorEnum.Top;
+                        pt = new MyPoint(X + 9, Y - 29);
+                        pt2 = new MyPoint(X + 19, Y - 29);
+
+                        while ((CanTarget(pt, pt2) == false) && (pt.Y > 29) && (pt.Y > (Y - 120)))
+                        {
+                            pt.Y -= 29;
+                            pt2.Y -= 29;
+                        }
+
+                        //если враг есть
+                        enemy = CanTargetEnemy(pt, pt2);
+                        if (enemy)
+                            ToFire();
                         break;
+                    //ПРАВО
                     case VectorEnum.Right:
-                        Vec = VectorEnum.Down;
+                        pt = new MyPoint(X + 9, Y + 58);
+                        pt2 = new MyPoint(X + 19, Y + 58);
+
+                        while ((CanTarget(pt, pt2) == false) && (pt.Y < (1320 - 29)) && (pt.Y < (Y + 120)))
+                        {
+                            pt.Y += 29;
+                            pt2.Y += 29;
+                        }
+
+                        //если враг есть
+                        enemy = CanTargetEnemy(pt, pt2);
+                        if (enemy)
+                            ToFire();
                         break;
                 }
-            }
 
+                //если врага нет, то вращаем пушку
+                if (enemy == false)
+                {
+                    //вращение пушки
+                    switch (VectorElement)
+                    {
+                        case VectorEnum.Top:
+                            VectorElement = VectorEnum.Right;
+                            break;
+                        case VectorEnum.Down:
+                            VectorElement = VectorEnum.Left;
+                            break;
+                        case VectorEnum.Left:
+                            VectorElement = VectorEnum.Top;
+                            break;
+                        case VectorEnum.Right:
+                            VectorElement = VectorEnum.Down;
+                            break;
+                    }
+                }
+            //};
+            //GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+            //MessageBox.Show(VectorElement.ToString());
         }
 
         //выстрел
         protected void ToFire()
         {
             //огонь. пуля стреляет сразу при создание объекта
-             GlobalDataStatic.StackBullet.Pop().InitElement(Vec, new MyPoint(X, Y), _damage);
+             GlobalDataStatic.StackBullet.Pop().InitElement(VectorElement, new MyPoint(X, Y), _damage);
              
 
             sound = SoundsEnum.shotSoung;
@@ -215,7 +226,7 @@ namespace Server.Model
         protected override void DistroyMy()
         {
             timerRotation.Stop();
-            timerRotation.Elapsed -= GunAutoRotation;
+            //timerRotation.Elapsed -= GunAutoRotation;
             base.DistroyMy();
             
         }
