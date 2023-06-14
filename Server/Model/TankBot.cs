@@ -16,7 +16,7 @@ namespace Server.Model
         public TankBot() 
         {
             //добавлен в стек
-            
+            tAutoMove.Elapsed += AutoMove;
         }
         public void InitElement(MyPoint tPos)
         {
@@ -25,13 +25,14 @@ namespace Server.Model
 
             Skin = SkinsEnum.PictureTankBot1;
 
-            tAutoMove.Start();
             AddMe();
+            tAutoMove.Start();
+            
 
             if (timerON == false)
             {
                 GlobalDataStatic.Controller.GlobalTimerMove.Elapsed += tTimerMove_Elapsed;
-                tAutoMove.Elapsed += AutoMove;
+                
                 timerON = true;
             }
 
@@ -43,6 +44,12 @@ namespace Server.Model
             if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
             {
                 tAutoMove.Stop();
+                //отключаемся от общего таймера
+                if (timerON)
+                {
+                    GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
+                    timerON = false;
+                }
                 return;
             }
 
@@ -313,7 +320,7 @@ namespace Server.Model
         protected override void DistroyMy()
         {
             tAutoMove.Stop();
-            tAutoMove.Elapsed -= AutoMove;
+            //tAutoMove.Elapsed -= AutoMove;
             //GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
             DistroyEvent?.Invoke(this); //передаем информацию о разрущшение танка
             base.DistroyMy();

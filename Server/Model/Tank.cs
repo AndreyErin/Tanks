@@ -198,9 +198,13 @@ namespace Server.Model
         //уничтожение объекта
         protected override void DistroyMy()
         {
+            
             //отключаемся от общего таймера
-            GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
-            timerON = false;
+            if (timerON)
+            {
+                GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
+                timerON = false;
+            }
             base.DistroyMy();            
             GlobalDataStatic.StackTankOfDistroy.Pop().InitElement(new MyPoint(X, Y), VectorElement, lvlTank, speedTank);
         }
