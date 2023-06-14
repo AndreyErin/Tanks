@@ -189,7 +189,7 @@ namespace Server
             //ограничение по числу танков на поле одновременно
             if (GlobalDataStatic.PartyTankBots.Count >= 30) { return; }
 
-            tTimer_RespawnBotTank.Interval = 5000;
+            tTimer_RespawnBotTank.Interval = 10000;
             GlobalDataStatic.RespawnBotON = true;
 
             //загрузка танков-ботов

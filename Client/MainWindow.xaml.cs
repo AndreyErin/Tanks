@@ -24,6 +24,7 @@ namespace Client
         public List<WorldElement> CollectionTree { get; set; } = new List<WorldElement>();
         private DrawingVisual myVisual = new DrawingVisual();
         private DrawingContext dc;
+        
         private Rect rect;
         
         private static Socket _socket;
@@ -95,10 +96,14 @@ namespace Client
             //
             
 
-            cnvMain.Visibility = Visibility.Visible;
+            //cnvMain.Visibility = Visibility.Visible;
+
+
             _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
             _playerForMusic.MediaEnded += _playerForMusic_MediaEnded;
             _playerForMusic.Play();
+
+           
 
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -274,10 +279,12 @@ namespace Client
                     SetDataOfServer(Encoding.UTF8.GetBytes("NEWGAME^"));
                     break;
                 case "btnRaundWin":
+                    CollectionTree.Clear();
                     CollectionWorldElements.Clear();//очищаем канвас
                     SetDataOfServer(Encoding.UTF8.GetBytes("NEWRAUND^"));
                     break;
                 case "btnRaundReplay":
+                    CollectionTree.Clear();
                     CollectionWorldElements.Clear();//очищаем канвас
                     SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
                     break;
@@ -358,9 +365,19 @@ namespace Client
         {
             Dispatcher.Invoke(() =>
             {
-                foreach (WorldElement worldElement in CollectionWorldElements) 
+                //проверяем дерево ли это
+                foreach (WorldElement worldElement in CollectionTree)
                 {
-                    if (worldElement.ID == id) 
+                    if (worldElement.ID == id)
+                    {
+                        worldElement.DeleteMe();
+                        return;
+                    }
+                }
+                //если не дерево то ищим дальше
+                foreach (WorldElement worldElement in CollectionWorldElements)
+                {
+                    if (worldElement.ID == id)
                     {
                         worldElement.DeleteMe();
                         return;
@@ -557,6 +574,7 @@ namespace Client
                 {
                     //все готовы и игра стартовала
                     case GameEnum.NewGameMultiPlayer:
+                        cnvMain.Visibility = Visibility.Visible;
                         //скрываем менюшку и запускаем рендер
                         btnOutInMenu.Visibility = Visibility.Hidden;
                         btnReady.Visibility = Visibility.Hidden;
@@ -570,7 +588,8 @@ namespace Client
                         break;
 
                     case GameEnum.NewGame:
-                    btnNewGameSolo.Visibility = Visibility.Hidden;
+                        cnvMain.Visibility = Visibility.Visible;
+                        btnNewGameSolo.Visibility = Visibility.Hidden;
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
                     btnOut2.Visibility = Visibility.Hidden;
                     btnMultiPlayer.Visibility = Visibility.Hidden;
@@ -609,6 +628,10 @@ namespace Client
                         _timerRender.Stop();
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
+                        //очищаем поле
+                        dc = myVisual.RenderOpen();
+                        dc.Close();
+
                         break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
@@ -620,6 +643,9 @@ namespace Client
                         _timerRender.Stop();
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
+                        //очищаем поле
+                        dc = myVisual.RenderOpen();
+                        dc.Close();
                         break;
                 case GameEnum.DestroyBunker:
                     lblResultOfBattleText.Content = "Поражение";
@@ -631,6 +657,9 @@ namespace Client
                         _timerRender.Stop();
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
+                        //очищаем поле
+                        dc = myVisual.RenderOpen();
+                        dc.Close();
                         break;
                 case GameEnum.DestroyBunkerEnamy:
                     lblResultOfBattleText.Content = "Победа";
@@ -642,6 +671,9 @@ namespace Client
                         _timerRender.Stop();
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
+                        //очищаем поле
+                        dc = myVisual.RenderOpen();
+                        dc.Close();
                         break;
                 case GameEnum.Win:
                     lblResultOfBattleText.Content = "Игра пройдена";
@@ -652,6 +684,9 @@ namespace Client
                         _timerRender.Stop();
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
+                        //очищаем поле
+                        dc = myVisual.RenderOpen();
+                        dc.Close();
                         break;
 
                     case GameEnum.PlayerOneReady:
@@ -678,14 +713,9 @@ namespace Client
                         else
                             lblFriendlyPlayer.Background = Brushes.Gray;
                         break;
-
-
-
-
                 }
             };
             Dispatcher.Invoke(action);
         }
-
     }
 }

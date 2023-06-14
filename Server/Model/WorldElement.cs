@@ -32,7 +32,8 @@ namespace Server.Model
 
         //добавление себя на поле боя
         protected void AddMe() 
-        {                                 
+        {
+            //ElementIsChanget = false;
             GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this);
             
             PropertyChanged += GlobalDataStatic.Controller.ChangedElement;
