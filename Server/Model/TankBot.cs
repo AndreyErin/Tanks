@@ -27,12 +27,12 @@ namespace Server.Model
 
             AddMe();
             tAutoMove.Start();
-            
+
 
             if (timerON == false)
             {
                 GlobalDataStatic.Controller.GlobalTimerMove.Elapsed += tTimerMove_Elapsed;
-                
+
                 timerON = true;
             }
 

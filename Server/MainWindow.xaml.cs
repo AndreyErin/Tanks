@@ -28,8 +28,7 @@ namespace Server
         public delegate void cdMessage();
         public delegate void sEvent(SoundsEnum sound);
         public event sEvent? SoundEvent;
-
-        //public TankPlayer mainTank;
+        
         public Map? map;
         int lvlMap = 0;
         string[] mapPool;
@@ -54,10 +53,16 @@ namespace Server
                 GlobalDataStatic.StackBlocksFerum.Push(new BlockFerum());
                 
                 GlobalDataStatic.StackBlocksRock.Push(new BlockRock());
-                GlobalDataStatic.StackTankBot.Push(new TankBot());
+                //GlobalDataStatic.StackTankBot.Push(new TankBot());
                 GlobalDataStatic.StackTree.Push(new Tree());                                               
             }
-           
+
+            //заполняем подготовленные танки-боты
+            for (int i = 0; i < 32; i++)
+            {              
+                GlobalDataStatic.StackTankBot.Push(new TankBot());               
+            }
+
             for (int i = 0; i < 50; i++)
             {
                 GlobalDataStatic.StackLoot.Push(new Loot());
@@ -74,7 +79,7 @@ namespace Server
 
             //настраеваем таймер респавна ботов-танков
             tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
-            tTimer_RespawnBotTank.EndInit();
+            //tTimer_RespawnBotTank.EndInit();
 
             TimerQueueCler.Elapsed += TimerCooldownMessage_Elapsed;
 
@@ -189,7 +194,7 @@ namespace Server
             //ограничение по числу танков на поле одновременно
             if (GlobalDataStatic.PartyTankBots.Count >= 30) { return; }
 
-            tTimer_RespawnBotTank.Interval = 10000;
+            tTimer_RespawnBotTank.Interval = 5000;
             GlobalDataStatic.RespawnBotON = true;
 
             //загрузка танков-ботов
@@ -303,7 +308,10 @@ namespace Server
             }
             //передача состояния объектов
             TimerQueueCler.Start();
+
+            GlobalTimerMove = new System.Timers.Timer(15);
             GlobalTimerMove.Start();
+
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
         }
@@ -331,11 +339,15 @@ namespace Server
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
-            //запускаем респавн  ботов-танков
-            tTimer_RespawnBotTank.Start();
+            
             //передача состояния объектов
             TimerQueueCler.Start();
+
+            GlobalTimerMove = new System.Timers.Timer(15);
             GlobalTimerMove.Start();
+
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
         }
 
         //повторяем раунд при проигрыше 
@@ -356,11 +368,15 @@ namespace Server
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
-            //запускаем респавн  ботов-танков
-            tTimer_RespawnBotTank.Start();
+            
             //передача состояния объектов
             TimerQueueCler.Start();
+
+            GlobalTimerMove = new System.Timers.Timer(15);
             GlobalTimerMove.Start();
+
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
         }
 
 
@@ -400,7 +416,10 @@ namespace Server
             }
             //передача состояния объектов
             TimerQueueCler.Start();
+
+            GlobalTimerMove = new System.Timers.Timer(15);
             GlobalTimerMove.Start();
+
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
         }
@@ -432,11 +451,14 @@ namespace Server
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
-            //запускаем респавн  ботов-танков
-            tTimer_RespawnBotTank.Start();
             //передача состояния объектов
             TimerQueueCler.Start();
+
+            GlobalTimerMove = new System.Timers.Timer(15);
             GlobalTimerMove.Start();
+
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
         }
 
         //повторяем раунд при проигрыше 
@@ -466,11 +488,15 @@ namespace Server
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
-            //запускаем респавн  ботов-танков
-            tTimer_RespawnBotTank.Start();
+
             //передача состояния объектов
             TimerQueueCler.Start();
+
+            GlobalTimerMove = new System.Timers.Timer(15);
             GlobalTimerMove.Start();
+
+            //запускаем респавн  ботов-танков
+            tTimer_RespawnBotTank.Start();
         }
 
         //уничтожение танков-ботов
@@ -496,7 +522,9 @@ namespace Server
 
                 //передача состояния объектов
                 TimerQueueCler.Stop();
+
                 GlobalTimerMove.Stop();
+                
 
                 if (mapPool.Length > (++lvlMap))
                 {

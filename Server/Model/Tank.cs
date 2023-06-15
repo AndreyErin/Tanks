@@ -46,12 +46,27 @@ namespace Server.Model
         //функция таймера для движения танка
         protected void tTimerMove_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID)) return;
 
-                //tTimerMove.Interval = 100000;
-                Action action = () =>
+
+            //tTimerMove.Interval = 100000;
+            Action action = () =>
             {
-            MyPoint pt;//точки-ледары
+
+
+                //если объект удален с карты, то останавливаем таймер
+                if (!GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
+                {
+                    //отключаемся от общего таймера
+                    if (timerON)
+                    {
+                        GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
+                        timerON = false;
+                    }
+                    return;
+                }
+
+
+                MyPoint pt;//точки-ледары
                 MyPoint pt2;
 
                 switch (VectorElement)
