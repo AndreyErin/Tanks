@@ -23,7 +23,7 @@ namespace Server.Model
 
         public WorldElement()
         {
-            ID = GlobalDataStatic.IdNumberElement++;
+            
         }
         
         //интерфейс INotifyPropertyChanged
@@ -33,6 +33,8 @@ namespace Server.Model
         //добавление себя на поле боя
         protected void AddMe() 
         {
+            ID = GlobalDataStatic.IdNumberElement++;
+
             //ElementIsChanget = false;
             GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this);
             
@@ -82,5 +84,11 @@ namespace Server.Model
             ElementIsChanget = false; //сбрасываем флаг изменения
         }
 
+        //вернуть элементы в ствои стеки без отправки сообщений
+        public void MessageStopAndRemoveMe() 
+        {
+            PropertyChanged = null;
+            RemoveMe();
+        }
     }
 }

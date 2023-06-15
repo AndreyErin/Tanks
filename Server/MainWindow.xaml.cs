@@ -194,7 +194,7 @@ namespace Server
             //ограничение по числу танков на поле одновременно
             if (GlobalDataStatic.PartyTankBots.Count >= 30) { return; }
 
-            tTimer_RespawnBotTank.Interval = 5000;
+            tTimer_RespawnBotTank.Interval = 10000;
             GlobalDataStatic.RespawnBotON = true;
 
             //загрузка танков-ботов
@@ -608,10 +608,10 @@ namespace Server
         //удаляем оставшиеся на карте элементы
         protected void RemoteAllElement() 
         {
-            foreach (var worldElement in GlobalDataStatic.BattleGroundCollection) 
+            foreach (var worldElement in GlobalDataStatic.BattleGroundCollection.ToList()) 
             {
                 //останавливаем отсылку сообщений в объекте и удаляем его из коллекции
-                worldElement.Value.RemoveMe();
+                worldElement.Value.MessageStopAndRemoveMe();
             }            
         }
 

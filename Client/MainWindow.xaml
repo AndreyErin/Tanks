@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
         Title="MainWindow" 
-        WindowState="Maximized" 
+        WindowState="Maximized"  
         BorderBrush="Brown" BorderThickness="2" Loaded="MainWin_Loaded" KeyDown="MainWin_KeyDown" KeyUp="MainWin_KeyUp" 
         PreviewKeyDown="MainWin_PreviewKeyDown" Background="#FF310309" Unloaded="MainWin_Unloaded">
     <!-- полноэкранный режим - WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized" -->

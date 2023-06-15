@@ -43,7 +43,16 @@
             <Label Grid.Column="0" Content="Количество принятых пакетов"/>
             <Label Grid.Column="1" x:Name="lblGetPocketCount" Content="0" />
         </Grid>
-        
-        
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Индексы"/>
+            <Label Grid.Column="1" x:Name="lblIndex" Content="0" />
+        </Grid>
+
+
     </Grid>
 </Window>

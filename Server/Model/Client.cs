@@ -173,6 +173,7 @@ namespace Server.Model
             Action action = () =>
             {
                 GlobalDataStatic.Controller.lblSetPocketCount.Content = int.Parse(GlobalDataStatic.Controller.lblSetPocketCount.Content.ToString()) + 1;
+                GlobalDataStatic.Controller.lblIndex.Content = GlobalDataStatic.IdNumberElement;
             };
             GlobalDataStatic.Controller.Dispatcher.Invoke(action);
 

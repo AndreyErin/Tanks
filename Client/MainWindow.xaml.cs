@@ -9,6 +9,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Linq;
+
 namespace Client
 {
     
@@ -363,7 +365,7 @@ namespace Client
             Dispatcher.Invoke(() =>
             {
                 //проверяем дерево ли это
-                foreach (WorldElement worldElement in CollectionTree)
+                foreach (WorldElement worldElement in CollectionTree.ToList())
                 {
                     if (worldElement.ID == id)
                     {
@@ -372,7 +374,7 @@ namespace Client
                     }
                 }
                 //если не дерево то ищим дальше
-                foreach (WorldElement worldElement in CollectionWorldElements)
+                foreach (WorldElement worldElement in CollectionWorldElements.ToList())
                 {
                     if (worldElement.ID == id)
                     {
@@ -383,12 +385,12 @@ namespace Client
             });           
         }
 
-        //изменение скина
+        //изменение в элементе
         public void ChangeElement(int id, double x, double y, SkinsEnum skin, VectorEnum vector)
         {
             Dispatcher.Invoke(() =>
             {               
-                foreach (WorldElement worldElement in CollectionWorldElements)
+                foreach (WorldElement worldElement in CollectionWorldElements.ToList())
                 {
                     if (worldElement.ID == id)
                     {
@@ -628,7 +630,8 @@ namespace Client
                         //очищаем поле
                         //dc = myVisual.RenderOpen();
                         //dc.Close();
-                        //очищаем спмски элнментов
+                        //очищаем списки элнментов
+                        ClearCollectionsElements();
                         //CollectionTree.Clear();
                         //CollectionWorldElements.Clear();
                         break;
@@ -645,7 +648,8 @@ namespace Client
                         //очищаем поле
                         //dc = myVisual.RenderOpen();
                         //dc.Close();
-                        //очищаем спмски элнментов
+                        //очищаем списки элнментов
+                        ClearCollectionsElements();
                         //CollectionTree.Clear();
                         //CollectionWorldElements.Clear();
                         break;
@@ -662,7 +666,8 @@ namespace Client
                         //очищаем поле
                         //dc = myVisual.RenderOpen();
                         //dc.Close();
-                        //очищаем спмски элнментов
+                        //очищаем списки элнментов
+                        ClearCollectionsElements();
                         //CollectionTree.Clear();
                         //CollectionWorldElements.Clear();
                         break;
@@ -679,7 +684,8 @@ namespace Client
                         //очищаем поле
                         //dc = myVisual.RenderOpen();
                         //dc.Close();
-                        //очищаем спмски элнментов
+                        //очищаем списки элнментов
+                        ClearCollectionsElements();
                         //CollectionTree.Clear();
                         //CollectionWorldElements.Clear();
                         break;
@@ -695,7 +701,8 @@ namespace Client
                         //очищаем поле
                         //dc = myVisual.RenderOpen();
                         //dc.Close();
-                        //очищаем спмски элнментов
+                        //очищаем списки элнментов
+                        ClearCollectionsElements();
                         //CollectionTree.Clear();
                         //CollectionWorldElements.Clear();
                         break;
@@ -727,6 +734,30 @@ namespace Client
                 }
             };
             Dispatcher.Invoke(action);
+        }
+
+        //очищаем коллекции после боя
+        private void ClearCollectionsElements() 
+        {
+            
+            try
+            {
+                foreach (WorldElement item in CollectionTree.ToList())
+                {
+                    item.DeleteMe();
+                }
+
+                foreach (WorldElement item in CollectionWorldElements.ToList())
+                {
+                    item.DeleteMe();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Попытка очищения списка элементов на клиенткой программе\n" + ex.Message);
+            }
+            
+
         }
     }
 }
