@@ -194,7 +194,7 @@ namespace Server
             //ограничение по числу танков на поле одновременно
             if (GlobalDataStatic.PartyTankBots.Count >= 30) { return; }
 
-            tTimer_RespawnBotTank.Interval = 10000;
+            tTimer_RespawnBotTank.Interval = 5000;
             GlobalDataStatic.RespawnBotON = true;
 
             //загрузка танков-ботов
@@ -516,15 +516,17 @@ namespace Server
                     tank.DestroyPayerTank -= DistroyFriendlyTank;
                 }
 
+
+
+                //передача состояния объектов
+                TimerQueueCler.Stop();
+                GlobalTimerMove.Stop();
+
                 //очищаем поле
                 RemoteAllElement();//////////////////////////////////////////////////////////////////
                 GlobalDataStatic.BattleGroundCollection.Clear();
 
-                //передача состояния объектов
-                TimerQueueCler.Stop();
 
-                GlobalTimerMove.Stop();
-                
 
                 if (mapPool.Length > (++lvlMap))
                 {
@@ -534,7 +536,21 @@ namespace Server
                 {
                     GameEvent?.Invoke(GameEnum.Win);
                 }
+
+
+                //MessageBox.Show("Статистика\nЭлементы на поле боя: " + GlobalDataStatic.BattleGroundCollection.Count +
+                //    "\nСтак каменных блоков: " + GlobalDataStatic.StackBlocksRock.Count +
+                //    "\nСтак железных блоков: " + GlobalDataStatic.StackBlocksFerum.Count +
+                //    "\nСтак снарядов: " + GlobalDataStatic.StackBullet.Count +
+                //    "\nСтак локальных пушек: " + GlobalDataStatic.StackLocationGun.Count +
+                //    "\nСтак лута: " + GlobalDataStatic.StackLoot.Count +
+                //    "\nСтак танков-ботов: " + GlobalDataStatic.StackTankBot.Count +
+                //    "\nСтак разбитых танков: " + GlobalDataStatic.StackTankOfDistroy.Count +
+                //    "\nСтак деревьев: " + GlobalDataStatic.StackTree.Count);
             }
+
+
+
         }
 
         //уничтожены танки игроков
@@ -544,23 +560,26 @@ namespace Server
             //ПОРАЖЕНИЕ
             if (GlobalDataStatic.PartyTanksOfPlayers.Count == 0)
             {
-                GameEvent?.Invoke(GameEnum.DistroyFriendlyTank);
+                
                 tTimer_RespawnBotTank.Stop();
                 GlobalDataStatic.IdNumberElement = 0;
 
-                //очищаем поле
-                RemoteAllElement();//////////////////////////////////////////////////////////////////
-                GlobalDataStatic.BattleGroundCollection.Clear();
+                
                 //передача состояния объектов
                 TimerQueueCler.Stop();
                 GlobalTimerMove.Stop();
+                //очищаем поле
+                RemoteAllElement();//////////////////////////////////////////////////////////////////
+                GlobalDataStatic.BattleGroundCollection.Clear();
+
+                GameEvent?.Invoke(GameEnum.DistroyFriendlyTank);
             }
         }
 
         //уничтожен бункер
         private void DestroyBunker()
         {
-            GameEvent?.Invoke(GameEnum.DestroyBunker);
+            
             tTimer_RespawnBotTank.Stop();
             GlobalDataStatic.IdNumberElement = 0;
             //отписываемся
@@ -569,12 +588,15 @@ namespace Server
                 tank.DestroyPayerTank -= DistroyFriendlyTank;
             }
 
-            //очищаем поле
-            RemoteAllElement();//////////////////////////////////////////////////////////////////            
-            GlobalDataStatic.BattleGroundCollection.Clear();
+
             //передача состояния объектов
             TimerQueueCler.Stop();
             GlobalTimerMove.Stop();
+            //очищаем поле
+            RemoteAllElement();//////////////////////////////////////////////////////////////////            
+            GlobalDataStatic.BattleGroundCollection.Clear();
+
+            GameEvent?.Invoke(GameEnum.DestroyBunker);
         }
 
         //уничтожен вражеский бункер
@@ -588,6 +610,10 @@ namespace Server
                 tank.DestroyPayerTank -= DistroyFriendlyTank;
             }
 
+            //передача состояния объектов
+            TimerQueueCler.Stop();
+            GlobalTimerMove.Stop();
+
             //очищаем поле
             RemoteAllElement();//////////////////////////////////////////////////////////////////            
             GlobalDataStatic.BattleGroundCollection.Clear();
@@ -600,19 +626,37 @@ namespace Server
             {
                 GameEvent?.Invoke(GameEnum.Win);
             }
-            //передача состояния объектов
-            TimerQueueCler.Stop();
-            GlobalTimerMove.Stop();
+
         }
 
         //удаляем оставшиеся на карте элементы
         protected void RemoteAllElement() 
         {
+            //MessageBox.Show("Статистика\nЭлементы на поле боя: " + GlobalDataStatic.BattleGroundCollection.Count +
+            //    "\nСтак каменных блоков: " + GlobalDataStatic.StackBlocksRock.Count +
+            //    "\nСтак железных блоков: " + GlobalDataStatic.StackBlocksFerum.Count +
+            //    "\nСтак снарядов: " + GlobalDataStatic.StackBullet.Count +
+            //    "\nСтак локальных пушек: " + GlobalDataStatic.StackLocationGun.Count +
+            //    "\nСтак лута: " + GlobalDataStatic.StackLoot.Count +
+            //    "\nСтак танков-ботов: " + GlobalDataStatic.StackTankBot.Count +
+            //    "\nСтак разбитых танков: " + GlobalDataStatic.StackTankOfDistroy.Count +
+            //    "\nСтак деревьев: " + GlobalDataStatic.StackTree.Count);
+
             foreach (var worldElement in GlobalDataStatic.BattleGroundCollection.ToList()) 
             {
                 //останавливаем отсылку сообщений в объекте и удаляем его из коллекции
                 worldElement.Value.MessageStopAndRemoveMe();
-            }            
+            }
+
+            //MessageBox.Show("Статистика\nЭлементы на поле боя: " + GlobalDataStatic.BattleGroundCollection.Count +
+            //    "\nСтак каменных блоков: " + GlobalDataStatic.StackBlocksRock.Count +
+            //    "\nСтак железных блоков: " + GlobalDataStatic.StackBlocksFerum.Count +
+            //    "\nСтак снарядов: " + GlobalDataStatic.StackBullet.Count +
+            //    "\nСтак локальных пушек: " + GlobalDataStatic.StackLocationGun.Count +
+            //    "\nСтак лута: " + GlobalDataStatic.StackLoot.Count +
+            //    "\nСтак танков-ботов: " + GlobalDataStatic.StackTankBot.Count +
+            //    "\nСтак разбитых танков: " + GlobalDataStatic.StackTankOfDistroy.Count +
+            //    "\nСтак деревьев: " + GlobalDataStatic.StackTree.Count);
         }
 
 

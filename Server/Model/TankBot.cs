@@ -320,10 +320,11 @@ namespace Server.Model
         protected override void DistroyMy()
         {
             tAutoMove.Stop();
+            base.DistroyMy();
             //tAutoMove.Elapsed -= AutoMove;
             //GlobalDataStatic.Controller.GlobalTimerMove.Elapsed -= tTimerMove_Elapsed;
             DistroyEvent?.Invoke(this); //передаем информацию о разрущшение танка
-            base.DistroyMy();
+            
         }
         //повышение уровня танка
         protected override void UpgradeWiewTank(int teer)

@@ -739,7 +739,7 @@ namespace Client
         //очищаем коллекции после боя
         private void ClearCollectionsElements() 
         {
-            
+
             try
             {
                 foreach (WorldElement item in CollectionTree.ToList())
@@ -751,12 +751,23 @@ namespace Client
                 {
                     item.DeleteMe();
                 }
+
+                //if (CollectionTree.Count != 0)
+                //    CollectionTree = new List<WorldElement>();
+
+                //if (CollectionWorldElements.Count != 0)
+                //    CollectionWorldElements = new List<WorldElement>();
+
+
+                //MessageBox.Show("Статистика клиент\nЛист деревьев: " + CollectionTree.Count +
+                //    "\nЛист остальных объектов: " + CollectionWorldElements.Count +
+                //    "\nСтак элементов: " + GlobalDataStatic.StackElements.Count);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Попытка очищения списка элементов на клиенткой программе\n" + ex.Message);
             }
-            
+
 
         }
     }

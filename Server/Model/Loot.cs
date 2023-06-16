@@ -16,6 +16,8 @@ namespace Server.Model
 
         public void InitElement(MyPoint pos)
         {
+
+
             Random random = new Random();
             //случайный лут
             switch (random.Next(0, 10))
@@ -32,8 +34,10 @@ namespace Server.Model
                     break;
 
                 case >= 3:
+                    //возвращаем неиспользованный лут в стак
+                    GlobalDataStatic.StackLoot.Push(this);
                     return; //фокус не удался, дропа не будет                                      
-            }           
+            }
 
             _height = 30;
             _width = 30;
