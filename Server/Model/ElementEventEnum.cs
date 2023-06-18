@@ -5,6 +5,7 @@ namespace Server.Model
     {
         Add,
         Remove,
-        Change
+        Change,
+        Frags
     }
 }

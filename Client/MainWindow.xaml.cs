@@ -18,24 +18,23 @@ namespace Client
     public partial class MainWindow : Window
     {
         //флаг идет ли бой или мы в меню сидим
-        private bool isBattle = false;
+        private bool _isBattle = false;
 
         //плеер для проигрывания музыки игры или меню
         private MediaPlayer _playerForMusic = new MediaPlayer();
-
+        //порядковый номер этого клиента(1й или 2й танк)
         private int _numberPlayer = 0;
 
         public List<WorldElement> CollectionWorldElements { get; set; } = new List<WorldElement>();
         public List<WorldElement> CollectionTree { get; set; } = new List<WorldElement>();
-        private DrawingVisual myVisual = new DrawingVisual();
-        private DrawingContext dc;
-        
+        private DrawingVisual _myVisual = new DrawingVisual();
+        private DrawingContext _dc;        
         private Rect rect;
         
         private static Socket _socket;
         private Key _moveKey = Key.None;//кнопка отслеживающая пследнее движение
         private Key _lastKey = Key.None;//кнопка нажатая пользователем
-        private string keyCommand = "";
+        private string _keyCommand = "";
         private System.Timers.Timer _timerRender = new System.Timers.Timer();
 
         public MainWindow()
@@ -57,7 +56,7 @@ namespace Client
             _timerRender.Elapsed += RenderingFPS;
             _timerRender.Interval = 30;
             
-            cnvMain.Visual.Add(myVisual);
+            cnvMain.Visual.Add(_myVisual);
 
             for (int i = 0; i < 300; i++)
             {
@@ -69,7 +68,7 @@ namespace Client
 
 
             //подгрузка изображений
-                dc = myVisual.RenderOpen();
+                _dc = _myVisual.RenderOpen();
                 //подготавливаем квадрат
                 rect.Width = 40;
                 rect.Height = 40;
@@ -78,26 +77,26 @@ namespace Client
 
                 foreach (var item in GlobalDataStatic.SkinDictionary)
                 {                                       
-                        dc.DrawImage(item.Value, rect);                  
+                        _dc.DrawImage(item.Value, rect);                  
                 }
 
                 foreach (var item in GlobalDataStatic.SkinDictionary90)
                 {
-                    dc.DrawImage(item.Value, rect);
+                    _dc.DrawImage(item.Value, rect);
                 }
 
                 foreach (var item in GlobalDataStatic.SkinDictionary180)
                 {
-                    dc.DrawImage(item.Value, rect);
+                    _dc.DrawImage(item.Value, rect);
                 }
 
                 foreach (var item in GlobalDataStatic.SkinDictionary270)
                 {
-                    dc.DrawImage(item.Value, rect);
+                    _dc.DrawImage(item.Value, rect);
                 }
-            dc.DrawImage(GlobalDataStatic.SkinDictionary[SkinsEnum.PictureBlock1], rect);
+            _dc.DrawImage(GlobalDataStatic.SkinDictionary[SkinsEnum.PictureBlock1], rect);
 
-            dc.Close();
+            _dc.Close();
             //
 
             _timerRender.Start();
@@ -137,7 +136,7 @@ namespace Client
         {
            Action action = () =>
             {                             
-                dc = myVisual.RenderOpen();
+                _dc = _myVisual.RenderOpen();
                 
                 foreach (WorldElement worldElement in CollectionWorldElements)
                 {
@@ -149,7 +148,7 @@ namespace Client
 
                     if ((int)worldElement.Skin > 18)
                     {
-                        dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                        _dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                     }
                     else
                     {
@@ -157,17 +156,17 @@ namespace Client
                         switch (worldElement.Vector)
                         {
                             case VectorEnum.Top:
-                                dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                                _dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                                 break;
 
                             case VectorEnum.Down:
-                                dc.DrawImage(GlobalDataStatic.SkinDictionary180[worldElement.Skin], rect);
+                                _dc.DrawImage(GlobalDataStatic.SkinDictionary180[worldElement.Skin], rect);
                                 break;
                             case VectorEnum.Left:
-                                dc.DrawImage(GlobalDataStatic.SkinDictionary270[worldElement.Skin], rect);
+                                _dc.DrawImage(GlobalDataStatic.SkinDictionary270[worldElement.Skin], rect);
                                 break;
                             case VectorEnum.Right:
-                                dc.DrawImage(GlobalDataStatic.SkinDictionary90[worldElement.Skin], rect);
+                                _dc.DrawImage(GlobalDataStatic.SkinDictionary90[worldElement.Skin], rect);
                                 break;
                         }
                     }
@@ -181,10 +180,10 @@ namespace Client
                     rect.X = worldElement.ePos.Y;
                     rect.Y = worldElement.ePos.X;
 
-                    dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
+                    _dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                 }
 
-                    dc.Close();
+                    _dc.Close();
             };
             Dispatcher.Invoke(action);
             
@@ -201,28 +200,28 @@ namespace Client
             case Key.W:
             case Key.Up:
                 //сообщение серверу
-                keyCommand = "MOVEUP^";
+                _keyCommand = "MOVEUP^";
                 _moveKey = e.Key;                   
                 break;
             case Key.S:
             case Key.Down:
-                keyCommand = "MOVEDOWN^";
+                _keyCommand = "MOVEDOWN^";
                 _moveKey = e.Key;
                 break;
             case Key.A:
             case Key.Left:
-                keyCommand = "MOVELEFT^";
+                _keyCommand = "MOVELEFT^";
                 _moveKey = e.Key;
                 break;
             case Key.D:
             case Key.Right:
-                keyCommand = "MOVERIGHT^";
+                _keyCommand = "MOVERIGHT^";
                 _moveKey = e.Key;
                 break;
             case Key.Space: //стрельба
-                if (cD == false)
+                if (_cD == false)
                 {
-                    keyCommand = "FIRE^";
+                    _keyCommand = "FIRE^";
                     Task.Factory.StartNew(CooldownFire);//запускаем откат в отдельном потоке
                 }
                 else
@@ -233,15 +232,15 @@ namespace Client
             }
 
             //если мы в бою то отправляем сообщения кнопок управления
-            if(isBattle)
-                SetDataOfServer(Encoding.UTF8.GetBytes(keyCommand));
+            if(_isBattle)
+                SetDataOfServer(Encoding.UTF8.GetBytes(_keyCommand));
         }
         
         private void MainWin_KeyUp(object sender, KeyEventArgs e)
         {
             //если кнопка движения была поднята то останавливаем танк
             //при этом идет бой
-            if ((e.Key == _moveKey) && isBattle )
+            if ((e.Key == _moveKey) && _isBattle )
             {                              
                 SetDataOfServer(Encoding.UTF8.GetBytes("STOP^"));
             }
@@ -257,13 +256,13 @@ namespace Client
             _lastKey = e.Key;
         }
 
-        private bool cD = false;
+        private bool _cD = false;
         //откат выстрела
         private void CooldownFire()
         {
-            cD = true;
+            _cD = true;
             Thread.Sleep(300);
-            cD = false;
+            _cD = false;
         }
 
         //завершение программы
@@ -359,6 +358,36 @@ namespace Client
             
         }
 
+        private void FragStatistic(Frags frags, int numberPlayer) 
+        {
+            Action action = () =>
+            {               
+                if (numberPlayer == _numberPlayer)
+                {
+                    lblFragsTeer1.Content = frags.lvl1;
+                    lblFragsTeer2.Content = frags.lvl2;
+                    lblFragsTeer3.Content = frags.lvl3;
+                    lblFragsTeer4.Content = frags.lvl4;
+                    lblFragsSpeed1.Content = frags.lvlSpeed1;
+                    lblFragsSpeed2.Content = frags.lvlSpeed2;
+                    lblFragsLocalGan.Content = frags.LocationGan;
+                    lblFragsSum.Content = frags.lvl1 + frags.lvl2 + frags.lvl3 + frags.lvl4 + frags.lvlSpeed1 + frags.lvlSpeed2 + frags.LocationGan;
+                }
+                else
+                {
+                    lblComradeFragsTeer1.Content = frags.lvl1;
+                    lblComradeFragsTeer2.Content = frags.lvl2;
+                    lblComradeFragsTeer3.Content = frags.lvl3;
+                    lblComradeFragsTeer4.Content = frags.lvl4;
+                    lblComradeFragsSpeed1.Content = frags.lvlSpeed1;
+                    lblComradeFragsSpeed2.Content = frags.lvlSpeed2;
+                    lblComradeFragsLocalGan.Content = frags.LocationGan;
+                    lblComradeFragsSum.Content = frags.lvl1 + frags.lvl2 + frags.lvl3 + frags.lvl4 + frags.lvlSpeed1 + frags.lvlSpeed2 + frags.LocationGan;
+                }                                                         
+            };
+            Dispatcher.Invoke(action);
+        }
+
         //добавление объекта на поле боя
         public void AddElement(int id, double x, double y, SkinsEnum skin, VectorEnum vector) 
         {
@@ -448,6 +477,7 @@ namespace Client
             bool serverEvent = false;
             string[] bigMessage;
             int playerIndex = 0;
+            Frags myFrags = new Frags();
 
             while (true)
             {
@@ -524,6 +554,18 @@ namespace Client
                         //определяем номер этого клиента
                         _numberPlayer = int.Parse(command[1]);
                         break;
+
+                    case "FRAGS":                            
+                        myFrags.lvl1 = int.Parse(command[2]);
+                        myFrags.lvl2 = int.Parse(command[3]);
+                        myFrags.lvl3 = int.Parse(command[4]);
+                        myFrags.lvl4 = int.Parse(command[5]);
+                        myFrags.lvlSpeed1 = int.Parse(command[6]);
+                        myFrags.lvlSpeed2 = int.Parse(command[7]);
+                        myFrags.LocationGan = int.Parse(command[8]);
+
+                        FragStatistic(myFrags, int.Parse(command[1]));
+                        break;
                     }
                 }
                 else 
@@ -593,11 +635,12 @@ namespace Client
                         lblThisPlayer.Visibility = Visibility.Hidden;
                         lblFriendlyPlayer.Visibility = Visibility.Hidden;
                         lblMultuPlayerStatus.Visibility = Visibility.Hidden;
-                            
+                        grdStatisticPanel.Visibility = Visibility.Hidden;
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);                      
                         _playerForMusic.Play();
 
-                        isBattle = true;
+                        _isBattle = true;
                         break;
 
                     case GameEnum.NewGame:
@@ -609,11 +652,12 @@ namespace Client
                         btnOut2.IsEnabled = false;
                     btnMultiPlayer.Visibility = Visibility.Hidden;
                         btnMultiPlayer.IsEnabled = false;
-                        
+                        grdStatisticPanel.Visibility = Visibility.Hidden;
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
                         _playerForMusic.Play();
 
-                        isBattle = true;
+                        _isBattle = true;
                         break;
                 case GameEnum.NewRoundMultiPlayer:
                 case GameEnum.NewRound:
@@ -624,11 +668,12 @@ namespace Client
                     
                     btnOut2.Visibility = Visibility.Hidden;
                         btnOut2.IsEnabled = false;
-                        
+                        grdStatisticPanel.Visibility = Visibility.Hidden;
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
                         _playerForMusic.Play();
 
-                        isBattle = true;
+                        _isBattle = true;
                         break;
                 case GameEnum.ReplayRoundMultiPlayer:
                 case GameEnum.ReplayRound:
@@ -640,10 +685,11 @@ namespace Client
                         btnRaundReplay.IsEnabled = false;
                     btnOut2.Visibility = Visibility.Hidden;
                         btnOut2.IsEnabled = false;
-                        
+                        grdStatisticPanel.Visibility = Visibility.Hidden;
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
                         _playerForMusic.Play();
-                        isBattle = true;
+                        _isBattle = true;
                         break;
                 case GameEnum.DistroyEnemyTank:
                     lblResultOfBattleText.Content = "Победа";
@@ -654,13 +700,15 @@ namespace Client
                         btnRaundWin.IsEnabled = true;
                     btnOut2.Visibility = Visibility.Visible;
                         btnOut2.IsEnabled = true;
-                        
+                        grdStatisticPanel.Visibility = Visibility.Visible;
+
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
                        
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        isBattle = false;
+                        _isBattle = false;
                         break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
@@ -671,15 +719,15 @@ namespace Client
                         btnRaundReplay.IsEnabled = true;
                         btnOut2.Visibility = Visibility.Visible;
                         btnOut2.IsEnabled = true;
+                        grdStatisticPanel.Visibility = Visibility.Visible;
 
-                        
-                        
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
 
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        isBattle = false;
+                        _isBattle = false;
                         break;
                 case GameEnum.DestroyBunker:
                     lblResultOfBattleText.Content = "Поражение";
@@ -690,13 +738,14 @@ namespace Client
                         btnRaundReplay.IsEnabled = true;
                         btnOut2.Visibility = Visibility.Visible;
                         btnOut2.IsEnabled = true;
-                        
+                        grdStatisticPanel.Visibility = Visibility.Visible;
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
 
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        isBattle = false;
+                        _isBattle = false;
                         break;
                 case GameEnum.DestroyBunkerEnamy:
                     lblResultOfBattleText.Content = "Победа";
@@ -707,13 +756,14 @@ namespace Client
                         btnRaundWin.IsEnabled = true;
                         btnOut2.Visibility = Visibility.Visible;
                         btnOut2.IsEnabled = true;
-                        
+                        grdStatisticPanel.Visibility = Visibility.Visible;
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
 
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        isBattle = false;
+                        _isBattle = false;
                         break;
                 case GameEnum.Win:
                     lblResultOfBattleText.Content = "Игра пройдена";
@@ -722,13 +772,14 @@ namespace Client
                     lblWinText.Visibility = Visibility.Visible;                   
                     btnOut2.Visibility = Visibility.Visible;
                         btnOut2.IsEnabled = true;
-                        
+                        grdStatisticPanel.Visibility = Visibility.Visible;
+
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
 
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        isBattle = false;
+                        _isBattle = false;
                         break;
 
                     case GameEnum.PlayerOneReady:

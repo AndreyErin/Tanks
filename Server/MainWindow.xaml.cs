@@ -649,8 +649,16 @@ namespace Server
         {
             switch (e.PropertyName?.ToUpper())
             {
-                case "CHANGE":
-                    ///////
+                case "FRAGS":
+                    string data;
+
+                    if (PartyPlayers.One.tank == ((TankPlayer)sender))
+                        data = $"1@{((TankPlayer)sender)._myFrags.lvl1}@{((TankPlayer)sender)._myFrags.lvl2}@{((TankPlayer)sender)._myFrags.lvl3}@{((TankPlayer)sender)._myFrags.lvl4}@{((TankPlayer)sender)._myFrags.lvlSpeed1}@{((TankPlayer)sender)._myFrags.lvlSpeed2}@{((TankPlayer)sender)._myFrags.LocationGan}";
+                    else
+                        data = $"2@{((TankPlayer)sender)._myFrags.lvl1}@{((TankPlayer)sender)._myFrags.lvl2}@{((TankPlayer)sender)._myFrags.lvl3}@{((TankPlayer)sender)._myFrags.lvl4}@{((TankPlayer)sender)._myFrags.lvlSpeed1}@{((TankPlayer)sender)._myFrags.lvlSpeed2}@{((TankPlayer)sender)._myFrags.LocationGan}";
+
+                    ElementEvent?.Invoke(ElementEventEnum.Frags, 0, bigStringMessage: data);
+
                     break;
 
                 case "ADD":                

@@ -193,6 +193,18 @@ namespace Server.Model
             int command = (int)gameEvent;
             byte[] data = Encoding.UTF8.GetBytes(command.ToString() + '^');
             Task.Run(() => SetDataAsynk(data));
+
+            if (gameEvent == GameEnum.DestroyBunker ||
+                gameEvent == GameEnum.DestroyBunkerEnamy ||
+                gameEvent == GameEnum.DistroyEnemyTank ||
+                gameEvent == GameEnum.DistroyFriendlyTank)
+            {
+
+                GlobalDataStatic.Controller.Dispatcher.Invoke(() => tank.GetFrags());
+
+                //data = Encoding.UTF8.GetBytes(GlobalDataStatic.Controller.Dispatcher.Invoke(() => tank.GetFrags()));
+                //Task.Run(() => SetDataAsynk(data));
+            } 
         } 
         
         protected void EventOfElement(ElementEventEnum elementEvent, int id, double x = -10, double y = -10, SkinsEnum skin = SkinsEnum.None, VectorEnum vector = VectorEnum.Top, string bigStringMessage = "") 
@@ -207,10 +219,12 @@ namespace Server.Model
                     commandString = $"REMOVE@{id}^";
                     break;
                 case ElementEventEnum.Change:                   
-                    commandString = $"CHANGE@{bigStringMessage}^";
-                    
+                    commandString = $"CHANGE@{bigStringMessage}^";                   
                     break;
-                
+                case ElementEventEnum.Frags:
+                    commandString = $"FRAGS@{bigStringMessage}^";
+                    break;
+
             }            
             byte[] data = Encoding.UTF8.GetBytes(commandString);
             Task.Run(()=> SetDataAsynk(data));

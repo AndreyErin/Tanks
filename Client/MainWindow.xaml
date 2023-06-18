@@ -46,6 +46,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" x:Name="lblMultuPlayerStatus" Content="Проверка готовности отряда." FontSize="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF310309" Visibility="Hidden"/>
@@ -69,11 +70,64 @@
 
             <Button Grid.Row="3" Content="Назад" x:Name="btnOutInMenu" Click="btnGameMenu_Click" Visibility="Hidden" />
 
+            <!-- статистическая панель -->
+            <Grid Grid.Row="5" x:Name="grdStatisticPanel" Visibility="Hidden" VerticalAlignment="Center" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Image Grid.Column="2" Grid.Row="0" Source="Model\Pictures\tankbot.png" Height="30" Width="30" Margin="5"/>
+                <Image Grid.Column="3" Grid.Row="0" Source="Model\Pictures\tankbot2.png" Height="30" Width="30" Margin="5"/>
+                <Image Grid.Column="4" Grid.Row="0" Source="Model\Pictures\tankbot3.png" Height="30" Width="30" Margin="5"/>
+                <Image Grid.Column="5" Grid.Row="0" Source="Model\Pictures\tankbot3.png" Height="30" Width="30" Margin="5"/>
+                <Image Grid.Column="6" Grid.Row="0" Source="Model\Pictures\tankspeedbot.png" Height="30" Width="30" Margin="5"/>
+                <Image Grid.Column="7" Grid.Row="0" Source="Model\Pictures\tankspeedbot2.png" Height="30" Width="30" Margin="5"/>
+                <Image Grid.Column="8" Grid.Row="0" Source="Model\Pictures\LocationGun.png" Height="30" Width="30" Margin="5"/>
+
+                <Label Grid.Row="1" Grid.Column="1" Content="Я"  Width="100" FontSize="20" HorizontalContentAlignment="Center" />
+                <Label Grid.Row="2" Grid.Column="1" Content="Товарищ" Width="100" FontSize="20" />
+                <Label Grid.Row="0" Grid.Column="9" Content="       " Width="100" FontSize="20" />
+                
+                <Label Grid.Row="1" Grid.Column="2" x:Name="lblFragsTeer1"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="3" x:Name="lblFragsTeer2"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="4" x:Name="lblFragsTeer3"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="5" x:Name="lblFragsTeer4"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="6" x:Name="lblFragsSpeed1"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="7" x:Name="lblFragsSpeed2"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="8" x:Name="lblFragsLocalGan" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="9" x:Name="lblFragsSum"      FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                <Label Grid.Row="2" Grid.Column="2" x:Name="lblComradeFragsTeer1"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="3" x:Name="lblComradeFragsTeer2"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="4" x:Name="lblComradeFragsTeer3"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="5" x:Name="lblComradeFragsTeer4"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="6" x:Name="lblComradeFragsSpeed1"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="7" x:Name="lblComradeFragsSpeed2"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="8" x:Name="lblComradeFragsLocalGan" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="9" x:Name="lblComradeFragsSum"      FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                
+            </Grid>
         </Grid>
 
 
 
-        <!-- статистическая панель -->
+        
 
 
 

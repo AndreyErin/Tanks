@@ -12,12 +12,12 @@ namespace Server.Model
         public event ISoundsObjects.SoundDeleg? SoundEvent;
 
         //уровень танка
-        protected int lvlTank = 1;
+        public int lvlTank = 1;
         //дамаг танка
         protected int damageTank = 1;
         //скорость танка
         
-        protected double speedTank = 1.5;
+        public double speedTank = 1.5;
         
         //НЕ уперлись в край карты
         protected bool noEndMap = false;
@@ -156,8 +156,12 @@ namespace Server.Model
              if (GlobalDataStatic.BattleGroundCollection.ContainsKey(ID))
              {
                  //огонь. пуля стреляет сразу при создание объекта
-                 GlobalDataStatic.StackBullet.Pop().InitElement(VectorElement, new MyPoint(X, Y), damageTank);
-                 sound = SoundsEnum.shotSoung;
+                 if(this as TankPlayer != null)
+                    GlobalDataStatic.StackBullet.Pop().InitElement(VectorElement, new MyPoint(X, Y), damageTank, (TankPlayer)this);
+                 else
+                    GlobalDataStatic.StackBullet.Pop().InitElement(VectorElement, new MyPoint(X, Y), damageTank);
+                 
+                sound = SoundsEnum.shotSoung;
                  SoundEvent?.Invoke(sound);
              }
         }
@@ -266,6 +270,7 @@ namespace Server.Model
                     damageTank = 3;
                     break;
                 case 4:
+                    HP = 3;
                     damageTank = 30;
                     break;      
             }
