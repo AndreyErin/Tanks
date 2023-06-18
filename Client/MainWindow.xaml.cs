@@ -17,6 +17,9 @@ namespace Client
 
     public partial class MainWindow : Window
     {
+        //флаг идет ли бой или мы в меню сидим
+        private bool isBattle = false;
+
         //плеер для проигрывания музыки игры или меню
         private MediaPlayer _playerForMusic = new MediaPlayer();
 
@@ -228,12 +231,17 @@ namespace Client
                 }
                 break;
             }
-            SetDataOfServer(Encoding.UTF8.GetBytes(keyCommand));
+
+            //если мы в бою то отправляем сообщения кнопок управления
+            if(isBattle)
+                SetDataOfServer(Encoding.UTF8.GetBytes(keyCommand));
         }
         
         private void MainWin_KeyUp(object sender, KeyEventArgs e)
-        {                      
-            if (e.Key == _moveKey)//если кнопка движения была поднята то останавливаем танк
+        {
+            //если кнопка движения была поднята то останавливаем танк
+            //при этом идет бой
+            if ((e.Key == _moveKey) && isBattle )
             {                              
                 SetDataOfServer(Encoding.UTF8.GetBytes("STOP^"));
             }
@@ -281,13 +289,9 @@ namespace Client
                     SetDataOfServer(Encoding.UTF8.GetBytes("NEWGAME^"));
                     break;
                 case "btnRaundWin":
-                    //CollectionTree.Clear();
-                    //CollectionWorldElements.Clear();//очищаем канвас
                     SetDataOfServer(Encoding.UTF8.GetBytes("NEWRAUND^"));
                     break;
                 case "btnRaundReplay":
-                    //CollectionTree.Clear();
-                    //CollectionWorldElements.Clear();//очищаем канвас
                     SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
                     break;
                 case "btnOut2":
@@ -296,14 +300,19 @@ namespace Client
                     break;
                 case "btnMultiPlayer":
                     stkResdyCheck.Visibility = Visibility.Visible;
-                    lblMultuPlayerStatus.Visibility = Visibility.Visible;
-                    btnNewGameSolo.Visibility = Visibility.Hidden;
+                    lblMultuPlayerStatus.Visibility = Visibility.Visible;                   
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
+                    btnNewGameSolo.Visibility = Visibility.Hidden;
+                    btnNewGameSolo.IsEnabled = false;
                     btnOut2.Visibility = Visibility.Hidden;
+                    btnOut2.IsEnabled = false;
                     btnMultiPlayer.Visibility = Visibility.Hidden;
-
+                    btnMultiPlayer.IsEnabled = false;
                     btnReady.Visibility = Visibility.Visible;
+                    btnReady.IsEnabled = true;
                     btnOutInMenu.Visibility = Visibility.Visible;
+                    btnOutInMenu.IsEnabled = true;
+
                     //пустышка для проверки был ли игрок зашедший раньше готов
                     SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
                     break;
@@ -311,20 +320,23 @@ namespace Client
                 case "btnOutInMenu":
                     stkResdyCheck.Visibility = Visibility.Hidden;
                     lblMultuPlayerStatus.Visibility = Visibility.Hidden;
-
                     btnReady.Visibility = Visibility.Hidden;
+                    btnReady.IsEnabled = false;
                     btnOutInMenu.Visibility = Visibility.Hidden;
+                    btnOutInMenu.IsEnabled = false;
 
 
-                    btnNewGameSolo.Visibility = Visibility.Visible;
                     lblResultOfBattleText.Visibility = Visibility.Visible;
+                    btnNewGameSolo.Visibility = Visibility.Visible;
+                    btnNewGameSolo.IsEnabled = true;                    
                     btnOut2.Visibility = Visibility.Visible;
+                    btnOut2.IsEnabled = true;
                     btnMultiPlayer.Visibility = Visibility.Visible;
+                    btnMultiPlayer.IsEnabled = true;
                     break;
 
                 //готовность игрока///////////
                 case "btnReady":
-                    
 
                     switch (((Button)sender).Content)
                     {
@@ -332,17 +344,16 @@ namespace Client
                             SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
                             ((Button)sender).Content = "Отменить";
                             btnOutInMenu.Visibility = Visibility.Hidden;
-                            //lblThisPlayer.Background = Brushes.GreenYellow;
+                            btnOutInMenu.IsEnabled = false;                            
                             break;
                         case "Отменить":
                             SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
                             ((Button)sender).Content = "Готов";
                             btnOutInMenu.Visibility = Visibility.Visible;
-                            //lblThisPlayer.Background = Brushes.Gray;
+                            btnOutInMenu.IsEnabled = true;
                             break;
                     }
 
-                    
                     break;
             }
             
@@ -576,46 +587,63 @@ namespace Client
                         cnvMain.Visibility = Visibility.Visible;
                         //скрываем менюшку и запускаем рендер
                         btnOutInMenu.Visibility = Visibility.Hidden;
+                        btnOutInMenu.IsEnabled = false;
                         btnReady.Visibility = Visibility.Hidden;
+                        btnReady.IsEnabled = false;
                         lblThisPlayer.Visibility = Visibility.Hidden;
                         lblFriendlyPlayer.Visibility = Visibility.Hidden;
                         lblMultuPlayerStatus.Visibility = Visibility.Hidden;
-                            //_timerRender.Start();
+                            
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);                      
                         _playerForMusic.Play();
 
+                        isBattle = true;
                         break;
 
                     case GameEnum.NewGame:
                         cnvMain.Visibility = Visibility.Visible;
+                        lblResultOfBattleText.Visibility = Visibility.Hidden;
                         btnNewGameSolo.Visibility = Visibility.Hidden;
-                    lblResultOfBattleText.Visibility = Visibility.Hidden;
+                        btnNewGameSolo.IsEnabled = false;
                     btnOut2.Visibility = Visibility.Hidden;
+                        btnOut2.IsEnabled = false;
                     btnMultiPlayer.Visibility = Visibility.Hidden;
-                        //_timerRender.Start();
+                        btnMultiPlayer.IsEnabled = false;
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
                         _playerForMusic.Play();
+
+                        isBattle = true;
                         break;
                 case GameEnum.NewRoundMultiPlayer:
                 case GameEnum.NewRound:
-                    btnRaundWin.Visibility = Visibility.Hidden;
-                    lblResultOfBattleText.Visibility = Visibility.Hidden;
-                    lblWinText.Visibility = Visibility.Hidden;
+                        lblResultOfBattleText.Visibility = Visibility.Hidden;
+                        lblWinText.Visibility = Visibility.Hidden;
+                        btnRaundWin.Visibility = Visibility.Hidden;
+                        btnRaundWin.IsEnabled = false;
+                    
                     btnOut2.Visibility = Visibility.Hidden;
-                        //_timerRender.Start();
+                        btnOut2.IsEnabled = false;
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
                         _playerForMusic.Play();
+
+                        isBattle = true;
                         break;
                 case GameEnum.ReplayRoundMultiPlayer:
                 case GameEnum.ReplayRound:
-                    btnNewGameSolo.Visibility = Visibility.Hidden;
-                    lblResultOfBattleText.Visibility = Visibility.Hidden;
-                    lblWinText.Visibility = Visibility.Hidden;
+                        lblResultOfBattleText.Visibility = Visibility.Hidden;
+                        lblWinText.Visibility = Visibility.Hidden;
+                        btnNewGameSolo.Visibility = Visibility.Hidden;
+                        btnNewGameSolo.IsEnabled = false;
                     btnRaundReplay.Visibility = Visibility.Hidden;
+                        btnRaundReplay.IsEnabled = false;
                     btnOut2.Visibility = Visibility.Hidden;
-                        //_timerRender.Start();
+                        btnOut2.IsEnabled = false;
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
                         _playerForMusic.Play();
+                        isBattle = true;
                         break;
                 case GameEnum.DistroyEnemyTank:
                     lblResultOfBattleText.Content = "Победа";
@@ -623,17 +651,16 @@ namespace Client
                     lblWinText.Content = "Армия врага уничтожена!";
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundWin.Visibility = Visibility.Visible;
+                        btnRaundWin.IsEnabled = true;
                     btnOut2.Visibility = Visibility.Visible;
-                        //_timerRender.Stop();
+                        btnOut2.IsEnabled = true;
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
-                        //очищаем поле
-                        //dc = myVisual.RenderOpen();
-                        //dc.Close();
+                       
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        //CollectionTree.Clear();
-                        //CollectionWorldElements.Clear();
+                        isBattle = false;
                         break;
                 case GameEnum.DistroyFriendlyTank:
                     lblResultOfBattleText.Content = "Поражение";
@@ -641,53 +668,52 @@ namespace Client
                     lblWinText.Content = "Наша армия уничтожена.";
                     lblWinText.Visibility = Visibility.Visible;
                     btnRaundReplay.Visibility = Visibility.Visible;
-                    btnOut2.Visibility = Visibility.Visible;
-                        //_timerRender.Stop();
+                        btnRaundReplay.IsEnabled = true;
+                        btnOut2.Visibility = Visibility.Visible;
+                        btnOut2.IsEnabled = true;
+
+                        
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
-                        //очищаем поле
-                        //dc = myVisual.RenderOpen();
-                        //dc.Close();
+
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        //CollectionTree.Clear();
-                        //CollectionWorldElements.Clear();
+                        isBattle = false;
                         break;
                 case GameEnum.DestroyBunker:
                     lblResultOfBattleText.Content = "Поражение";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
                     lblWinText.Content = "Наш штаб уничтожен.";
                     lblWinText.Visibility = Visibility.Visible;
-                    btnRaundReplay.Visibility = Visibility.Visible;
-                    btnOut2.Visibility = Visibility.Visible;
-                        //_timerRender.Stop();
+                        btnRaundReplay.Visibility = Visibility.Visible;
+                        btnRaundReplay.IsEnabled = true;
+                        btnOut2.Visibility = Visibility.Visible;
+                        btnOut2.IsEnabled = true;
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
-                        //очищаем поле
-                        //dc = myVisual.RenderOpen();
-                        //dc.Close();
+
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        //CollectionTree.Clear();
-                        //CollectionWorldElements.Clear();
+                        isBattle = false;
                         break;
                 case GameEnum.DestroyBunkerEnamy:
                     lblResultOfBattleText.Content = "Победа";
                     lblResultOfBattleText.Visibility = Visibility.Visible;
                     lblWinText.Content = "Штаб врага уничтожен!";
                     lblWinText.Visibility = Visibility.Visible;
-                    btnRaundWin.Visibility = Visibility.Visible;
-                    btnOut2.Visibility = Visibility.Visible;
-                        //_timerRender.Stop();
+                        btnRaundWin.Visibility = Visibility.Visible;
+                        btnRaundWin.IsEnabled = true;
+                        btnOut2.Visibility = Visibility.Visible;
+                        btnOut2.IsEnabled = true;
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
-                        //очищаем поле
-                        //dc = myVisual.RenderOpen();
-                        //dc.Close();
+
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        //CollectionTree.Clear();
-                        //CollectionWorldElements.Clear();
+                        isBattle = false;
                         break;
                 case GameEnum.Win:
                     lblResultOfBattleText.Content = "Игра пройдена";
@@ -695,16 +721,14 @@ namespace Client
                     lblWinText.Content = "Маладес!";
                     lblWinText.Visibility = Visibility.Visible;                   
                     btnOut2.Visibility = Visibility.Visible;
-                        //_timerRender.Stop();
+                        btnOut2.IsEnabled = true;
+                        
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.menuSound]);
                         _playerForMusic.Play();
-                        //очищаем поле
-                        //dc = myVisual.RenderOpen();
-                        //dc.Close();
+
                         //очищаем списки элнментов
                         ClearCollectionsElements();
-                        //CollectionTree.Clear();
-                        //CollectionWorldElements.Clear();
+                        isBattle = false;
                         break;
 
                     case GameEnum.PlayerOneReady:
@@ -751,24 +775,11 @@ namespace Client
                 {
                     item.DeleteMe();
                 }
-
-                //if (CollectionTree.Count != 0)
-                //    CollectionTree = new List<WorldElement>();
-
-                //if (CollectionWorldElements.Count != 0)
-                //    CollectionWorldElements = new List<WorldElement>();
-
-
-                //MessageBox.Show("Статистика клиент\nЛист деревьев: " + CollectionTree.Count +
-                //    "\nЛист остальных объектов: " + CollectionWorldElements.Count +
-                //    "\nСтак элементов: " + GlobalDataStatic.StackElements.Count);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Попытка очищения списка элементов на клиенткой программе\n" + ex.Message);
             }
-
-
         }
     }
 }

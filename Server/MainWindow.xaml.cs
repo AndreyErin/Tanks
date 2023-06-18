@@ -194,7 +194,7 @@ namespace Server
             //ограничение по числу танков на поле одновременно
             if (GlobalDataStatic.PartyTankBots.Count >= 30) { return; }
 
-            tTimer_RespawnBotTank.Interval = 5000;
+            tTimer_RespawnBotTank.Interval = 10000;
             GlobalDataStatic.RespawnBotON = true;
 
             //загрузка танков-ботов
@@ -378,7 +378,6 @@ namespace Server
             //запускаем респавн  ботов-танков
             tTimer_RespawnBotTank.Start();
         }
-
 
         //мультиплеер начальное меню - новая игра
         public void NewGameMultyPlayer()
@@ -632,33 +631,12 @@ namespace Server
         //удаляем оставшиеся на карте элементы
         protected void RemoteAllElement() 
         {
-            //MessageBox.Show("Статистика\nЭлементы на поле боя: " + GlobalDataStatic.BattleGroundCollection.Count +
-            //    "\nСтак каменных блоков: " + GlobalDataStatic.StackBlocksRock.Count +
-            //    "\nСтак железных блоков: " + GlobalDataStatic.StackBlocksFerum.Count +
-            //    "\nСтак снарядов: " + GlobalDataStatic.StackBullet.Count +
-            //    "\nСтак локальных пушек: " + GlobalDataStatic.StackLocationGun.Count +
-            //    "\nСтак лута: " + GlobalDataStatic.StackLoot.Count +
-            //    "\nСтак танков-ботов: " + GlobalDataStatic.StackTankBot.Count +
-            //    "\nСтак разбитых танков: " + GlobalDataStatic.StackTankOfDistroy.Count +
-            //    "\nСтак деревьев: " + GlobalDataStatic.StackTree.Count);
-
             foreach (var worldElement in GlobalDataStatic.BattleGroundCollection.ToList()) 
             {
                 //останавливаем отсылку сообщений в объекте и удаляем его из коллекции
                 worldElement.Value.MessageStopAndRemoveMe();
             }
-
-            //MessageBox.Show("Статистика\nЭлементы на поле боя: " + GlobalDataStatic.BattleGroundCollection.Count +
-            //    "\nСтак каменных блоков: " + GlobalDataStatic.StackBlocksRock.Count +
-            //    "\nСтак железных блоков: " + GlobalDataStatic.StackBlocksFerum.Count +
-            //    "\nСтак снарядов: " + GlobalDataStatic.StackBullet.Count +
-            //    "\nСтак локальных пушек: " + GlobalDataStatic.StackLocationGun.Count +
-            //    "\nСтак лута: " + GlobalDataStatic.StackLoot.Count +
-            //    "\nСтак танков-ботов: " + GlobalDataStatic.StackTankBot.Count +
-            //    "\nСтак разбитых танков: " + GlobalDataStatic.StackTankOfDistroy.Count +
-            //    "\nСтак деревьев: " + GlobalDataStatic.StackTree.Count);
         }
-
 
         //передача звуков клиенту
         public void SoundOfElement(SoundsEnum sound) 
