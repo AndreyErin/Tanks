@@ -33,7 +33,9 @@ namespace Server.Model
         //добавление себя на поле боя
         protected void AddMe() 
         {
-            ID = GlobalDataStatic.IdNumberElement++;
+            //если объект не является танком игрока тогда присваеваем ему новый ID
+            
+             ID = GlobalDataStatic.IdNumberElement++;
 
             //ElementIsChanget = false;
             GlobalDataStatic.BattleGroundCollection.TryAdd(ID, this);

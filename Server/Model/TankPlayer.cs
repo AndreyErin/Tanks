@@ -13,7 +13,7 @@ namespace Server.Model
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет
         public event Action<TankPlayer> DestroyPayerTank;
 
-        public Frags _myFrags = new Frags() {lvl1 = 0, lvl2 =0, lvl3 = 0, lvl4 = 0, lvlSpeed1 = 0, lvlSpeed2 = 0 };
+        public Frags _myFrags = new Frags() {lvl1 = 0, lvl2 =0, lvl3 = 0, lvl4 = 0, lvlSpeed1 = 0, lvlSpeed2 = 0, LocationGan = 0 };
 
         public TankPlayer(MyPoint tPos)
         {
@@ -21,6 +21,24 @@ namespace Server.Model
             InitElementBase(tPos);
             IsPlayer = true;
             Skin = SkinsEnum.PictureTank1;
+            AddMe();
+        }
+
+        //обновляем танк
+        public void UploadTank(MyPoint myPoint) 
+        {
+            _myFrags.lvl1 = 0;
+            _myFrags.lvl2 = 0;
+            _myFrags.lvl3 = 0;
+            _myFrags.lvl4 = 0;
+            _myFrags.lvlSpeed1 = 0;
+            _myFrags.lvlSpeed2 = 0;
+            _myFrags.LocationGan = 0;
+
+            VectorElement = VectorEnum.Top;
+            X = myPoint.X;
+            Y = myPoint.Y;
+            UpdateHpForTeer();
             AddMe();
         }
 
@@ -59,7 +77,7 @@ namespace Server.Model
         }
 
         //приводим характеристика танка в соответсвие с тиром
-        public void UpdateHpForTeer()
+        private void UpdateHpForTeer()
         {
             switch (lvlTank)
             {

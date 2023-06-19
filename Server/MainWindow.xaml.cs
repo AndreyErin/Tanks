@@ -79,8 +79,8 @@ namespace Server
 
             //настраеваем таймер респавна ботов-танков
             tTimer_RespawnBotTank.Elapsed += TTimer_RespawnBotTank_Elapsed;
-            //tTimer_RespawnBotTank.EndInit();
-
+            
+            //таймер отправки сообщений клиенту
             TimerQueueCler.Elapsed += TimerCooldownMessage_Elapsed;
 
             //запускаем функцию прослушивания в отдельном потоке
@@ -158,10 +158,7 @@ namespace Server
                         if (PartyPlayers.One.Ready == true && PartyPlayers.Two.Ready == true)
                         NewGameMultyPlayer();
                     }
-
-                    
-                    ///////////////////////////////////////////////////////////////
-                    
+                                                           
                     break;
                 case ComandEnum.MoveUp:
                     tank.Move(VectorEnum.Top);
@@ -389,6 +386,8 @@ namespace Server
             PartyPlayers.One.Ready = false;
             PartyPlayers.Two.Ready = false;
 
+            
+
             try
             {
                 GameEvent?.Invoke(GameEnum.NewGameMultiPlayer);
@@ -396,12 +395,17 @@ namespace Server
                 //создаем элементы окружения
                 CreateWorldElements(mapPool[lvlMap]);
 
-                GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
-                //должен быть 2й респавн на карте
-                GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[1]));
-                //присваеваем танки клиентам
-                PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
-                PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
+                GlobalDataStatic.PartyTanksOfPlayers.Clear();
+                //GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));                                
+                //GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[1]));
+
+                //PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
+                //PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
+
+                PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
+                PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1]);
+                GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
+                GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.Two.tank);
 
                 //подписываемся
                 foreach (TankPlayer tank in GlobalDataStatic.PartyTanksOfPlayers)
@@ -435,14 +439,21 @@ namespace Server
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);
 
-            GlobalDataStatic.PartyTanksOfPlayers.Clear();
+            
+            //обновляем танки и добавляем в пати
+            if (PartyPlayers.One.tank.HP > 0)
+                PartyPlayers.One.tank.UploadTank(map.respawnTankPlayer[0]);
+            else
+                PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
 
-            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
-            //должен быть 2й респавн на карте
-            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[1]));
-            //присваеваем танки клиентам
-            PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
-            PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
+            if (PartyPlayers.Two.tank.HP > 0)
+                PartyPlayers.Two.tank.UploadTank(map.respawnTankPlayer[1]);
+            else
+                PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1]);
+
+            GlobalDataStatic.PartyTanksOfPlayers.Clear();
+            GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
+            GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.Two.tank);
 
             //подписываемся
             foreach (TankPlayer tanksPlayer in GlobalDataStatic.PartyTanksOfPlayers)
@@ -471,22 +482,20 @@ namespace Server
 
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);
-
-            
+           
             GlobalDataStatic.PartyTanksOfPlayers.Clear();
-            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[0]));
-            //должен быть 2й респавн на карте
-            GlobalDataStatic.PartyTanksOfPlayers.Add(new TankPlayer(map.respawnTankPlayer[1]));
-            //присваеваем танки клиентам
-            PartyPlayers.One.tank = GlobalDataStatic.PartyTanksOfPlayers[0];
-            PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
+
+            PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
+            PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1]);
+            GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
+            GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.Two.tank);
+
 
             //подписываемся
             foreach (TankPlayer tanksPlayer in GlobalDataStatic.PartyTanksOfPlayers)
             {
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
-
 
             //передача состояния объектов
             TimerQueueCler.Start();
@@ -505,8 +514,7 @@ namespace Server
             //если вражеские танки уничтожены все и новых не будет, то -
             //ПОБЕДА
             if ((GlobalDataStatic.PartyTankBots.Count == 0) && (GlobalDataStatic.RespawnBotON == false))
-            {
-                
+            {              
                 tTimer_RespawnBotTank.Stop();
                 GlobalDataStatic.IdNumberElement = 0;
                 //отписываемся
@@ -515,17 +523,13 @@ namespace Server
                     tank.DestroyPayerTank -= DistroyFriendlyTank;
                 }
 
-
-
                 //передача состояния объектов
                 TimerQueueCler.Stop();
                 GlobalTimerMove.Stop();
 
                 //очищаем поле
-                RemoteAllElement();//////////////////////////////////////////////////////////////////
+                RemoteAllElement();
                 GlobalDataStatic.BattleGroundCollection.Clear();
-
-
 
                 if (mapPool.Length > (++lvlMap))
                 {
@@ -535,21 +539,7 @@ namespace Server
                 {
                     GameEvent?.Invoke(GameEnum.Win);
                 }
-
-
-                //MessageBox.Show("Статистика\nЭлементы на поле боя: " + GlobalDataStatic.BattleGroundCollection.Count +
-                //    "\nСтак каменных блоков: " + GlobalDataStatic.StackBlocksRock.Count +
-                //    "\nСтак железных блоков: " + GlobalDataStatic.StackBlocksFerum.Count +
-                //    "\nСтак снарядов: " + GlobalDataStatic.StackBullet.Count +
-                //    "\nСтак локальных пушек: " + GlobalDataStatic.StackLocationGun.Count +
-                //    "\nСтак лута: " + GlobalDataStatic.StackLoot.Count +
-                //    "\nСтак танков-ботов: " + GlobalDataStatic.StackTankBot.Count +
-                //    "\nСтак разбитых танков: " + GlobalDataStatic.StackTankOfDistroy.Count +
-                //    "\nСтак деревьев: " + GlobalDataStatic.StackTree.Count);
             }
-
-
-
         }
 
         //уничтожены танки игроков
@@ -568,7 +558,7 @@ namespace Server
                 TimerQueueCler.Stop();
                 GlobalTimerMove.Stop();
                 //очищаем поле
-                RemoteAllElement();//////////////////////////////////////////////////////////////////
+                RemoteAllElement();
                 GlobalDataStatic.BattleGroundCollection.Clear();
 
                 GameEvent?.Invoke(GameEnum.DistroyFriendlyTank);
@@ -592,7 +582,7 @@ namespace Server
             TimerQueueCler.Stop();
             GlobalTimerMove.Stop();
             //очищаем поле
-            RemoteAllElement();//////////////////////////////////////////////////////////////////            
+            RemoteAllElement();           
             GlobalDataStatic.BattleGroundCollection.Clear();
 
             GameEvent?.Invoke(GameEnum.DestroyBunker);
@@ -614,10 +604,10 @@ namespace Server
             GlobalTimerMove.Stop();
 
             //очищаем поле
-            RemoteAllElement();//////////////////////////////////////////////////////////////////            
+            RemoteAllElement();         
             GlobalDataStatic.BattleGroundCollection.Clear();
 
-            if (mapPool.Length > (++lvlMap))//если арунды еще будут
+            if (mapPool.Length > (++lvlMap))//если раунды еще будут
             {
                 GameEvent?.Invoke(GameEnum.DestroyBunkerEnamy);
             }
