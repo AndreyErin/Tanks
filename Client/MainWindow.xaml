@@ -53,9 +53,9 @@
 
             <StackPanel x:Name="stkResdyCheck" Margin="0,5,0,10" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Hidden">
 
-                <Label x:Name="lblThisPlayer" Content="Я" Background="Gray" Height="50" Width="100" IsHitTestVisible="False" Margin="5,0,5,0" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="2" BorderBrush="#FF310309"/>
+                <Label x:Name="lblThisPlayer" Content="Я" Background="Gray" Foreground="#FF310309" Height="50" Width="100" IsHitTestVisible="False" Margin="5,0,5,0" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="2" BorderBrush="#FF310309"/>
 
-                <Label x:Name="lblFriendlyPlayer" Content="Товарищ" Background="Gray" Height="50" Width="100" IsHitTestVisible="False" Margin="5,0,5,0" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="2" BorderBrush="#FF310309"/>
+                <Label x:Name="lblFriendlyPlayer" Content="Товарищ" Background="Gray" Foreground="#FF310309" Height="50" Width="100" IsHitTestVisible="False" Margin="5,0,5,0" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="2" BorderBrush="#FF310309"/>
             </StackPanel>
             
             <Label Grid.Row="0" x:Name="lblResultOfBattleText" Content="Танчики"  FontSize="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Foreground="#FF310309"/>
@@ -100,27 +100,27 @@
                 <Image Grid.Column="7" Grid.Row="0" Source="Model\Pictures\tankspeedbot2.png" Height="30" Width="30" Margin="5"/>
                 <Image Grid.Column="8" Grid.Row="0" Source="Model\Pictures\LocationGun.png" Height="30" Width="30" Margin="5"/>
 
-                <Label Grid.Row="1" Grid.Column="1" Content="Я"  Width="100" FontSize="20" HorizontalContentAlignment="Center" />
-                <Label Grid.Row="2" Grid.Column="1" Content="Товарищ" Width="100" FontSize="20" />
-                <Label Grid.Row="0" Grid.Column="9" Content="       " Width="100" FontSize="20" />
+                <!--<Label Grid.Row="1" Grid.Column="1" Content="Я"  Width="100" FontSize="20" HorizontalContentAlignment="Center" />
+                <Label Grid.Row="2" Grid.Column="1" Content="Товарищ" x:Name="lblComrade" Width="100" FontSize="20" />
+                <Label Grid.Row="0" Grid.Column="9" Content="       " Width="100" FontSize="20" />-->
                 
-                <Label Grid.Row="1" Grid.Column="2" x:Name="lblFragsTeer1"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="1" Grid.Column="3" x:Name="lblFragsTeer2"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="1" Grid.Column="4" x:Name="lblFragsTeer3"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="1" Grid.Column="5" x:Name="lblFragsTeer4"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="1" Grid.Column="6" x:Name="lblFragsSpeed1"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="1" Grid.Column="7" x:Name="lblFragsSpeed2"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="1" Grid.Column="8" x:Name="lblFragsLocalGan" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="1" Grid.Column="9" x:Name="lblFragsSum"      FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="1" Grid.Column="2" x:Name="lblFragsTeer1"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                <Label Grid.Row="1" Grid.Column="3" x:Name="lblFragsTeer2"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                <Label Grid.Row="1" Grid.Column="4" x:Name="lblFragsTeer3"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                <Label Grid.Row="1" Grid.Column="5" x:Name="lblFragsTeer4"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                <Label Grid.Row="1" Grid.Column="6" x:Name="lblFragsSpeed1"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                <Label Grid.Row="1" Grid.Column="7" x:Name="lblFragsSpeed2"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                <Label Grid.Row="1" Grid.Column="8" x:Name="lblFragsLocalGan" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Green"/>
+                <!--<Label Grid.Row="1" Grid.Column="9" x:Name="lblFragsSum"      FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>-->
 
-                <Label Grid.Row="2" Grid.Column="2" x:Name="lblComradeFragsTeer1"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="3" x:Name="lblComradeFragsTeer2"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="4" x:Name="lblComradeFragsTeer3"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="5" x:Name="lblComradeFragsTeer4"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="6" x:Name="lblComradeFragsSpeed1"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="7" x:Name="lblComradeFragsSpeed2"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="8" x:Name="lblComradeFragsLocalGan" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Label Grid.Row="2" Grid.Column="9" x:Name="lblComradeFragsSum"      FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Grid.Row="2" Grid.Column="2" x:Name="lblComradeFragsTeer1"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Blue"/>
+                <Label Grid.Row="2" Grid.Column="3" x:Name="lblComradeFragsTeer2"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Blue"/>
+                <Label Grid.Row="2" Grid.Column="4" x:Name="lblComradeFragsTeer3"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Blue"/>
+                <Label Grid.Row="2" Grid.Column="5" x:Name="lblComradeFragsTeer4"    FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Blue"/>
+                <Label Grid.Row="2" Grid.Column="6" x:Name="lblComradeFragsSpeed1"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Blue"/>
+                <Label Grid.Row="2" Grid.Column="7" x:Name="lblComradeFragsSpeed2"   FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Blue"/>
+                <Label Grid.Row="2" Grid.Column="8" x:Name="lblComradeFragsLocalGan" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Blue"/>
+                <!--<Label Grid.Row="2" Grid.Column="9" x:Name="lblComradeFragsSum"      FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>-->
                 
             </Grid>
         </Grid>

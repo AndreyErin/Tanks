@@ -197,7 +197,8 @@ namespace Server.Model
             if (gameEvent == GameEnum.DestroyBunker ||
                 gameEvent == GameEnum.DestroyBunkerEnamy ||
                 gameEvent == GameEnum.DistroyEnemyTank ||
-                gameEvent == GameEnum.DistroyFriendlyTank)
+                gameEvent == GameEnum.DistroyFriendlyTank ||
+                gameEvent == GameEnum.Win)
             {
 
                 GlobalDataStatic.Controller.Dispatcher.Invoke(() => tank.GetFrags());

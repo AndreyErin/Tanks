@@ -156,21 +156,19 @@ namespace Server.Model
                 bool result = ((HPElement)s.Value).HaveHit(posLedarL, posLedarR);
 
                 if (result)
-                {                    
-                    ((HPElement)s.Value).GetDamage(_damage);
+                {                                                                   
                     switch (s.Value)
                     {
                         case Tank:
-                            if (((HPElement)s.Value).HP <= 0)
+                            if ((((HPElement)s.Value).HP - _damage) <= 0)
                             {
                                 sound = SoundsEnum.shotTargetSound;
-
                                 //если хозяин танка был игроком, тогда записываем фраг                          
                                 _owner?.Frag(((Tank)s.Value).lvlTank, ((Tank)s.Value).speedTank);
                             }
                             break;
                         case LocationGun:
-                            if (((HPElement)s.Value).HP <= 0)
+                            if ((((HPElement)s.Value).HP - _damage) <= 0)
                             {
                                 sound = SoundsEnum.shotTargetSound;
                                 _owner?.FragLocationGun();
@@ -186,6 +184,9 @@ namespace Server.Model
                             sound = SoundsEnum.rockSound;                                   
                             break;
                     }
+
+                    ((HPElement)s.Value).GetDamage(_damage);
+
                     SoundEvent?.Invoke(sound);//играть звук
                     return true;                                       
                 }

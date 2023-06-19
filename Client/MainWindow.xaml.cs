@@ -371,7 +371,7 @@ namespace Client
                     lblFragsSpeed1.Content = frags.lvlSpeed1;
                     lblFragsSpeed2.Content = frags.lvlSpeed2;
                     lblFragsLocalGan.Content = frags.LocationGan;
-                    lblFragsSum.Content = frags.lvl1 + frags.lvl2 + frags.lvl3 + frags.lvl4 + frags.lvlSpeed1 + frags.lvlSpeed2 + frags.LocationGan;
+                    //lblFragsSum.Content = frags.lvl1 + frags.lvl2 + frags.lvl3 + frags.lvl4 + frags.lvlSpeed1 + frags.lvlSpeed2 + frags.LocationGan;
                 }
                 else
                 {
@@ -382,7 +382,7 @@ namespace Client
                     lblComradeFragsSpeed1.Content = frags.lvlSpeed1;
                     lblComradeFragsSpeed2.Content = frags.lvlSpeed2;
                     lblComradeFragsLocalGan.Content = frags.LocationGan;
-                    lblComradeFragsSum.Content = frags.lvl1 + frags.lvl2 + frags.lvl3 + frags.lvl4 + frags.lvlSpeed1 + frags.lvlSpeed2 + frags.LocationGan;
+                    //lblComradeFragsSum.Content = frags.lvl1 + frags.lvl2 + frags.lvl3 + frags.lvl4 + frags.lvlSpeed1 + frags.lvlSpeed2 + frags.LocationGan;
                 }                                                         
             };
             Dispatcher.Invoke(action);
@@ -646,6 +646,7 @@ namespace Client
                     case GameEnum.NewGame:
                         cnvMain.Visibility = Visibility.Visible;
                         lblResultOfBattleText.Visibility = Visibility.Hidden;
+                        //lblComrade.Visibility = Visibility.Hidden;
                         btnNewGameSolo.Visibility = Visibility.Hidden;
                         btnNewGameSolo.IsEnabled = false;
                     btnOut2.Visibility = Visibility.Hidden;
@@ -796,9 +797,9 @@ namespace Client
                         break;
                     case GameEnum.PlayerTwoReady:
                         if (_numberPlayer == 2)
-                            lblThisPlayer.Background = Brushes.GreenYellow;
+                            lblThisPlayer.Background = Brushes.CornflowerBlue;
                         else
-                            lblFriendlyPlayer.Background = Brushes.GreenYellow;
+                            lblFriendlyPlayer.Background = Brushes.CornflowerBlue;
                         break;
                     case GameEnum.PlayerTwoNotReady:
                         if (_numberPlayer == 2)
