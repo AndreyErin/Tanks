@@ -7,7 +7,8 @@ namespace Server.Model
     public class TankPlayer : Tank
     {
         public event PropertyChangedEventHandler? FragsEvent;
-        
+
+        public new int HP { get; set; } = 1;
 
         //делегат сообщающий в Main, что танк был уничтожен
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет

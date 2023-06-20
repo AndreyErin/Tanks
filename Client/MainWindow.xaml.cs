@@ -553,7 +553,32 @@ namespace Client
                     case "NUMBERPLAYEAR":
                         //определяем номер этого клиента
                         _numberPlayer = int.Parse(command[1]);
-                        break;
+
+                            Action action = () =>
+                            {
+                                if (_numberPlayer == 1)
+                                {
+                                    lblComradeFragsTeer1.Foreground = Brushes.Blue;
+                                    lblComradeFragsTeer2.Foreground = Brushes.Blue;
+                                    lblComradeFragsTeer3.Foreground = Brushes.Blue;
+                                    lblComradeFragsTeer4.Foreground = Brushes.Blue;
+                                    lblComradeFragsSpeed1.Foreground = Brushes.Blue;
+                                    lblComradeFragsSpeed2.Foreground = Brushes.Blue;
+                                    lblComradeFragsLocalGan.Foreground = Brushes.Blue;
+                                }
+                                else
+                                {
+                                    lblFragsTeer1.Foreground = Brushes.Blue;
+                                    lblFragsTeer2.Foreground = Brushes.Blue;
+                                    lblFragsTeer3.Foreground = Brushes.Blue;
+                                    lblFragsTeer4.Foreground = Brushes.Blue;
+                                    lblFragsSpeed1.Foreground = Brushes.Blue;
+                                    lblFragsSpeed2.Foreground = Brushes.Blue;
+                                    lblFragsLocalGan.Foreground = Brushes.Blue;
+                                }
+                            };
+                            GlobalDataStatic.Controller.Dispatcher.Invoke(action);
+                            break;
 
                     case "FRAGS":                            
                         myFrags.lvl1 = int.Parse(command[2]);
@@ -791,9 +816,9 @@ namespace Client
                         break;
                     case GameEnum.PlayerOneNotReady:
                         if (_numberPlayer == 1)
-                            lblThisPlayer.Background = Brushes.Gray;
+                            lblThisPlayer.Background = Brushes.LightGray;
                         else
-                            lblFriendlyPlayer.Background = Brushes.Gray;
+                            lblFriendlyPlayer.Background = Brushes.LightGray;
                         break;
                     case GameEnum.PlayerTwoReady:
                         if (_numberPlayer == 2)
@@ -803,9 +828,9 @@ namespace Client
                         break;
                     case GameEnum.PlayerTwoNotReady:
                         if (_numberPlayer == 2)
-                            lblThisPlayer.Background = Brushes.Gray;
+                            lblThisPlayer.Background = Brushes.LightGray;
                         else
-                            lblFriendlyPlayer.Background = Brushes.Gray;
+                            lblFriendlyPlayer.Background = Brushes.LightGray;
                         break;
                 }
             };
