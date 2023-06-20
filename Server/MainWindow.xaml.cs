@@ -303,6 +303,8 @@ namespace Server
             {
                 MessageBox.Show("Новая игра" + ex.Message);
             }
+
+            PartyPlayers.One.UploadHpPlayers();
             //передача состояния объектов
             TimerQueueCler.Start();
 
@@ -336,7 +338,8 @@ namespace Server
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
-            
+            PartyPlayers.One.UploadHpPlayers();
+
             //передача состояния объектов
             TimerQueueCler.Start();
 
@@ -365,7 +368,8 @@ namespace Server
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
-            
+            PartyPlayers.One.UploadHpPlayers();
+
             //передача состояния объектов
             TimerQueueCler.Start();
 
@@ -417,6 +421,10 @@ namespace Server
             {
                 MessageBox.Show("Новая игра Мультиплеер" + ex.Message);
             }
+
+            PartyPlayers.One.UploadHpPlayers();
+            PartyPlayers.Two.UploadHpPlayers();
+
             //передача состояния объектов
             TimerQueueCler.Start();
 
@@ -461,6 +469,10 @@ namespace Server
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
 
+
+            PartyPlayers.One.UploadHpPlayers();
+            PartyPlayers.Two.UploadHpPlayers();
+
             //передача состояния объектов
             TimerQueueCler.Start();
 
@@ -496,6 +508,9 @@ namespace Server
             {
                 tanksPlayer.DestroyPayerTank += DistroyFriendlyTank;
             }
+
+            PartyPlayers.One.UploadHpPlayers();
+            PartyPlayers.Two.UploadHpPlayers();
 
             //передача состояния объектов
             TimerQueueCler.Start();

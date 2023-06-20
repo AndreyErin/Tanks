@@ -17,6 +17,8 @@ namespace Client
 
     public partial class MainWindow : Window
     {
+        private Brush _brush;
+
         //флаг идет ли бой или мы в меню сидим
         private bool _isBattle = false;
 
@@ -47,8 +49,8 @@ namespace Client
         //загрузка программы
         private async void MainWin_Loaded(object sender, RoutedEventArgs e)
         {
+            _brush = (Brush)new BrushConverter().ConvertFrom("#FF310309");
 
-            
 
             cnvMain.Visibility = Visibility.Hidden;
 
@@ -388,6 +390,61 @@ namespace Client
             Dispatcher.Invoke(action);
         }
 
+        private void UploadHpPlayers(int onePlayer, int twoPlayer) 
+        {
+            Action action1 = () =>
+            {
+                switch (onePlayer)
+                {
+                    case 1:
+                        brdGreen1.Background = Brushes.GreenYellow;
+                        brdGreen2.Background = _brush;
+                        brdGreen3.Background = _brush;
+                        break;
+                    case 2:
+                        brdGreen1.Background = Brushes.GreenYellow;
+                        brdGreen2.Background = Brushes.GreenYellow;
+                        brdGreen3.Background = _brush;
+                        break;
+                    case 3:
+                        brdGreen1.Background = Brushes.GreenYellow;
+                        brdGreen2.Background = Brushes.GreenYellow;
+                        brdGreen3.Background = Brushes.GreenYellow;
+                        break;
+                    case <= 0:
+                        brdGreen1.Background = _brush;
+                        brdGreen2.Background = _brush;
+                        brdGreen3.Background = _brush;
+                        break;
+                }
+
+                switch (twoPlayer)
+                {
+                    case 1:
+                        brdBlue1.Background = Brushes.CornflowerBlue;
+                        brdBlue2.Background = _brush;
+                        brdBlue3.Background = _brush;
+                        break;
+                    case 2:
+                        brdBlue1.Background = Brushes.CornflowerBlue;
+                        brdBlue2.Background = Brushes.CornflowerBlue;
+                        brdBlue3.Background = _brush;
+                        break;
+                    case 3:
+                        brdBlue1.Background = Brushes.CornflowerBlue;
+                        brdBlue2.Background = Brushes.CornflowerBlue;
+                        brdBlue3.Background = Brushes.CornflowerBlue;
+                        break;
+                    case <= 0:
+                        brdBlue1.Background = _brush;
+                        brdBlue2.Background = _brush;
+                        brdBlue3.Background = _brush;
+                        break;
+                }
+            };
+            GlobalDataStatic.Controller.Dispatcher.Invoke(action1);
+        }
+
         //добавление объекта на поле боя
         public void AddElement(int id, double x, double y, SkinsEnum skin, VectorEnum vector) 
         {
@@ -590,6 +647,11 @@ namespace Client
                         myFrags.LocationGan = int.Parse(command[8]);
 
                         FragStatistic(myFrags, int.Parse(command[1]));
+                        break;
+
+                    case "UPLOADHPPLAYERS":
+                            UploadHpPlayers(int.Parse(command[1]), int.Parse(command[2]));
+                        
                         break;
                     }
                 }

@@ -38,30 +38,22 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
+            <!-- основное поле -->
             <Grid Grid.Column="1" Background="LightYellow" Height="720" Width="1320">
                 <local:DrawingCanvas   x:Name="cnvMain" Height="auto" Width="auto" IsHitTestVisible="False" />
             </Grid>
-        <!--</Grid>-->
-
-        <!--<Grid Grid.Row="1" Grid.Column="0" Background="LightYellow" Height="720" Width="1320">-->
-            <!--<Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>-->
-            
-            <!-- основное поле -->
-           
-
+                                
             <Grid Grid.Column="0" Height="720">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Rectangle x:Name="rctHpGreen3" Grid.Row="0" Fill="LightGray" Margin="2,0,2,2" RadiusX="3" RadiusY="3"/>
-                <Rectangle x:Name="rctHpGreen2" Grid.Row="1" Fill="LightGray" Margin="2,0,2,0" RadiusX="3" RadiusY="3"/>
-                <Rectangle x:Name="rctHpGreen1" Grid.Row="2" Fill="LightGray" Margin="2,2,2,0" RadiusX="3" RadiusY="3"/>
+
+                <Border x:Name="brdGreen3" CornerRadius="2" Background="#FF310309" Grid.Row="0" BorderThickness="1" BorderBrush="GreenYellow" Margin="2,0,2,2"/>
+                <Border x:Name="brdGreen2" CornerRadius="2" Background="#FF310309" Grid.Row="1" BorderThickness="1" BorderBrush="GreenYellow" Margin="2,0,2,0"/>
+                <Border x:Name="brdGreen1" CornerRadius="2" Background="#FF310309" Grid.Row="2" BorderThickness="1" BorderBrush="GreenYellow" Margin="2,2,2,0"/>
+                               
             </Grid>
 
             <Grid Grid.Column="2" Height="720">
@@ -70,9 +62,10 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Rectangle x:Name="rctHpBlue3" Grid.Row="0" Fill="LightGray" Margin="2,0,2,2" RadiusX="3" RadiusY="3"/>
-                <Rectangle x:Name="rctHpBlue2" Grid.Row="1" Fill="LightGray" Margin="2,0,2,0" RadiusX="3" RadiusY="3"/>
-                <Rectangle x:Name="rctHpBlue1" Grid.Row="2" Fill="LightGray" Margin="2,2,2,0" RadiusX="3" RadiusY="3"/>
+                <Border x:Name="brdBlue3" CornerRadius="2" Background="#FF310309" Grid.Row="0" BorderThickness="1" BorderBrush="CornflowerBlue" Margin="2,0,2,2"/>
+                <Border x:Name="brdBlue2" CornerRadius="2" Background="#FF310309" Grid.Row="1" BorderThickness="1" BorderBrush="CornflowerBlue" Margin="2,0,2,0"/>
+                <Border x:Name="brdBlue1" CornerRadius="2" Background="#FF310309" Grid.Row="2" BorderThickness="1" BorderBrush="CornflowerBlue" Margin="2,2,2,0"/>
+
             </Grid>
         </Grid>
 

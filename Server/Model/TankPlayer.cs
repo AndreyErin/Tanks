@@ -7,8 +7,7 @@ namespace Server.Model
     public class TankPlayer : Tank
     {
         public event PropertyChangedEventHandler? FragsEvent;
-
-        public new int HP { get; set; } = 1;
+        
 
         //делегат сообщающий в Main, что танк был уничтожен
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет
@@ -62,6 +61,9 @@ namespace Server.Model
                     break;
 
             }
+            //обновляем HP танков игроков в клиенте
+            PartyPlayers.One?.UploadHpPlayers();
+            PartyPlayers.Two?.UploadHpPlayers();
         }
 
         protected override void UpgradeWiewTankSpeed(double speed)
@@ -75,6 +77,12 @@ namespace Server.Model
                     Skin = SkinsEnum.PictureTankSpeed2;
                     break;
             }
+
+            //обновляем HP танков игроков в клиенте
+            PartyPlayers.One?.UploadHpPlayers();
+
+            if (GlobalDataStatic.Controller.IsMultiPlayer)
+                PartyPlayers.Two?.UploadHpPlayers();
         }
 
         //приводим характеристика танка в соответсвие с тиром
@@ -90,6 +98,12 @@ namespace Server.Model
                     HP = 3;
                     break;
             }
+
+            //обновляем HP танков игроков в клиенте
+            PartyPlayers.One?.UploadHpPlayers();
+
+            if(GlobalDataStatic.Controller.IsMultiPlayer)
+                PartyPlayers.Two?.UploadHpPlayers();
         }
 
         public void Frag(int lvlTankFrag, double speedTankFrag) 

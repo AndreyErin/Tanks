@@ -160,6 +160,7 @@ namespace Server.Model
                     switch (s.Value)
                     {
                         case Tank:
+                            //если танк уничтожен
                             if ((((HPElement)s.Value).HP - _damage) <= 0)
                             {
                                 sound = SoundsEnum.shotTargetSound;
@@ -186,6 +187,12 @@ namespace Server.Model
                     }
 
                     ((HPElement)s.Value).GetDamage(_damage);
+
+                    //при попадание по любому тобъекту будем обновлять HP танков игроков в клиенте
+                    PartyPlayers.One?.UploadHpPlayers();
+
+                    if (GlobalDataStatic.Controller.IsMultiPlayer)
+                        PartyPlayers.Two?.UploadHpPlayers();
 
                     SoundEvent?.Invoke(sound);//играть звук
                     return true;                                       

@@ -187,6 +187,19 @@ namespace Server.Model
                 client.Close();
             }
 
+        //обновляем хп в клиентах
+        public void UploadHpPlayers() 
+        {
+            int hp2Players = 0;
+
+            if (PartyPlayers.Two != null)
+                hp2Players = PartyPlayers.Two.tank.HP;
+
+
+            byte[] data = Encoding.UTF8.GetBytes($"UPLOADHPPLAYERS@{PartyPlayers.One?.tank.HP}@{hp2Players}^");
+            Task.Run(() => SetDataAsynk(data));
+        }
+
         //события игры(получаем событие и отправляем на сервер)
         protected void EventOfGame(GameEnum gameEvent)
         {
