@@ -50,6 +50,11 @@ namespace Client.Model
             case SkinsEnum.PictureTank3:            
             case SkinsEnum.PictureTankSpeed:
             case SkinsEnum.PictureTankSpeed2:
+            case SkinsEnum.PictureTank1b:
+            case SkinsEnum.PictureTank2b:
+            case SkinsEnum.PictureTank3b:
+            case SkinsEnum.PictureTankSpeedb:
+            case SkinsEnum.PictureTankSpeed2b:
             case SkinsEnum.PictureTankOfDestroy1:
             case SkinsEnum.PictureTankOfDestroy2:
             case SkinsEnum.PictureTankOfDestroy3:

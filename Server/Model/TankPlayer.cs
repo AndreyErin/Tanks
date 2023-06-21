@@ -13,15 +13,26 @@ namespace Server.Model
         //нужен для того, чтобы определять уничтоженна ли группировка танков игроков или нет
         public event Action<TankPlayer> DestroyPayerTank;
 
+        private bool _isFirstTank;
+
         public Frags _myFrags = new Frags() {lvl1 = 0, lvl2 =0, lvl3 = 0, lvl4 = 0, lvlSpeed1 = 0, lvlSpeed2 = 0, LocationGan = 0 };
 
-        public TankPlayer(MyPoint tPos)
+        public TankPlayer(MyPoint tPos, bool isFirstTank = true)
         {
             FragsEvent += GlobalDataStatic.Controller.ChangedElement;
             InitElementBase(tPos);
             IsPlayer = true;
-            Skin = SkinsEnum.PictureTank1;
+
+            _isFirstTank = isFirstTank;
+
+            if (_isFirstTank)
+                Skin = SkinsEnum.PictureTank1;
+            else
+                Skin = SkinsEnum.PictureTank1b;
+
             AddMe();
+
+            //MessageBox.Show(Skin.ToString());
         }
 
         //обновляем танк
@@ -54,10 +65,16 @@ namespace Server.Model
             switch (teer)
             {
                 case 2:
-                    Skin = SkinsEnum.PictureTank2;
+                    if(_isFirstTank)
+                        Skin = SkinsEnum.PictureTank2;
+                    else
+                        Skin = SkinsEnum.PictureTank2b;
                     break;
                 case 3:
-                    Skin = SkinsEnum.PictureTank3;
+                    if (_isFirstTank)
+                        Skin = SkinsEnum.PictureTank3;
+                    else
+                        Skin = SkinsEnum.PictureTank3b;
                     break;
 
             }
@@ -71,10 +88,16 @@ namespace Server.Model
             switch (speed)
             {
                 case 2.0:
-                    Skin = SkinsEnum.PictureTankSpeed;
+                    if (_isFirstTank)
+                        Skin = SkinsEnum.PictureTankSpeed;
+                    else
+                        Skin = SkinsEnum.PictureTankSpeedb;
                     break;
                 case 2.5:
-                    Skin = SkinsEnum.PictureTankSpeed2;
+                    if (_isFirstTank)
+                        Skin = SkinsEnum.PictureTankSpeed2;
+                    else
+                        Skin = SkinsEnum.PictureTankSpeed2b;
                     break;
             }
 

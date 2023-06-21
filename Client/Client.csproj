@@ -32,7 +32,10 @@
     <None Remove="Model\Pictures\logo.png" />
     <None Remove="Model\Pictures\playertank.png" />
     <None Remove="Model\Pictures\playertank2.png" />
+    <None Remove="Model\Pictures\playertank2b.png" />
     <None Remove="Model\Pictures\playertank3.png" />
+    <None Remove="Model\Pictures\playertank3b.png" />
+    <None Remove="Model\Pictures\playertankb.png" />
     <None Remove="Model\Pictures\Speed.png" />
     <None Remove="Model\Pictures\tankbot.png" />
     <None Remove="Model\Pictures\tankbot2.png" />
@@ -44,6 +47,8 @@
     <None Remove="Model\Pictures\tankofdestroyspeed2.png" />
     <None Remove="Model\Pictures\tankspeed.png" />
     <None Remove="Model\Pictures\tankspeed2.png" />
+    <None Remove="Model\Pictures\tankspeed2b.png" />
+    <None Remove="Model\Pictures\tankspeedb.png" />
     <None Remove="Model\Pictures\tankspeedbot.png" />
     <None Remove="Model\Pictures\tankspeedbot2.png" />
     <None Remove="Model\Pictures\wood.png" />
@@ -129,7 +134,16 @@
     <Content Include="Model\Pictures\playertank2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Model\Pictures\playertank2b.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Model\Pictures\playertank3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\playertank3b.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\playertankb.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Model\Pictures\Speed.png">
@@ -163,6 +177,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Model\Pictures\tankspeed2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankspeed2b.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Model\Pictures\tankspeedb.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Model\Pictures\tankspeedbot.png">

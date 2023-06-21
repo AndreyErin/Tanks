@@ -10,7 +10,7 @@ namespace Client.Model
     {        
         static GlobalDataStatic()
         {            
-            for (int i = 1; i <= 18; i++)
+            for (int i = 1; i <= 23; i++)
             {
                 TransformedBitmap Tb90 = new TransformedBitmap();
                 Tb90.BeginInit();
@@ -86,6 +86,14 @@ namespace Client.Model
             //[SkinsEnum.PictureTank4] = new BitmapImage(new Uri(@"Model\Pictures\playertank4.png", UriKind.Relative)),
             [SkinsEnum.PictureTankSpeed] = new BitmapImage(new Uri(@"Model\Pictures\tankspeed.png", UriKind.Relative)),
             [SkinsEnum.PictureTankSpeed2] = new BitmapImage(new Uri(@"Model\Pictures\tankspeed2.png", UriKind.Relative)),
+
+            [SkinsEnum.PictureTank1b] = new BitmapImage(new Uri(@"Model\Pictures\playertankb.png", UriKind.Relative)),
+            [SkinsEnum.PictureTank2b] = new BitmapImage(new Uri(@"Model\Pictures\playertank2b.png", UriKind.Relative)),
+            [SkinsEnum.PictureTank3b] = new BitmapImage(new Uri(@"Model\Pictures\playertank3b.png", UriKind.Relative)),
+            [SkinsEnum.PictureTankSpeedb] = new BitmapImage(new Uri(@"Model\Pictures\tankspeedb.png", UriKind.Relative)),
+            [SkinsEnum.PictureTankSpeed2b] = new BitmapImage(new Uri(@"Model\Pictures\tankspeed2b.png", UriKind.Relative)),
+
+            
             //бункер
             [SkinsEnum.PictureBunker] = new BitmapImage(new Uri(@"Model\Pictures\bunker.png", UriKind.Relative)),
             [SkinsEnum.PictureBunker2] = new BitmapImage(new Uri(@"Model\Pictures\bunker2.png", UriKind.Relative)),

@@ -424,7 +424,7 @@ namespace Server
                 //PartyPlayers.Two.tank = GlobalDataStatic.PartyTanksOfPlayers[1];
 
                 PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
-                PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1]);
+                PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1], false);
                 GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
                 GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.Two.tank);
 
@@ -474,7 +474,7 @@ namespace Server
             if (PartyPlayers.Two.tank.HP > 0)
                 PartyPlayers.Two.tank.UploadTank(map.respawnTankPlayer[1]);
             else
-                PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1]);
+                PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1], false);
 
             GlobalDataStatic.PartyTanksOfPlayers.Clear();
             GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
@@ -515,7 +515,7 @@ namespace Server
             GlobalDataStatic.PartyTanksOfPlayers.Clear();
 
             PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
-            PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1]);
+            PartyPlayers.Two.tank = new TankPlayer(map.respawnTankPlayer[1], false);
             GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
             GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.Two.tank);
 

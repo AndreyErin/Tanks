@@ -149,12 +149,14 @@ namespace Client
                     rect.X = worldElement.ePos.Y;
                     rect.Y = worldElement.ePos.X;
 
-                    if ((int)worldElement.Skin > 18)
+                    if ((int)worldElement.Skin > 23)
                     {
                         _dc.DrawImage(GlobalDataStatic.SkinDictionary[worldElement.Skin], rect);
                     }
                     else
                     {
+                        
+
                         //вынаем изображение с нужным разворотом
                         switch (worldElement.Vector)
                         {
