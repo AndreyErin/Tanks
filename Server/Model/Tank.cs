@@ -242,10 +242,11 @@ namespace Server.Model
                     speedTank += 0.5;
                     if (speedTank > 2.5)
                         speedTank = 2.5;
-                    UpgradeWiewTankSpeed(speedTank);
+                    
                     HP = 1;
                     damageTank = 1;
                     lvlTank = 1;
+                    UpgradeWiewTankSpeed(speedTank);
                     break;
             }
             sound = SoundsEnum.bonusSound;

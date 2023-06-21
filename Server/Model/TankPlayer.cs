@@ -81,7 +81,7 @@ namespace Server.Model
             //обновляем HP танков игроков в клиенте
             PartyPlayers.One?.UploadHpPlayers();
 
-            if (GlobalDataStatic.Controller.IsMultiPlayer)
+            //if (GlobalDataStatic.Controller.IsMultiPlayer)
                 PartyPlayers.Two?.UploadHpPlayers();
         }
 
@@ -102,7 +102,7 @@ namespace Server.Model
             //обновляем HP танков игроков в клиенте
             PartyPlayers.One?.UploadHpPlayers();
 
-            if(GlobalDataStatic.Controller.IsMultiPlayer)
+            //if(GlobalDataStatic.Controller.IsMultiPlayer)
                 PartyPlayers.Two?.UploadHpPlayers();
         }
 

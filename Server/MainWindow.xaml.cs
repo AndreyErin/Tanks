@@ -13,6 +13,8 @@ namespace Server
 {
     public partial class MainWindow : Window
     {
+        public bool? _lastGameIsWin = null;
+
         //проверяем у нас мультиплеерная игра или нет
         public bool IsMultiPlayer = false;
 
@@ -156,7 +158,21 @@ namespace Server
 
                         //если оба готовы то запускаем мультиплеерную игру
                         if (PartyPlayers.One.Ready == true && PartyPlayers.Two.Ready == true)
-                        NewGameMultyPlayer();
+                        {
+                            switch (_lastGameIsWin)
+                            {
+                                case null:
+                                    NewGameMultyPlayer();
+                                    break;
+                                case true:
+                                    NewRaundMultyPlayer();
+                                    break;
+                                case false:
+                                    ReplayRaundMultyPlayer();
+                                    break;
+                            }
+                            
+                        }
                     }
                                                            
                     break;
@@ -324,12 +340,13 @@ namespace Server
 
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);
-
-            //mainTank.ID = GlobalDataStatic.IdNumberElement++;
-            //GlobalDataStatic.BattleGroundCollection.Add(mainTank);
-
-            PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
+                      
             GlobalDataStatic.PartyTanksOfPlayers.Clear();
+            if (PartyPlayers.One.tank.HP > 0)
+                PartyPlayers.One.tank.UploadTank(map.respawnTankPlayer[0]);
+            else
+                PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
+
             GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
 
             //подписываемся
@@ -358,8 +375,8 @@ namespace Server
             //заполняем карту элементами мира следующего уровня
             CreateWorldElements(mapPool[lvlMap]);
 
-            PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);
             GlobalDataStatic.PartyTanksOfPlayers.Clear();
+            PartyPlayers.One.tank = new TankPlayer(map.respawnTankPlayer[0]);           
             GlobalDataStatic.PartyTanksOfPlayers.Add(PartyPlayers.One.tank);
 
             //подписываемся
@@ -542,6 +559,8 @@ namespace Server
                 TimerQueueCler.Stop();
                 GlobalTimerMove.Stop();
 
+                _lastGameIsWin = true;
+
                 //очищаем поле
                 RemoteAllElement();
                 GlobalDataStatic.BattleGroundCollection.Clear();
@@ -568,7 +587,8 @@ namespace Server
                 tTimer_RespawnBotTank.Stop();
                 GlobalDataStatic.IdNumberElement = 0;
 
-                
+                _lastGameIsWin = false;
+
                 //передача состояния объектов
                 TimerQueueCler.Stop();
                 GlobalTimerMove.Stop();
@@ -592,6 +612,7 @@ namespace Server
                 tank.DestroyPayerTank -= DistroyFriendlyTank;
             }
 
+            _lastGameIsWin = false;
 
             //передача состояния объектов
             TimerQueueCler.Stop();
@@ -617,6 +638,8 @@ namespace Server
             //передача состояния объектов
             TimerQueueCler.Stop();
             GlobalTimerMove.Stop();
+
+            _lastGameIsWin = true;
 
             //очищаем поле
             RemoteAllElement();         

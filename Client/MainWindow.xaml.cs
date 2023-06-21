@@ -17,6 +17,7 @@ namespace Client
 
     public partial class MainWindow : Window
     {
+        private bool _isMultiplayer = false;
         private Brush _brush;
 
         //флаг идет ли бой или мы в меню сидим
@@ -287,19 +288,75 @@ namespace Client
             switch (((Button)sender).Name)
             {
                 case "btnNewGameSolo":
+                    _isMultiplayer = false;
                     SetDataOfServer(Encoding.UTF8.GetBytes("NEWGAME^"));
                     break;
                 case "btnRaundWin":
-                    SetDataOfServer(Encoding.UTF8.GetBytes("NEWRAUND^"));
+                    if (_isMultiplayer)
+                    {
+                        btnReady.Content = "Готов";
+                        lblWinText.Visibility = Visibility.Hidden;
+                        btnRaundWin.Visibility = Visibility.Hidden;
+                        lblThisPlayer.Visibility = Visibility.Visible;
+                        lblFriendlyPlayer.Visibility = Visibility.Visible;
+
+                        stkResdyCheck.Visibility = Visibility.Visible;
+                        
+                        lblMultuPlayerStatus.Visibility = Visibility.Visible;
+                        lblResultOfBattleText.Visibility = Visibility.Hidden;
+                        btnNewGameSolo.Visibility = Visibility.Hidden;
+                        btnNewGameSolo.IsEnabled = false;
+                        btnOut2.Visibility = Visibility.Hidden;
+                        btnOut2.IsEnabled = false;
+                        btnMultiPlayer.Visibility = Visibility.Hidden;
+                        btnMultiPlayer.IsEnabled = false;
+                        btnReady.Visibility = Visibility.Visible;
+                        btnReady.IsEnabled = true;
+                        
+
+                        //пустышка для проверки был ли игрок зашедший раньше готов
+                        SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
+                    }
+                    else
+                        SetDataOfServer(Encoding.UTF8.GetBytes("NEWRAUND^"));
                     break;
+
                 case "btnRaundReplay":
-                    SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
+                    if (_isMultiplayer)
+                    {
+                        btnReady.Content = "Готов";
+                        lblWinText.Visibility = Visibility.Hidden;
+                        btnRaundReplay.Visibility = Visibility.Hidden;
+                        lblThisPlayer.Visibility = Visibility.Visible;
+                        lblFriendlyPlayer.Visibility = Visibility.Visible;
+
+                        stkResdyCheck.Visibility = Visibility.Visible;
+                        lblMultuPlayerStatus.Visibility = Visibility.Visible;
+                        lblResultOfBattleText.Visibility = Visibility.Hidden;
+                        btnNewGameSolo.Visibility = Visibility.Hidden;
+                        btnNewGameSolo.IsEnabled = false;
+                        btnOut2.Visibility = Visibility.Hidden;
+                        btnOut2.IsEnabled = false;
+                        btnMultiPlayer.Visibility = Visibility.Hidden;
+                        btnMultiPlayer.IsEnabled = false;
+                        btnReady.Visibility = Visibility.Visible;
+                        btnReady.IsEnabled = true;
+                        
+
+                        //пустышка для проверки был ли игрок зашедший раньше готов
+                        SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
+                    }
+                    else
+                        SetDataOfServer(Encoding.UTF8.GetBytes("REPLAY^"));
                     break;
+
                 case "btnOut2":
                     SetDataOfServer(Encoding.UTF8.GetBytes("OUT^"));
                     MainWin.Close();
                     break;
                 case "btnMultiPlayer":
+                    _isMultiplayer = true;
+
                     stkResdyCheck.Visibility = Visibility.Visible;
                     lblMultuPlayerStatus.Visibility = Visibility.Visible;                   
                     lblResultOfBattleText.Visibility = Visibility.Hidden;
@@ -344,14 +401,21 @@ namespace Client
                         case "Готов":
                             SetDataOfServer(Encoding.UTF8.GetBytes("READY^"));
                             ((Button)sender).Content = "Отменить";
-                            btnOutInMenu.Visibility = Visibility.Hidden;
-                            btnOutInMenu.IsEnabled = false;                            
+
+                            if (_isMultiplayer == null)
+                            {
+                                btnOutInMenu.Visibility = Visibility.Hidden;
+                                btnOutInMenu.IsEnabled = false;
+                            }
                             break;
                         case "Отменить":
                             SetDataOfServer(Encoding.UTF8.GetBytes("NOTREADY^"));
                             ((Button)sender).Content = "Готов";
-                            btnOutInMenu.Visibility = Visibility.Visible;
-                            btnOutInMenu.IsEnabled = true;
+                            if (_isMultiplayer == null)
+                            {
+                                btnOutInMenu.Visibility = Visibility.Hidden;
+                                btnOutInMenu.IsEnabled = false;
+                            }
                             break;
                     }
 
@@ -368,8 +432,8 @@ namespace Client
                 {
                     lblFragsTeer1.Content = frags.lvl1;
                     lblFragsTeer2.Content = frags.lvl2;
-                    lblFragsTeer3.Content = frags.lvl3;
-                    lblFragsTeer4.Content = frags.lvl4;
+                    lblFragsTeer3.Content = frags.lvl3 + frags.lvl4;
+                    //lblFragsTeer4.Content = frags.lvl4;
                     lblFragsSpeed1.Content = frags.lvlSpeed1;
                     lblFragsSpeed2.Content = frags.lvlSpeed2;
                     lblFragsLocalGan.Content = frags.LocationGan;
@@ -379,8 +443,8 @@ namespace Client
                 {
                     lblComradeFragsTeer1.Content = frags.lvl1;
                     lblComradeFragsTeer2.Content = frags.lvl2;
-                    lblComradeFragsTeer3.Content = frags.lvl3;
-                    lblComradeFragsTeer4.Content = frags.lvl4;
+                    lblComradeFragsTeer3.Content = frags.lvl3 + frags.lvl4;
+                    //lblComradeFragsTeer4.Content = frags.lvl4;
                     lblComradeFragsSpeed1.Content = frags.lvlSpeed1;
                     lblComradeFragsSpeed2.Content = frags.lvlSpeed2;
                     lblComradeFragsLocalGan.Content = frags.LocationGan;
@@ -618,7 +682,7 @@ namespace Client
                                     lblComradeFragsTeer1.Foreground = Brushes.Blue;
                                     lblComradeFragsTeer2.Foreground = Brushes.Blue;
                                     lblComradeFragsTeer3.Foreground = Brushes.Blue;
-                                    lblComradeFragsTeer4.Foreground = Brushes.Blue;
+                                    //lblComradeFragsTeer4.Foreground = Brushes.Blue;
                                     lblComradeFragsSpeed1.Foreground = Brushes.Blue;
                                     lblComradeFragsSpeed2.Foreground = Brushes.Blue;
                                     lblComradeFragsLocalGan.Foreground = Brushes.Blue;
@@ -628,7 +692,7 @@ namespace Client
                                     lblFragsTeer1.Foreground = Brushes.Blue;
                                     lblFragsTeer2.Foreground = Brushes.Blue;
                                     lblFragsTeer3.Foreground = Brushes.Blue;
-                                    lblFragsTeer4.Foreground = Brushes.Blue;
+                                    //lblFragsTeer4.Foreground = Brushes.Blue;
                                     lblFragsSpeed1.Foreground = Brushes.Blue;
                                     lblFragsSpeed2.Foreground = Brushes.Blue;
                                     lblFragsLocalGan.Foreground = Brushes.Blue;
@@ -664,9 +728,9 @@ namespace Client
                         ServerGameEvent((GameEnum)number);
                     }
 
-                    //переключаем плеера
-                    playerIndex++;
-                    if(playerIndex > 4) playerIndex = 0;
+                    ////переключаем плеера
+                    //playerIndex++;
+                    //if(playerIndex > 4) playerIndex = 0;
 
                     Action action = () =>
                     {
@@ -753,10 +817,15 @@ namespace Client
                         lblWinText.Visibility = Visibility.Hidden;
                         btnRaundWin.Visibility = Visibility.Hidden;
                         btnRaundWin.IsEnabled = false;
-                    
-                    btnOut2.Visibility = Visibility.Hidden;
-                        btnOut2.IsEnabled = false;
+
+                        lblThisPlayer.Visibility = Visibility.Hidden;
+                        lblFriendlyPlayer.Visibility = Visibility.Hidden;
+                        lblMultuPlayerStatus.Visibility = Visibility.Hidden;
                         grdStatisticPanel.Visibility = Visibility.Hidden;
+
+                        btnOut2.Visibility = Visibility.Hidden;
+                        btnOut2.IsEnabled = false;
+                        btnReady.Visibility = Visibility.Hidden;
 
                         _playerForMusic.Open(GlobalDataStatic.SoundDictionary[SoundsEnum.mainSound]);
                         _playerForMusic.Play();
@@ -767,6 +836,13 @@ namespace Client
                 case GameEnum.ReplayRound:
                         lblResultOfBattleText.Visibility = Visibility.Hidden;
                         lblWinText.Visibility = Visibility.Hidden;
+
+                        btnReady.Visibility = Visibility.Hidden;
+                        lblThisPlayer.Visibility = Visibility.Hidden;
+                        lblFriendlyPlayer.Visibility = Visibility.Hidden;
+                        lblMultuPlayerStatus.Visibility = Visibility.Hidden;
+                        grdStatisticPanel.Visibility = Visibility.Hidden;
+
                         btnNewGameSolo.Visibility = Visibility.Hidden;
                         btnNewGameSolo.IsEnabled = false;
                     btnRaundReplay.Visibility = Visibility.Hidden;
